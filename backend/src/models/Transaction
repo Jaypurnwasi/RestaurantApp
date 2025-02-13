@@ -5,15 +5,13 @@ export interface ITransaction extends Document {
     amount: number;
     success: boolean;
     orderId: mongoose.Types.ObjectId;
-    date: Date;
 }
 
 const TransactionSchema: Schema = new Schema({
     mode: { type: String, enum: ["Card", "Cash", "UPI"], required: true },
     amount: { type: Number, required: true },
     success: { type: Boolean, required: true, default: false },
-    orderId: { type: Schema.Types.ObjectId, ref: "Order", required: true },
-    date: { type: Date, default: Date.now }
+    orderId: { type: Schema.Types.ObjectId, ref: "Order", required: true }
 }, { timestamps: true });
 
 export default mongoose.model<ITransaction>("Transaction", TransactionSchema);
