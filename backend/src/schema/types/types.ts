@@ -52,3 +52,26 @@ export enum Role {
     currentPassword: string
     newPassword: string
   }
+
+
+  // Menu item types 
+
+  export interface AddMenuItemInput {
+    name: string
+    description: string
+    image: string
+    price: number
+    isVeg: boolean
+    categoryId: string
+  }
+  
+  // Input Type for Updating a Menu Item
+  export interface UpdateMenuItemInput {
+    id: string
+    name: string
+    description: string
+    image: string
+    price: number
+    isVeg: boolean
+    categoryId: string
+  }

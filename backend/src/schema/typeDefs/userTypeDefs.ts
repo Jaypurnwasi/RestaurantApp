@@ -52,7 +52,7 @@ type Query {
   
   getAllStaffMembers: [User!]
   getAllCustomers: [User!]
-  getUserById(userId:String): User! 
+  getUserById(userId:ID!): User! 
   
 }
 
@@ -64,7 +64,9 @@ type Mutation {
   removeUser(input: RemoveUserInput!): User!     #done
   deleteAccount: User!                           #done
   updateUser(input: UpdateUserInput!): User!    #done
-  updatePassword(input: UpdatePasswordInput!): Boolean!
+  updatePassword(input: UpdatePasswordInput!): Boolean! #done
+  logout:Boolean!                             #done
+
   
 }
 `

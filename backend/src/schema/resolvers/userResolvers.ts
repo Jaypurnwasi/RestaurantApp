@@ -8,7 +8,7 @@ import logger from "../../utils/logger";
 import { error } from "console";
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
-import { Query } from "mongoose";
+// import { Query } from "mongoose";
 
 dotenv.config()
 
@@ -84,7 +84,48 @@ Query:{
       });
     }
   },
-  
+  async getUserById(_: any, { userId }: { userId: string }, context: MyContext) {
+    try {
+      if (!context.user) {
+        logger.warn("Unauthorized access attempt to getUserById");
+        throw new GraphQLError("Authentication required", {
+          extensions: { code: "UNAUTHENTICATED", status: 401 },
+        });
+      }
+
+      const foundUser = await User.findById(userId);
+
+      if (!foundUser) {
+        logger.warn(`User with ID ${userId} not found`);
+        throw new GraphQLError("User not found", {
+          extensions: { code: "NOT_FOUND", status: 404 },
+        });
+      }
+
+      // If user is Admin, allow fetching any user
+      if (context.user.role === "Admin") {
+        logger.info(`Admin fetched user details for ID: ${userId}`);
+        return foundUser;
+      }
+
+      // Non-admin users can only fetch their own details
+      if (foundUser.id !== context.user.id) {
+        logger.warn(`Unauthorized access: User ${context.user.id} tried to access User ${userId}`);
+        throw new GraphQLError("Permission denied", {
+          extensions: { code: "FORBIDDEN", status: 403 },
+        });
+      }
+
+      logger.info(`User ${context.user.id} fetched their own details`);
+      return foundUser;
+    } catch (error: any) {
+      logger.error(`Error in getUserById: ${error.message}`);
+      throw new GraphQLError(error.message || "Internal Server Error", {
+        extensions: { code: "INTERNAL_SERVER_ERROR", status: 500 },
+      });
+    }
+  },
+ 
 
 },
 
@@ -329,7 +370,7 @@ Query:{
           });
         }     
 
-        logger.info(`User ${user.id} successfully deleted their account`);
+        logger.info(`User ${user.id,user.role} successfully deleted their account`);
         return user;
 
       } catch (error: any) {
@@ -426,6 +467,33 @@ Query:{
         });
       }
     },
+    async logout(_: any, __: any, context: MyContext) {
+      try {
+        if (!context.user) {
+          throw new GraphQLError("User not authenticated", {
+            extensions: { code: "UNAUTHENTICATED", status: 401 },
+          });
+        } 
+    
+        // Clear token from cookies
+        context.res.clearCookie("token", {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+        });
+    
+        logger.info(`User ${context.user.id,context.user.role} logged out successfully`);
+    
+        return true;
+      } catch (error: any) {
+        logger.error(`Logout failed: ${error.message}`);
+        throw new GraphQLError(error.message || "Internal Server Error", {
+          extensions: { code: "INTERNAL_SERVER_ERROR", status: 500 },
+        });
+      }
+    },
+    
+    
     
     
     
