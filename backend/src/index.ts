@@ -12,6 +12,7 @@ import { MyContext } from './schema/types/types';
 import jwt from 'jsonwebtoken';
 import { DecodedUser } from './schema/types/types';
 import dotenv from 'dotenv'
+import User from './models/User';
 
 dotenv.config()
 const resolvers = userResolvers;
@@ -50,8 +51,16 @@ expressMiddleware(server, {
     if (token) {
       try {
         const decode = jwt.verify(token, process.env.KEY as string);
-        if(typeof decode ==='object')
-        user = decode as DecodedUser;
+        if(typeof decode ==='object'){
+          const existingUser = await User.findById(decode.id);
+          if (!existingUser) {
+            console.warn(`Token belongs to a deleted user: ${decode.id}`);
+            res.clearCookie('token')
+            return { req, res, user: null }; // User not found, remove from context
+          }
+
+          user = decode as DecodedUser;
+        }
       } catch (error) {
         console.error("Invalid Token");
       }
