@@ -46,4 +46,8 @@ type Mutation {
   updateMenuItem(input: UpdateMenuItemInput!): MenuItem!
 }
 
+type Subscription {
+    menuItemAdded: MenuItem
+  }
+
 `

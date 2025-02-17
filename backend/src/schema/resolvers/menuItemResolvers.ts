@@ -5,8 +5,10 @@ import { AddMenuItemInput,UpdateMenuItemInput } from "../types/types"
 import Category from "../../models/Category"
 import logger from "../../utils/logger"
 import mongoose from "mongoose"
+import { PubSub } from "graphql-subscriptions"
 
 
+const pubsub = new PubSub()
 
 
 export const menuItemResolvers = {
@@ -101,6 +103,9 @@ export const menuItemResolvers = {
                 isVeg,
                 categoryId ,
               });
+              pubsub.publish("MENU_ITEM_ADDED", { menuItemAdded: newItem });
+
+
       
               return newItem;
 
@@ -110,9 +115,29 @@ export const menuItemResolvers = {
               });
             }
           },
+          
 
         
 
-    }
+    },
+    Subscription: {
+      // Subscription for receiving the newly added menu item
+      menuItemAdded: {
+        subscribe: () => { 
+
+          try {
+            return pubsub.asyncIterableIterator('MENU_ITEM_ADDED');
+
+          } catch (error) {
+
+            console.error('Error in subscription: ', error);
+            throw new Error('Failed to subscribe to MENU_ITEM_ADDED'); // Optional custom error message
+          }
+
+        },
+      
+        
+      },
+    },
 
 }
