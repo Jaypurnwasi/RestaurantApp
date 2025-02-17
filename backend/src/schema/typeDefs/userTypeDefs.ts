@@ -1,4 +1,4 @@
-const userTypeDefs = `#graphql
+export const userTypeDefs = `#graphql
 
 enum Role {
   Admin
@@ -73,4 +73,4 @@ type Mutation {
 
 
 
-export default userTypeDefs
+// export default userTypeDefs

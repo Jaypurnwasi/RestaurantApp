@@ -1,4 +1,4 @@
-const  menuItemTypedefs = `#graphql
+export const  menuItemTypedefs = `#graphql
 # MenuItem Type
 type MenuItem {
   id: ID!
@@ -42,7 +42,7 @@ type Query {
 # Mutations
 type Mutation {
   addMenuItem(input: AddMenuItemInput!): MenuItem!
-  removeMenuItem(id: ID!): Boolean!
+  removeMenuItem(id: ID!): Boolean!       
   updateMenuItem(input: UpdateMenuItemInput!): MenuItem!
 }
 

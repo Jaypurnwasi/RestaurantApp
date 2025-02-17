@@ -5,7 +5,7 @@ import express from 'express';
 import http from 'http'; 
 import cors from 'cors';
 import { userResolvers } from './schema/resolvers/userResolvers';
-import userTypeDefs from './schema/typeDefs/userTypeDefs';
+import {userTypeDefs} from './schema/typeDefs/userTypeDefs';
 import dbConnect from './config/dbConnection';
 import cookieParser from 'cookie-parser'
 import { MyContext } from './schema/types/types';
@@ -14,9 +14,12 @@ import { DecodedUser } from './schema/types/types';
 import dotenv from 'dotenv'
 import User from './models/User';
 
+import { typeDefs } from './schema/index';
+import { resolvers } from './schema/index';
+
 dotenv.config()
-const resolvers = userResolvers;
-const typeDefs = userTypeDefs;
+// const resolvers = userResolvers;
+// const typeDefs = userTypeDefs;
 
 
 const app = express();

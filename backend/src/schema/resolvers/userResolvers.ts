@@ -248,12 +248,12 @@ Query:{
         logger.error(`Login error: ${error.message}`);
         throw new GraphQLError(error.message || "Internal Server Error", {
           extensions: {
-            code: error.extensions?.code || "INTERNAL_SERVER_ERROR",
+            code: error.extensions?.code || "INTERNAL_SERVER_ERROr",
             status: error.extensions?.status || 500,
           },
         });
       }
-    },
+    },  
 
     async signup(_: any, { input }: { input: SignupInput }, { res }: any) {
       try {
@@ -493,19 +493,8 @@ Query:{
       }
     },
     
+
     
-    
-    
-    
-    
-
-
-
-
-
-
-
-
 
   }
 };

@@ -75,3 +75,20 @@ export enum Role {
     isVeg: boolean
     categoryId: string
   }
+
+
+  // Input for Category 
+
+
+export interface AddCategoryInput {
+  name: string;
+}
+
+export interface UpdateCategoryInput {
+  id: string;
+  name: string;
+}
+
+export interface deleteCategoryInput {
+  id:string;
+}
