@@ -7,6 +7,7 @@ export interface IMenuItem extends Document {
     price: number;
     isVeg: boolean;
     categoryId: mongoose.Types.ObjectId;
+    isActive:boolean;
 }
 
 const MenuItemSchema: Schema = new Schema({
@@ -30,7 +31,13 @@ const MenuItemSchema: Schema = new Schema({
          min: [1, "Price must be a positive number"]
         },
     isVeg: { type: Boolean, required: true },
-    categoryId: { type: Schema.Types.ObjectId, ref: "Category", required: true }
+    categoryId: { type: Schema.Types.ObjectId, ref: "Category", required: true },
+
+    isActive:{
+        type:Boolean,
+        required:true,
+        default:true    
+    },
 }, { timestamps: true });
 
 export default mongoose.model<IMenuItem>("MenuItem", MenuItemSchema);

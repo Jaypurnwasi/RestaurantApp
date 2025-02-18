@@ -8,9 +8,15 @@ type MenuItem {
   price: Int!
   isVeg: Boolean!
   categoryId: ID!
+  isActive:Boolean!
 #   createdAt: String!
 #   updatedAt: String!
 }
+type Category {
+  id: ID!
+  name: String!
+}
+
 
 # Input Type for Adding a Menu Item
 input AddMenuItemInput {
@@ -33,21 +39,24 @@ input UpdateMenuItemInput {
   categoryId: ID
 }
 
+
 # Queries
 type Query {
-  getAllMenuItems: [MenuItem!]
-  getMenuItemById(id: ID!): MenuItem
+  getAllMenuItems(isVeg: Boolean): [MenuItem!]!
+  getMenuItemById(id: ID!): MenuItem!
 }
 
 # Mutations
 type Mutation {
   addMenuItem(input: AddMenuItemInput!): MenuItem!
-  removeMenuItem(id: ID!): Boolean!       
+  deleteMenuItem(id: ID!): MenuItem!       
   updateMenuItem(input: UpdateMenuItemInput!): MenuItem!
 }
 
 type Subscription {
     menuItemAdded: MenuItem
+    menuItemDeleted:MenuItem
+    menuItemUpdated:MenuItem
   }
 
 `
