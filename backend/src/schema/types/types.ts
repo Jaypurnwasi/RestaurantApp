@@ -55,6 +55,18 @@ export enum Role {
 
 
   // Menu item types 
+  export interface MenuItem {
+    id: string
+    name: string
+    description: string
+    image: string
+    price: number
+    isVeg: boolean
+    categoryId: string
+    isActive:boolean
+  
+  }
+
 
   export interface AddMenuItemInput {
     name: string
@@ -92,3 +104,30 @@ export interface UpdateCategoryInput {
 export interface deleteCategoryInput {
   id:string;
 }
+
+export interface getMenuItemsByCategoryInput{
+  category:string
+  isveg?:boolean
+}
+
+export interface searchMenuItemsInput{
+  name:string
+  category?:string
+  isVeg?:boolean
+}
+
+
+// # Input Types
+export interface AddToCartInput {
+  menuItemId: string
+  quantity: number
+}
+
+export interface RemoveItemInput {
+  menuItemId: string
+}
+
+export interface DecreaseQuantityInput {
+  menuItemId: string
+}
+

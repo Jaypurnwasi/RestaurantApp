@@ -9,8 +9,7 @@ type MenuItem {
   isVeg: Boolean!
   categoryId: ID!
   isActive:Boolean!
-#   createdAt: String!
-#   updatedAt: String!
+
 }
 type Category {
   id: ID!
@@ -38,12 +37,27 @@ input UpdateMenuItemInput {
   isVeg: Boolean
   categoryId: ID
 }
+input getMenuItemsByCategoryInput{
+  category:ID!
+  isveg:Boolean
+}
+input searchMenuItemsInput{
+  name:String!
+  category:ID
+  isVeg:Boolean
+}
+
+
+
+
 
 
 # Queries
 type Query {
   getAllMenuItems(isVeg: Boolean): [MenuItem!]!
   getMenuItemById(id: ID!): MenuItem!
+  getMenuItemsByCategory(input:getMenuItemsByCategoryInput):[MenuItem!]!
+  searchMenuItems(input:searchMenuItemsInput):[MenuItem!]!
 }
 
 # Mutations
