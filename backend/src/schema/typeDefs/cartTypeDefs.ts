@@ -11,6 +11,10 @@ type MenuItem {
   isActive:Boolean!
 
 }
+type Category {
+  id: ID!
+  name: String!
+}
 
 type CartItem {
   menuItem: MenuItem!  # Populated menu item details

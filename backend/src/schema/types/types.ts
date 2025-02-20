@@ -130,4 +130,26 @@ export interface RemoveItemInput {
 export interface DecreaseQuantityInput {
   menuItemId: string
 }
+export enum OrderStatus {
+  PENDING = "Pending",
+  FAILED = "Failed",
+  COMPLETED = "Completed",
+  PREPARED = "Prepared"
+}
+
+export interface CreateOrderInput {
+  tableId: string
+  amount: number
+  success: boolean
+  
+}
+
+export interface UpdateOrderStatusInput {
+  orderId: string
+  status: OrderStatus
+}
+
+export enum Mode{
+  
+}
 

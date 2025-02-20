@@ -4,8 +4,11 @@ export interface IOrder extends Document {
     tableId: string;
     items: { menuItem: mongoose.Types.ObjectId; quantity: number }[];
     amount: number;
-    status: "Pending" | "Prepared" | "Completed";
+    status: "Pending" | "Prepared" | "Completed"|"Failed";
     customerId : mongoose.Types.ObjectId;
+    createdAt:Date;
+    updatedAt:Date;
+
 }
 
 const OrderSchema: Schema = new Schema({
@@ -15,7 +18,7 @@ const OrderSchema: Schema = new Schema({
         quantity: { type: Number, required: true, min: 1 }
     }],
     amount: { type: Number, required: true },
-    status: { type: String, enum: ["Pending", "Prepared", "Completed"], default: "Pending" },
+    status: { type: String, enum: ["Pending", "Prepared", "Completed","Failed"], default: "Pending" },
     customerId :{ type: Schema.Types.ObjectId, ref: "User", required: true }
 }, { timestamps: true });
 

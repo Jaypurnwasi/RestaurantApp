@@ -11,7 +11,8 @@ export interface IMenuItem extends Document {
 }
 
 const MenuItemSchema: Schema = new Schema({
-    name: { type: String, 
+    name: {
+        type: String, 
         required: true,
         trim: true, 
         minlength: [3, "Name must be between 3 and 50 characters"], 
