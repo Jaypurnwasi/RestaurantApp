@@ -78,7 +78,7 @@ const server = new ApolloServer<MyContext>({
   ],
   formatError: (error) => ({
     message: error.message,
-    code: error.extensions?.code || "INTERNAL_SERVER_ERROR",
+    code: error.extensions?.code || "INTERNAL_SERVER_ERRO",
     status: error.extensions?.status || 500,
   }),
 });
@@ -86,7 +86,7 @@ const server = new ApolloServer<MyContext>({
 const startServer = async () => {
   await server.start();
 
-  app.use(cors({ credentials: true, origin: "*" }));
+  app.use(cors({ credentials: true, origin: 'http://localhost:4200' }));
   app.use(cookieParser());
 
   app.use(

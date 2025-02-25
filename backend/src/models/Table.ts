@@ -17,3 +17,4 @@ const TableSchema: Schema = new Schema({
 
 export default mongoose.model<ITable>("Table", TableSchema);
 
+    

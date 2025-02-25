@@ -227,15 +227,14 @@ Query:{
 
         // Generate JWT token
         const token = jwt.sign(
-          { id: user.id, role: user.role },
+          { id: user.id, role: user.role,name:user.name,email:user.email },
           process.env.KEY as string,
           { expiresIn: "7d" }
         );
 
         // Set token in HTTP-only cookie
-        res.cookie("token", token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
+        res.cookie("token", token, {    // httponly true removed 
+          secure: process.env.NODE_ENV === "production"?true:false,  // ? updated
           sameSite: "strict",
           maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
