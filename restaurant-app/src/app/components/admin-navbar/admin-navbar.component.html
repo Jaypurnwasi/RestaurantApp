@@ -1,0 +1,14 @@
+<nav class="navbar">
+    <!-- Logo -->
+    <div class="logo">
+      <img src="assets/logo.png" alt="App Logo">
+    </div>
+  
+    <!-- User Profile & Logout -->
+    <div class="user-actions">
+      <img  [src]="user?.profileImg" alt="" class="profile-pic">
+
+      <button class="logout-btn" (click)="logout()">Logout</button>
+    </div>
+  </nav>
+  
