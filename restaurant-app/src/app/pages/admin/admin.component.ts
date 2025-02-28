@@ -3,9 +3,11 @@ import { Router } from '@angular/router';
 import { User } from '../../interfaces/user';
 import { AuthService } from '../../services/auth.service';
 import { AdminNavbarComponent } from "../../components/admin-navbar/admin-navbar.component";
+import { RouterOutlet } from '@angular/router';
+import { AdminSidebarComponent } from "../../components/admin-sidebar/admin-sidebar.component";
 @Component({
   selector: 'app-admin',
-  imports: [AdminNavbarComponent],
+  imports: [AdminNavbarComponent, RouterOutlet, AdminSidebarComponent],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css'
 })

@@ -2,9 +2,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #384a68;
+    background-color: #E6DCD3;
     padding: 10px 20px;
-    color: white;
+    color: black;
+    /* border-radius: 10px; */
+    /* box-shadow: 1px 1px 1px grey; */
   }
   
   .logo img {
@@ -33,9 +35,14 @@
     cursor: pointer;
     border-radius: 5px;
     transition: background 0.3s;
+    margin-right: 30px;
   }
   
   .logout-btn:hover {
     background-color: #dc2626;
   }
   
+  .dashboard{
+    color:#B27369;
+    font-size: 1.7rem;
+  }

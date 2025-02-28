@@ -1,4 +1,13 @@
-<app-admin-navbar></app-admin-navbar>
-<div class="admin-content">
-    <h4>Welcome, {{ user?.name }}</h4>
+<div class="admin-dashboard">
+    <app-admin-navbar class="admin-navbar"></app-admin-navbar>
+  <div class="admin-content">
+      <app-admin-sidebar class="admin-sidebar">
+      </app-admin-sidebar>  
+    <div class="content">
+        <router-outlet></router-outlet>
+    </div>
+  </div>
+
+
+    
   </div>
