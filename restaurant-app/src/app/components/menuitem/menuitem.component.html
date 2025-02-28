@@ -1,0 +1,77 @@
+<!-- src/app/components/admin/menu-items/menu-items.component.html -->
+<div class="menu-items-container">
+  <div *ngIf="showForm" class="form-overlay">
+    <div *ngIf="showForm" class="form-container">
+      <form [formGroup]="addMenuItemForm" (ngSubmit)="addMenuItem()">
+        <button class="close-button" (click)="toggleForm()">X</button>
+        <label>Name:</label>
+        <input formControlName="name" type="text" />
+    
+        <label>Description:</label>
+        <textarea formControlName="description"></textarea>
+    
+        <label>Price:</label>
+        <input formControlName="price" type="number" />
+    
+        <label>Category:</label>
+        <select formControlName="categoryId">
+          <option *ngFor="let category of categories" [value]="category.id">
+            {{ category.name }}
+          </option>
+        </select>
+
+        <div class="checkbox-container">
+          <label>Veg:</label>
+        <input type="checkbox" formControlName="isVeg" class="checkbox" />
+
+        </div>    
+    
+        <label>Image:</label>
+        <input type="file" (change)="onImageUpload($event)" />
+        
+        <button type="submit" [disabled]="addMenuItemForm.invalid">Submit</button>
+      </form>
+    </div>
+  </div>
+
+    <div class="menu-item-header">
+        <h3>All Menu Items</h3>
+        <input type="text" class="search-input" placeholder="Search items" (input)="onSearch($event)"/>
+        <button class="add-button" (click)="toggleForm()">Add item</button>
+    </div>
+   
+    <div class="cards-grid" *ngIf="!loading; else loadingTemplate">
+      <div class="menu-card" *ngFor="let item of menuItems$|async">
+
+        <img [src]="'./assets/images/' + item.image" [alt]="item.name" class="menu-image" />
+        <div class="menu-content">
+            <div class="item-name-delete">
+                <h4 class="menu-name">{{ item.name }}</h4>
+            <span class="material-symbols-outlined delete-icon" (click)="onDelete(item.id,item.name)">
+            delete 
+            </span>
+
+            </div>
+          
+          <p class="menu-description">{{ item.description }}</p>
+          <div class="menu-details">
+            <span class="menu-price">{{ item.price | currency }}</span>
+            <span class="menu-veg" [ngClass]="{'veg': item.isVeg, 'non-veg': !item.isVeg}">
+              {{ item.isVeg ? 'Veg' : 'Non-Veg' }}
+            </span>
+            <!-- <span class="menu-category">Category: {{ item.categoryId }}</span> -->
+            <span class="menu-status" [ngClass]="{'active': item.isActive, 'inactive': !item.isActive}">
+              {{ item.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="no-items" *ngIf="(menuItems$ | async)?.length === 0">
+        No menu items found.
+      </div>
+    </div>
+  
+    <ng-template #loadingTemplate>
+      <div class="loading">Loading menu items...</div>
+    </ng-template>
+  </div>
