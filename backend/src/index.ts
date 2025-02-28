@@ -35,29 +35,7 @@ const wsServer = new WebSocketServer({
 
 // Set up GraphQL WebSocket server
 const wsServerCleanup = useServer(
-  {
-    schema,
-    context: async (ctx:any) => {
-      // Extract user from connectionParams in WebSocket requests
-      let user: DecodedUser | null = null;
-      const token = ctx.connectionParams?.token;
-
-      if (token) {
-        try {
-          const decoded = jwt.verify(token, process.env.KEY as string);
-          if (typeof decoded === "object") {
-            const existingUser = await User.findById(decoded.id);
-            if (!existingUser) return { user: null };
-            user = decoded as DecodedUser;
-          }
-        } catch (error) {
-          console.error("Invalid WebSocket Token");
-        }
-      }
-
-      return { user };
-    },
-  },
+  { schema,},
   wsServer
 );
 
@@ -78,7 +56,7 @@ const server = new ApolloServer<MyContext>({
   ],
   formatError: (error) => ({
     message: error.message,
-    code: error.extensions?.code || "INTERNAL_SERVER_ERRO",
+    code: error.extensions?.code || "INTERNAL_SERVER_ERROR",
     status: error.extensions?.status || 500,
   }),
 });
@@ -122,7 +100,7 @@ const startServer = async () => {
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: 4000 }, resolve)
   );
-  console.log(`🚀 Server ready at http://localhost:4000/`);
+  console.log(` Server ready at http://localhost:4000/`);
 };
 
 startServer();

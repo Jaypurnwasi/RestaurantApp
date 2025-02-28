@@ -20,11 +20,18 @@
           </option>
         </select>
 
-        <div class="checkbox-container">
-          <label>Veg:</label>
-        <input type="checkbox" formControlName="isVeg" class="checkbox" />
-
-        </div>    
+        <div class="form-field">
+          <label class="form-label">Veg:</label>
+          <div class="checkbox-wrapper">
+            <input 
+              type="checkbox" 
+              id="isVegCheckbox" 
+              formControlName="isVeg" 
+              class="checkbox" 
+            />
+            <label for="isVegCheckbox" class="checkbox-visual"></label>
+          </div>
+        </div>
     
         <label>Image:</label>
         <input type="file" (change)="onImageUpload($event)" />
@@ -36,6 +43,26 @@
 
     <div class="menu-item-header">
         <h3>All Menu Items</h3>
+
+        <div class="veg-toggle-wrapper">
+          <label class="veg-toggle-label">Filter:</label>
+          <div class="veg-toggle">
+            <input 
+              type="checkbox" 
+              id="veg-toggle" 
+              (change)="onVegToggle($event)" 
+              [checked]="isVegFilter" 
+              hidden 
+            />
+            <label for="veg-toggle" class="toggle-slider">
+              <span class="toggle-text veg">Veg</span>
+              <span class="toggle-text all">All</span>
+              <span class="slider-ball"></span>
+            </label>
+          </div>
+        </div>
+
+
         <input type="text" class="search-input" placeholder="Search items" (input)="onSearch($event)"/>
         <button class="add-button" (click)="toggleForm()">Add item</button>
     </div>
@@ -55,6 +82,7 @@
           
           <p class="menu-description">{{ item.description }}</p>
           <div class="menu-details">
+           <div class="menu-details-values">
             <span class="menu-price">{{ item.price | currency }}</span>
             <span class="menu-veg" [ngClass]="{'veg': item.isVeg, 'non-veg': !item.isVeg}">
               {{ item.isVeg ? 'Veg' : 'Non-Veg' }}
@@ -63,6 +91,8 @@
             <span class="menu-status" [ngClass]="{'active': item.isActive, 'inactive': !item.isActive}">
               {{ item.isActive ? 'Active' : 'Inactive' }}
             </span>
+           </div>
+            <button class="edit-menu-button" (click)="onEdit(item)">Edit</button>
           </div>
         </div>
       </div>

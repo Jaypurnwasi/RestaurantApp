@@ -17,22 +17,23 @@ export class MenuService {
 
   constructor(private apollo: Apollo) {}
 
-  async fetchMenuItems(): Promise<void> {
+  async fetchMenuItems(isVeg?:boolean): Promise<void> {
     const query = {
       query: `
-        query {
-          getAllMenuItems {
-            id
-            name
-            description
-            image
-            price
-            isVeg
-            categoryId
-            isActive
-          }
+        query getAllMenuItems($isVeg: Boolean) {
+        getAllMenuItems(isVeg: $isVeg) {
+          id
+          name
+          description
+          image
+          price
+          isVeg
+          categoryId
+          isActive
         }
+      }
       `,
+      variables: {isVeg },
     }
     try {
       const response = await fetch(this.apiUrl, {
@@ -58,7 +59,7 @@ export class MenuService {
     }
   }
 
-  async addMenuItem(item: Omit<Menuitem, 'id'>) {
+  async addMenuItem(item: Partial<Menuitem>) {
 
     const ADD_MENU_ITEM = gql`
       mutation ($input: AddMenuItemInput!) {
@@ -77,6 +78,68 @@ export class MenuService {
       }
     });
   }
+
+  async updateMenuItem(updatedItem: Partial<Menuitem>): Promise<void> {
+    const mutation = {
+      query: `
+        mutation updateMenuItem($input: UpdateMenuItemInput!) {
+        updateMenuItem( input: $input) {
+          id
+          name
+          description
+          price
+          isVeg
+          categoryId
+          image
+        }
+      }
+      `,
+      variables: {
+        input: {
+          id: updatedItem.id,
+          name: updatedItem.name,
+          description: updatedItem.description,
+          price: updatedItem.price,
+          isVeg: updatedItem.isVeg,
+          categoryId: updatedItem.categoryId,
+          image: updatedItem.image
+        }
+      },
+    };
+  
+    try {
+      const response = await fetch(this.apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(mutation),
+        credentials: 'include',
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      // this.fetchMenuItems(); // Refresh UI
+      const result = await response.json();
+      const updatedMenuItem: Menuitem = result.data.updateMenuItem;
+
+      // Update the local menuItemsSubject without refetching
+      const currentItems = this.menuItemsSubject.value;
+      const updatedItems = currentItems.map((item) =>
+        item.id === updatedMenuItem.id ? { ...item, ...updatedMenuItem } : item
+      );
+      this.menuItemsSubject.next(updatedItems);
+
+      console.log('Menu item updated successfully:', updatedMenuItem);
+    } catch (error) {
+      console.error('Error updating menu item:', error);
+    }
+  }
+
+
+
+
+
   async deleteMenuItem(itemId: string): Promise<void> {
     const mutation = {
       query: `
@@ -122,7 +185,7 @@ export class MenuService {
     }
   }
 
-  searchMenuItems(name: string): Observable<any[]> {
+  searchMenuItems(name: string,isVeg?: boolean): Observable<any[]> {
     return this.apollo.watchQuery<{ searchMenuItems: Menuitem[] }>({
       query: gql`
         query searchMenuItems($input: searchMenuItemsInput!) {
@@ -139,7 +202,7 @@ export class MenuService {
         }
       `,
       variables: {
-        input: {name}
+        input: {name,isVeg}
       },
     })
     .valueChanges

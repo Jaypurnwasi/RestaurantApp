@@ -112,8 +112,9 @@ export interface getMenuItemsByCategoryInput{
 
 export interface searchMenuItemsInput{
   name:string
-  category?:string
   isVeg?:boolean
+  category?:string
+  
 }
 
 

@@ -15,15 +15,17 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class MenuitemComponent {
   menuItems$ = new BehaviorSubject<Menuitem[]>([]);
+  isVegFilter: boolean | undefined = undefined; // `true` for Veg, `false` for Non-Veg, `undefined` for all
    categories: Category[] = [];
   loading = true;
   showForm = false;
+  editingItemId:string|null = null;
   baseUrl = './assets/images/';
 
   addMenuItemForm = new FormGroup({
     name: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required),
-    price: new FormControl('', [Validators.required, Validators.min(1)]),
+    price: new FormControl(1, [Validators.required, Validators.min(1)]),
     isVeg: new FormControl(false),
     categoryId: new FormControl('', Validators.required),
     image: new FormControl('') ,// Only stores image name
@@ -43,13 +45,21 @@ export class MenuitemComponent {
         console.log('Categories:', this.categories); // Debugging
       });
       
-      console.log('menu items in menuItemComponents is',this.menuItems$)
+      console.log('menu items in menuItemComponents is',this.menuItems$.value)
       console.log('categories fetched in menu item component', this.categories)
     });
   }
   fetchMenuItems() {
+    this.menuService.fetchMenuItems(this.isVegFilter)
     this.menuService.menuItems$.subscribe((items:Menuitem[]) => {
       this.menuItems$.next(items)})
+  }
+
+  onVegToggle(event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+    this.isVegFilter = checked ? true : undefined; // `true` for Veg, `undefined` for all
+    this.fetchMenuItems();
+    console.log('veg toggle clicked',this.isVegFilter)
   }
 
   onSearch(event: Event) {
@@ -60,7 +70,7 @@ export class MenuitemComponent {
       this.fetchMenuItems();
     } else {
       // Otherwise, perform a search
-      this.menuService.searchMenuItems(searchValue).subscribe(items => {
+      this.menuService.searchMenuItems(searchValue,this.isVegFilter).subscribe(items => {
         this.menuItems$.next(items);
       });
     }
@@ -69,6 +79,7 @@ export class MenuitemComponent {
 
   toggleForm() {
     this.showForm = !this.showForm;
+    this.editingItemId = null; // Reset after editing
     if (!this.showForm) {
       this.addMenuItemForm.reset(); // Reset form when closing
     }
@@ -79,25 +90,63 @@ export class MenuitemComponent {
     this.addMenuItemForm.patchValue({ image: file ? file.name : '' });
   }
 
+  // async addMenuItem() {
+  //   if (this.addMenuItemForm.valid) {
+  //     const formData = this.addMenuItemForm.value;
+
+  //     const newItem: Omit<Menuitem, "id"> = {
+  //       name: formData.name ?? '', // Default to empty string
+  //       description: formData.description ?? '',
+  //       image: formData.image ?? '', // Ensure image is always a string
+  //       price: Number(formData.price) || 0, // Convert to number, default to 0
+  //       isVeg: formData.isVeg ?? false, // Default to false
+  //       categoryId: formData.categoryId ?? '' // Default to empty string
+  //     };     
+  //     await this.menuService.addMenuItem(newItem);
+
+  //     this.showForm = false;
+  //     this.addMenuItemForm.reset();
+  //   }
+  // }
+
   async addMenuItem() {
     if (this.addMenuItemForm.valid) {
       const formData = this.addMenuItemForm.value;
-
-      const newItem: Omit<Menuitem, "id"> = {
-        name: formData.name ?? '', // Default to empty string
+      const updatedItem: Partial<Menuitem> = {
+        id: this.editingItemId || undefined, // If editing, include the ID
+        name: formData.name ?? '',
         description: formData.description ?? '',
-        image: formData.image ?? '', // Ensure image is always a string
-        price: Number(formData.price) || 0, // Convert to number, default to 0
-        isVeg: formData.isVeg ?? false, // Default to false
-        categoryId: formData.categoryId ?? '' // Default to empty string
-      };     
-      await this.menuService.addMenuItem(newItem);
-
+        image: formData.image ?? '',
+        price: Number(formData.price) || 0,
+        isVeg: formData.isVeg ?? false,
+        categoryId: formData.categoryId ?? '',
+      };
+  
+      if (this.editingItemId) {
+        console.log('update item function called')
+        await this.menuService.updateMenuItem(updatedItem);
+      } else {
+        await this.menuService.addMenuItem(updatedItem);
+      }
+  
       this.showForm = false;
       this.addMenuItemForm.reset();
+      this.editingItemId = null; // Reset after editing
     }
   }
-
+  onEdit(item: Menuitem) {
+    this.showForm = true;
+    this.addMenuItemForm.patchValue({
+      name: item.name,
+      description: item.description,
+      price: item.price,
+      isVeg: item.isVeg,
+      categoryId: item.categoryId,
+      image: item.image, 
+    });
+    this.editingItemId = item.id; // Store the ID of the item being edited
+    console.log('currently editing item ',item.name)
+  }
   
   
   async onDelete(itemId: string,name:string) {

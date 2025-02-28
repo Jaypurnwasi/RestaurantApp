@@ -8,11 +8,9 @@ import mongoose from "mongoose"
 import { PubSub } from "graphql-subscriptions"
 import { subscribe } from "diagnostics_channel"
 import { log } from "console"
-
+import { capitalizeWords } from "../../utils/helper"
 
 const pubsub = new PubSub()
-
-
 
 export const menuItemResolvers = {
 
@@ -39,6 +37,7 @@ export const menuItemResolvers = {
           }
   
           // **Filters**: Customers can only see active menu items
+          
           const filters: any = { isActive: true };
   
           // Apply vegetarian filter if provided
@@ -256,10 +255,6 @@ export const menuItemResolvers = {
         }
       },
 
-
-
-        
-
     },
 
     Mutation:{
@@ -283,8 +278,9 @@ export const menuItemResolvers = {
               const { name, description, image, price, isVeg, categoryId } = input; 
       
               // **Trim Values to Avoid Unnecessary Spaces**
-              const trimmedName = name.trim();
+              const trimmedName = capitalizeWords(name).trim();
               const trimmedDescription = description.trim();
+              // name = capitalizeWords(name)
       
              
       

@@ -22,14 +22,7 @@ export const cartResolvers = {
                 throw new GraphQLError("Authentication required", {
                   extensions: { code: "UNAUTHORIZED" },
                 });
-              }
-          
-            //   if (!context.user.id ) {
-            //     throw new GraphQLError("Access denied", {
-            //       extensions: { code: "FORBIDDEN" },
-            //     });
-            //   }
-          
+              }        
               // Fetch the user's cart and populate menuItemId
               let cart : PopulatedCart|null  = await Cart.findOne({ userId:context.user.id  }).populate({
                 path: "items.menuItemId",
@@ -39,12 +32,11 @@ export const cartResolvers = {
               if (!cart) {
                 return null; // Return null if the cart doesn't exist
               }
-            //   console.log({...cart.items})
           
               // Map data to match the GraphQL type definition
               const formattedCart  = {
                 id: cart._id,
-                userId: cart.userId,
+                userId: cart.userId ,
                 items: cart.items.map((item) => ({
                   menuItem: {
                     id: item.menuItemId._id,
@@ -61,12 +53,11 @@ export const cartResolvers = {
               };
           
               logger.info(`Fetched cart for user ${context.user.id}`);
-
               return formattedCart;
             } catch (error:any) {
               logger.error(`Error in getAllCartItems: ${error.message}`);
               throw new GraphQLError(error.message, {
-                extensions: { code: "INTERNAL_SERVER_ERROR" },
+                extensions: { code: "INTERNAL_SERVER_ERROR" ,status:500},
               });
             }
           },
@@ -99,8 +90,7 @@ export const cartResolvers = {
                 throw new GraphQLError("Quantity must be at least 1", {
                   extensions: { code: "BAD_REQUEST",status:400 },
                 });
-              }
-          
+              }        
               // Check if menu item exists
               const menuItem = await MenuItem.findById(menuItemId);
               if (!menuItem) {
@@ -117,14 +107,12 @@ export const cartResolvers = {
               }
           
               // Fetch the user's cart
-              let cart = await Cart.findOne({ userId });
-          
+              let cart = await Cart.findOne({ userId });         
               if (!cart) {
                  // Create a new cart if none exists
                 cart = new Cart({ userId, items: [] });
               }
-          
-              // Check if the item already exists in the cart
+                 // Check if the item already exists in the cart
               const existingItemIndex = cart.items.findIndex((item) => item.menuItemId.equals(menuItemId));
           
               if (existingItemIndex > -1) {
@@ -138,8 +126,7 @@ export const cartResolvers = {
               // Save the updated cart
               await cart.save();
           
-              logger.info(`User ${userId} added menu item ${menuItemId} to the cart`);
-          
+              logger.info(`User ${userId} added menu item ${menuItemId} to the cart`);   
               return {
                 menuItemId,
                 quantity: cart.items.find((item) => item.menuItemId.equals(menuItemId))?.quantity || quantity,
@@ -177,7 +164,7 @@ export const cartResolvers = {
                   extensions: { code: "BAD_USER_INPUT" },
                 });
               }
-          
+
               // Find cart for the user
               const cart = await Cart.findOne({ userId });
           
@@ -199,11 +186,8 @@ export const cartResolvers = {
               // Remove the item from the cart
               const removedItem = cart.items[itemIndex]; // Store item details for response
               cart.items.splice(itemIndex, 1);
-          
-            
-                await cart.save(); // Save updated cart
               
-          
+              await cart.save(); // Save updated cart
               logger.info(`Item ${menuItemId} removed from cart for user ${userId}`);
               
               // Return removed item details
@@ -214,13 +198,12 @@ export const cartResolvers = {
             } catch (error:any) {
               logger.error(`Error in removeItemFromCart: ${error.message}`);
               throw new GraphQLError(error.message, {
-                extensions: { code: "INTERNAL_SERVER_ERROR" },
+                extensions: { code: "INTERNAL_SERVER_ERROR",status:500 },
               });
             }
           },
           async decreaseItemQuantity(_: any, { input }: { input: DecreaseQuantityInput}, context: any)
           {
-
             try {
                 // Authentication Check
                 if (!context.user) {
@@ -253,8 +236,7 @@ export const cartResolvers = {
                   throw new GraphQLError("Cart not found", {
                     extensions: { code: "NOT_FOUND" },
                   });
-                }
-            
+                }           
                 // Find index of the menu item in the cart
                 const itemIndex = cart.items.findIndex((item) => item.menuItemId.toString() === menuItemId);
             
@@ -291,15 +273,14 @@ export const cartResolvers = {
               } catch (error:any) {
                 logger.error(`Error in decreaseItemQuantity: ${error.message}`);
                 throw new GraphQLError(error.message, {
-                  extensions: { code: "INTERNAL_SERVER_ERROR" },
+                  extensions: { code: "INTERNAL_SERVER_ERROR" ,status:500},
                 });
               }
           },
 
           async clearCart(_:any,__:any,context:MyContext){
             try {
-                // Authentication Check
-                
+                // Authentication Check                
                 if (!context.user) {
                   throw new GraphQLError("Authentication required", {
                     extensions: { code: "UNAUTHORIZED" },
@@ -310,8 +291,7 @@ export const cartResolvers = {
                   throw new GraphQLError("Invalid userId format", {
                     extensions: { code: "BAD_USER_INPUT" },
                   });
-                }
-            
+                }            
                 // Check if cart exists
                 const cart = await Cart.findOne({ userId:context.user.id});
             
@@ -329,13 +309,9 @@ export const cartResolvers = {
               } catch (error:any) {
                 logger.error(`Error in clearCart: ${error.message}`);
                 throw new GraphQLError(error.message, {
-                  extensions: { code: "INTERNAL_SERVER_ERROR" },
+                  extensions: { code: "INTERNAL_SERVER_ERROR",status:500 },
                 });
               }
-          },
-
-
-          
-
+          },         
     }
 }
