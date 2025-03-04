@@ -1,7 +1,7 @@
-<!-- src/app/components/admin/menu-items/menu-items.component.html -->
+<!-- src/app/components/admin/menu-items/menuitems.component.html -->
 <div class="menu-items-container">
-  <div *ngIf="showForm" class="form-overlay">
-    <div *ngIf="showForm" class="form-container">
+  <div *ngIf="showForm && isAdmin()" class="form-overlay" >
+    <div *ngIf="showForm" class="form-container" >
       <form [formGroup]="addMenuItemForm" (ngSubmit)="addMenuItem()">
         <button class="close-button" (click)="toggleForm()">X</button>
         <label>Name:</label>
@@ -64,7 +64,7 @@
 
 
         <input type="text" class="search-input" placeholder="Search items" (input)="onSearch($event)"/>
-        <button class="add-button" (click)="toggleForm()">Add item</button>
+        <button class="add-button" (click)="toggleForm()" *ngIf="user?.role==='Admin'">Add item</button>
     </div>
    
     <div class="cards-grid" *ngIf="!loading; else loadingTemplate">
@@ -74,7 +74,7 @@
         <div class="menu-content">
             <div class="item-name-delete">
                 <h4 class="menu-name">{{ item.name }}</h4>
-            <span class="material-symbols-outlined delete-icon" (click)="onDelete(item.id,item.name)">
+            <span class="material-symbols-outlined delete-icon" (click)="onDelete(item.id,item.name)" *ngIf="isAdmin()">
             delete 
             </span>
             </div>
@@ -82,16 +82,16 @@
           <p class="menu-description">{{ item.description }}</p>
           <div class="menu-details">
            <div class="menu-details-values">
-            <span class="menu-price">{{ item.price | currency }}</span>
+            <span class="menu-price">{{ item.price |currency:'INR':'symbol'}}</span>
             <span class="menu-veg" [ngClass]="{'veg': item.isVeg, 'non-veg': !item.isVeg}">
               {{ item.isVeg ? 'Veg' : 'Non-Veg' }}
             </span>
             <!-- <span class="menu-category">Category: {{ item.categoryId }}</span> -->
-            <span class="menu-status" [ngClass]="{'active': item.isActive, 'inactive': !item.isActive}">
+            <span class="menu-status" [ngClass]="{'active': item.isActive, 'inactive': !item.isActive}" *ngIf=" isAdmin()">
               {{ item.isActive ? 'Active' : 'Inactive' }}
             </span>
            </div>
-            <button class="edit-menu-button" (click)="onEdit(item)">Edit</button>
+            <button class="edit-menu-button" (click)="onEdit(item)" *ngIf=" isAdmin()">Edit</button>
           </div>
         </div>
       </div>

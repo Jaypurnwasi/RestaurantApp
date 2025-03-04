@@ -13,7 +13,7 @@ export class UserService {
 
   constructor(private apollo: Apollo) {
     // this.fetchUsers(); // Initial fetch on service instantiation
-    this.fetchStaffMembers(); // Default to Staff Members
+    // this.fetchStaffMembers(); // Default to Staff Members
   }
 
   

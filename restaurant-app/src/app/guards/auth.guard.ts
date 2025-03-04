@@ -19,9 +19,16 @@ export class AuthGuard implements CanActivate {
     }
 
     // Check if the user has the required role (e.g., Admin for /admin routes)
-    const requiredRole = route.data['role'] as string; // Expect role to be passed via route data
-    if (requiredRole && currentUser.role !== requiredRole) {
-      console.log(`User role ${currentUser.role} does not match required role ${requiredRole}`);
+    const requiredRole = route.data['role']; // Could be string or string array
+    if (!requiredRole) {
+      return true; // No role restriction, allow access
+    }
+
+    // Handle single role or array of roles
+    const allowedRoles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
+
+    if (!allowedRoles.includes(currentUser.role)) {
+      console.log(`User role ${currentUser.role} not in allowed roles ${allowedRoles.join(', ')}`);
       this.router.navigate(['/login']); // Or redirect to an unauthorized page
       return false;
     }

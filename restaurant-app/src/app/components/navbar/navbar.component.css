@@ -1,0 +1,78 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #E6DCD3; /* Same as admin navbar */
+    padding: 10px 20px;
+    color: black;
+  }
+  
+  .logo img {
+    height: 40px; /* Same as admin navbar */
+  }
+  
+  /* Navbar Options */
+  .nav-options {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .nav-options a {
+    color:#B27369;
+    text-decoration: none;
+    font-size: 1.4rem;
+    padding: 8px 12px;
+    transition: background 0.3s, color 0.3s;
+  }
+  
+  .nav-options a:hover {
+    border-bottom: 2px solid #B27369;
+    /* background-color: #f5f0ec;  */
+    /* color: #B27369;  */
+  }
+  
+  .nav-options a.active {
+    border-bottom: 2px solid #B27369;
+  } 
+  
+  /* User Actions */
+  .user-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Same as admin navbar */
+  }
+  
+  .profile-pic {
+    width: 40px; /* Same as admin navbar */
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white; /* Same as admin navbar */
+  }
+  
+  .profile-pic-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: #666;
+  }
+  
+  .logout-btn {
+    background-color: #ef4444; /* Same as admin navbar */
+    color: white;
+    border: none;
+    padding: 8px 12px; /* Same as admin navbar */
+    cursor: pointer;
+    border-radius: 5px; /* Same as admin navbar */
+    transition: background 0.3s; /* Same as admin navbar */
+    margin-right: 30px; /* Same as admin navbar */
+  }
+  
+  .logout-btn:hover {
+    background-color: #dc2626; /* Same as admin navbar */
+  }

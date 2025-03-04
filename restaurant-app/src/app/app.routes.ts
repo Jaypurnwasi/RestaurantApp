@@ -6,6 +6,9 @@ import { CategoriesComponent } from './components/categories/categories.componen
 import { OrdersComponent } from './components/orders/orders.component';
 import { UsersComponent } from './components/users/users.component';
 import { AuthGuard } from './guards/auth.guard';
+import { StaffComponent } from './components/staff/staff.component';
+import { HomeComponent } from './pages/home/home.component';
+import { CartComponent } from './components/cart/cart.component';
 export const routes: Routes = [
   { path: 'login',
      component: LoginComponent ,
@@ -26,7 +29,26 @@ export const routes: Routes = [
     ],
     
   },
-  // { path: '**', redirectTo: '/login' }, // Wildcard route for unmatched paths
+  {
+    path:'staff',
+    component:StaffComponent,
+    canActivate: [AuthGuard], // Apply Auth Guard
+    data: { role: ['KitchenStaff','Waiter'] },
+  },
+  {
+    path:'',
+    component:HomeComponent,
+    canActivate: [AuthGuard],
+    data: { role: ['Customer','Admin'] },
+    children: [
+      { path: 'menu', component: MenuitemComponent }, // Menu page
+      { path: 'cart', component: CartComponent }, // Cart page
+      { path: 'orders', component: OrdersComponent }, // Customer orders
+      { path: '', redirectTo: 'home', pathMatch: 'full' }, // Default to home
+    ],
+
+  }
+
 ];
 
 

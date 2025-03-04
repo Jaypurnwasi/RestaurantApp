@@ -40,11 +40,15 @@
             <td>{{ order.amount | currency }}</td>
             <td>
               <select 
-                [value]="order.status" >
-                <option value="Pending">Pending</option>
-                <option value="Prepared">Prepared</option>
-                <option value="Completed">Completed</option>
-                <option value="Failed">Failed</option>
+                [value]="order.status" 
+                (change)="updateStatus(order.id, $event)" >
+                <option 
+                *ngFor="let status of getValidStatuses(order.status)" 
+                [value]="status"
+                [disabled]="status !== order.status && !validStatusTransitions[order.status].includes(status)"
+              >
+                {{ status }}
+              </option>
               </select>
             </td>
             <td>{{ order.customerId || 'N/A' }}</td>

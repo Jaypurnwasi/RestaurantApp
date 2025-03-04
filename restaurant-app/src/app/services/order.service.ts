@@ -66,9 +66,41 @@ export class OrderService {
       });
   }
 
+  async updateOrderStatus(orderId: string, status: 'Pending' | 'Prepared' | 'Completed' | 'Failed'): Promise<void> {
+    const mutation = gql`
+      mutation UpdateOrderStatus($input: UpdateOrderStatusInput!) {
+        updateOrderStatus(input: $input) {
+          orderId
+          updatedStatus
+          success
+        }
+      }
+    `;
+
+    const result = await firstValueFrom(
+      this.apollo.mutate<{ updateOrderStatus: { orderId: string; updatedStatus: string; success: boolean } }>({
+        mutation,
+        variables: { input: { orderId, status } },
+      })
+    );
+
+    if (!result.data || !result.data.updateOrderStatus.success) {
+      throw new Error('Failed to update order status');
+    }
+
+    const updatedOrderId = result.data.updateOrderStatus.orderId;
+    const updatedStatus = result.data.updateOrderStatus.updatedStatus;
+    const updatedOrders = this.ordersSubject.value.map(order =>
+      order.id === updatedOrderId ? { ...order, status: updatedStatus as 'Pending' | 'Prepared' | 'Completed' | 'Failed' } : order
+    );
+    console.log('Updated orders:', updatedOrders); // ADDED: Debug update
+    this.ordersSubject.next(updatedOrders);
+  }
+
   getOrders(): Observable<Order[]> {
     return this.orders$;
   }
+
 
   refreshOrders(filterType: 'Live' | 'Previous'): void {
     this.fetchOrders(filterType, 'network-only');

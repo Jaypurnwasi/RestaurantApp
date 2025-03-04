@@ -46,7 +46,6 @@ export class AuthService {
 
   }
 
-
   async login(email: string, password: string): Promise<any> {
     const query = {
       query: `
@@ -55,7 +54,7 @@ export class AuthService {
             email
             id
             name
-            profileImage
+            profileImg
             role
           }
         }

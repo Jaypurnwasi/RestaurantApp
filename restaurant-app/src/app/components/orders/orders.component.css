@@ -140,6 +140,10 @@
     background-color: #fff;
     cursor: pointer;
   }
+
+  .orders-table select option[disabled] {
+    color: #999; /* Gray out disabled options */
+  }
   
   .no-items {
     text-align: center;

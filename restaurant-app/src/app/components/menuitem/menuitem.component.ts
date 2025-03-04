@@ -7,6 +7,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Category } from '../../interfaces/category';
 import { CategoryService } from '../../services/category.service';
 import { BehaviorSubject } from 'rxjs';
+import { User } from '../../interfaces/user';
+import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-menuitem',
   imports: [CommonModule,ReactiveFormsModule],
@@ -21,6 +23,8 @@ export class MenuitemComponent {
   showForm = false;
   editingItemId:string|null = null;
   baseUrl = './assets/images/';
+  user: User | null = null;
+  
 
   addMenuItemForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -32,7 +36,11 @@ export class MenuitemComponent {
     
   });
 
-  constructor(public menuService: MenuService,private categoryService:CategoryService) {}
+  constructor(public menuService: MenuService,private categoryService:CategoryService,private authService: AuthService) {
+    this.authService.currentUser$.subscribe(user => {
+      this.user = user;
+    });
+  }
 
   ngOnInit(): void {  
     this.menuService.menuItems$.subscribe((items:Menuitem[]) => {
@@ -49,6 +57,11 @@ export class MenuitemComponent {
       console.log('categories fetched in menu item component', this.categories)
     });
   }
+  isAdmin(): boolean {
+    const user = this.authService.getCurrentUser();
+    return user?.role === 'Admin';
+  }
+
   fetchMenuItems() {
     this.menuService.fetchMenuItems(this.isVegFilter)
     this.menuService.menuItems$.subscribe((items:Menuitem[]) => {
@@ -77,11 +90,15 @@ export class MenuitemComponent {
   }
 
 
+
   toggleForm() {
-    this.showForm = !this.showForm;
-    this.editingItemId = null; // Reset after editing
-    if (!this.showForm) {
-      this.addMenuItemForm.reset(); // Reset form when closing
+
+    if (this.isAdmin()) { // Guarded for Admin only
+      this.showForm = !this.showForm;
+      this.editingItemId = null;
+      if (!this.showForm) {
+        this.addMenuItemForm.reset();
+      }
     }
   }
 
@@ -90,24 +107,7 @@ export class MenuitemComponent {
     this.addMenuItemForm.patchValue({ image: file ? file.name : '' });
   }
 
-  // async addMenuItem() {
-  //   if (this.addMenuItemForm.valid) {
-  //     const formData = this.addMenuItemForm.value;
 
-  //     const newItem: Omit<Menuitem, "id"> = {
-  //       name: formData.name ?? '', // Default to empty string
-  //       description: formData.description ?? '',
-  //       image: formData.image ?? '', // Ensure image is always a string
-  //       price: Number(formData.price) || 0, // Convert to number, default to 0
-  //       isVeg: formData.isVeg ?? false, // Default to false
-  //       categoryId: formData.categoryId ?? '' // Default to empty string
-  //     };     
-  //     await this.menuService.addMenuItem(newItem);
-
-  //     this.showForm = false;
-  //     this.addMenuItemForm.reset();
-  //   }
-  // }
 
   async addMenuItem() {
     if (this.addMenuItemForm.valid) {

@@ -7,6 +7,7 @@ import logger from "../../utils/logger";
 import { MyContext,CreateOrderInput, OrderStatus,UpdateOrderStatusInput} from "../types/types";
 import Table from "../../models/Table";
 import { PubSub } from "graphql-subscriptions";
+import { timeStamp } from "console";
  
 const pubsub = new PubSub();
 
@@ -101,7 +102,7 @@ Query : {
       let filter = {}; // Default: No filter (Admin gets all orders)
   
       // Customers can only fetch their own orders
-      if (role !== "Admin") {
+      if (!["Admin","Waiter","KitchenStaff"].includes(role)) {
         filter = { customerId: userId };
       }
   
@@ -112,14 +113,13 @@ Query : {
           model: MenuItem, // Ensures full MenuItem details are included
         })
         .populate("customerId")
+        .sort({ createdAt: -1 })
         .lean();
   
       if (orders.length === 0) {
         throw new GraphQLError("No orders found", { extensions: { code: "NOT_FOUND" } });
       }
-  
-     
-     
+   
       return orders.map(order => ({
         id: order._id.toString(),
         tableId: order.tableId.toString(),

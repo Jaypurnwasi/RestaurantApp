@@ -1,5 +1,25 @@
-<section >
-
-    
-
-</section>
+<nav class="navbar">
+    <!-- Logo Section -->
+    <div class="logo">
+      <img src="assets/images/logo.svg" alt="Logo" /> <!-- Adjust path to your logo -->
+    </div>
+  
+    <!-- Navbar Options -->
+    <div class="nav-options">
+      <a routerLink="menu" routerLinkActive="active">Menu</a>
+      <a routerLink="cart" routerLinkActive="active">Cart</a>
+      <a routerLink="orders" routerLinkActive="active">Orders</a>
+    </div>
+  
+    <!-- User Profile and Logout -->
+    <div class="user-actions">
+      <img 
+        *ngIf="user?.profileImg" 
+        [src]="'./assets/images/' + user?.profileImg"
+        alt="Profile" 
+        class="profile-pic" 
+      />
+      <span *ngIf="!user?.profileImg" class="profile-pic-placeholder">No Image</span>
+      <button class="logout-btn" (click)="logout()">Logout</button>
+    </div>
+  </nav>
