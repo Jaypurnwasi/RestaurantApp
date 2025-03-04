@@ -3,6 +3,8 @@ import { AddCategoryInput, MyContext,deleteCategoryInput ,UpdateCategoryInput} f
 import Category from "../../models/Category";
 import logger from "../../utils/logger";
 import MenuItem from "../../models/MenuItem";
+import { validateMessage } from "graphql-ws";
+import { assertValidExecutionArguments } from "graphql/execution/execute";
 
 
 
@@ -154,6 +156,7 @@ export const categoryResolvers = {
                   extensions: { code: "FORBIDDEN", status: 403 } 
                 });
               }
+              console.log('request to delete the following category received ',input.id)
           
               //  Step 2: Check if category exists
               const { id } = input;

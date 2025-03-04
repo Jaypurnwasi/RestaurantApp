@@ -34,7 +34,7 @@ Query:{
         });
       }
 
-      const staffMembers = await User.find({ role: { $ne: "Customer" } });
+      const staffMembers = await User.find({ role: { $ne: "Customer" } }).sort({ name: 1 });
 
       logger.info(
         `Admin ${context.user.id} fetched ${staffMembers.length} staff members.`
@@ -68,7 +68,7 @@ Query:{
         });
       }
 
-      const customers = await User.find({ role: "Customer" });
+      const customers = await User.find({ role: "Customer" }).sort({ name: 1 });;
 
       logger.info(
         `Admin ${context.user.id} fetched ${customers.length} customers.`
@@ -132,7 +132,7 @@ Query:{
   Mutation: {
     async createUser(_: any, { input }: { input: CreateUserInput }, context: any) {
       try {
-        const { name, email, password, role, profileImage } = input;
+        const { name, email, password, role, profileImg } = input;
 
         // Check if email already exists
         const existingUser = await User.findOne({ email });
@@ -186,7 +186,7 @@ Query:{
           email,
           password: hashedPassword,
           role,
-          profileImage
+          profileImg
         });
 
         await newUser.save();

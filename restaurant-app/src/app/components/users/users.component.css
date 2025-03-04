@@ -1,0 +1,282 @@
+.users-container {
+    padding: 20px;
+  }
+  
+  h3 {
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .users-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    /* background-color: #E6DCD3; */
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .add-button {
+    height: 40px;
+    border-radius: 5px;
+    font-size: 1rem;
+    padding: 8px 12px;
+    border: none;
+    background-color: rgba(0, 128, 0, 0.336);
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .add-button:hover {
+    background-color: rgba(0, 128, 0, 0.589);
+  }
+  
+  /* Form Overlay Styles (Referenced from MenuitemComponent) */
+  .form-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .form-container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+  }
+  
+  .form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .form-container label {
+    color: #333;
+    font-weight: 500;
+  }
+  
+  .form-container input,
+  .form-container select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    background: transparent;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #333;
+  }
+  
+  .close-button:hover {
+    color: red;
+  }
+  
+  .form-container button[type="submit"] {
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: rgba(0, 128, 0, 0.6);
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .form-container button[type="submit"]:hover:not(:disabled) {
+    background-color: rgba(0, 128, 0, 0.8);
+  }
+  
+  .form-container button[type="submit"]:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  /* Table Styles (unchanged) */
+  .users-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+  }
+  
+  .users-table th,
+  .users-table td {
+    padding: 15px 20px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    color: #333;
+  }
+  
+  .users-table th {
+    background-color: #E6DCD3;
+    font-weight: 600;
+    color: #B27369;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+  }
+  
+  .users-table tr:hover {
+    background-color: #f5f0ec;
+  }
+  
+  .profile-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+  }
+  
+  .no-items {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .delete-icon {
+    color: rgba(206, 11, 11, 0.445);
+    font-size: 1.8rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  
+  .delete-icon:hover {
+    color: rgba(255, 0, 0, 0.822);
+  }
+
+  .user-type-toggle-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .user-type-toggle-label {
+    font-size: 1rem;
+    color: #333;
+    font-weight: 500;
+  }
+  
+  .user-type-toggle {
+    position: relative;
+    display: inline-block;
+    width: 180px; /* Increased width for longer text */
+    height: 34px; /* Slightly taller for better readability */
+  }
+  
+  .user-type-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .toggle-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 17px; /* Half of height for perfect rounding */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px; /* Increased padding for text spacing */
+    font-size: 0.85rem; /* Slightly smaller font for fit */
+    font-weight: 500;
+    color: #fff;
+    overflow: hidden; /* Prevent text overflow */
+  }
+  
+  .toggle-slider .toggle-text {
+    z-index: 1;
+    white-space: nowrap; /* Keep text on one line */
+  }
+  
+  .toggle-slider .customers {
+    margin-left: 4px;
+  }
+  
+  .toggle-slider .staff {
+    margin-right: 4px;
+  }
+  
+  .toggle-slider .slider-ball {
+    position: absolute;
+    height: 28px; /* Adjusted to fit within height */
+    width: 88px; /* Wider to cover text transition */
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 14px;
+    transition: transform 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+  
+  .user-type-toggle input:checked + .toggle-slider {
+    background-color: rgba(0, 128, 0, 0.8); /* Green for Staff */
+  }
+  
+  .user-type-toggle input:not(:checked) + .toggle-slider {
+    background-color: rgba(0, 0, 0, 0.5); /* Gray for Customers */
+  }
+  
+  .user-type-toggle input:checked + .toggle-slider .slider-ball {
+    transform: translateX(82px); /* Adjusted for new width (140px - 50px - 3px padding) */
+  }
+  
+  @media (max-width: 600px) {
+    .users-table {
+      font-size: 0.85rem;
+    }
+  
+    .users-table th,
+    .users-table td {
+      padding: 10px 15px;
+    }
+  
+    .profile-image {
+      width: 30px;
+      height: 30px;
+    }
+  
+    .users-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+  
+    .add-button {
+      width: 100%;
+      padding: 10px;
+    }
+  }

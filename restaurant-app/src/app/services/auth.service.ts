@@ -33,6 +33,7 @@ export class AuthService {
     if (token ) {
       const decodedToken: any = this.jwtHelper.decodeToken(token);
       const user: User = {
+        id:decodedToken.id,
         name: decodedToken.name,
         email: decodedToken.email,
         profileImg: decodedToken.profileImg || '',
@@ -106,20 +107,5 @@ export class AuthService {
 
 
   }
-
- 
   
-  // private getTokenFromCookies(): string | null {
-  //   const cookies = document.cookie.split('; ');
-  //   for (const cookie of cookies) {
-  //     const [name, value] = cookie.split('=');
-  //     if (name === 'token') {
-  //       return decodeURIComponent(value);
-  //     }
-  //   }
-  //   return null;
-  // }
-
- 
- 
 }

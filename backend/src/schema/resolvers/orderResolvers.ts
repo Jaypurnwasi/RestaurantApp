@@ -11,7 +11,6 @@ import { PubSub } from "graphql-subscriptions";
 const pubsub = new PubSub();
 
 
-
 export const orderResolvers = {
 
 Query : {
@@ -101,7 +100,7 @@ Query : {
 
       let filter = {}; // Default: No filter (Admin gets all orders)
   
-      // ✅ Customers can only fetch their own orders
+      // Customers can only fetch their own orders
       if (role !== "Admin") {
         filter = { customerId: userId };
       }
@@ -119,17 +118,8 @@ Query : {
         throw new GraphQLError("No orders found", { extensions: { code: "NOT_FOUND" } });
       }
   
-      //  Fetch transactions for all orders
-      // const orderIds = orders.map(order => order._id);
-      // const transactions = await Transaction.find({ orderId: { $in: orderIds } }).lean();
-  
-      //  Map transactions to orders
-      // const transactionMap = new Map(
-      //   transactions.map(tx => [tx.orderId.toString(), tx])
-      // );
-  
-      //  Format and return the orders
-      
+     
+     
       return orders.map(order => ({
         id: order._id.toString(),
         tableId: order.tableId.toString(),

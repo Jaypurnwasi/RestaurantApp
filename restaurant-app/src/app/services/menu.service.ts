@@ -136,10 +136,6 @@ export class MenuService {
     }
   }
 
-
-
-
-
   async deleteMenuItem(itemId: string): Promise<void> {
     const mutation = {
       query: `

@@ -1,1 +1,68 @@
-<p>orders works!</p>
+<div class="orders-container">
+    <div class="orders-header">
+      <h3>All Orders</h3>
+      <div class="status-toggle-wrapper">
+        <label class="status-toggle-label">Filter:</label>
+        <div class="status-toggle">
+          <input 
+            type="checkbox" 
+            id="status-toggle" 
+            (change)="onStatusToggle($event)" 
+            [checked]="isLiveFilter" 
+            hidden 
+          />
+          <label for="status-toggle" class="toggle-slider">
+            <span class="toggle-text live">Live</span>
+
+            <span class="toggle-text previous">Previous</span>
+            <span class="slider-ball"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  
+    <ng-container *ngIf="orders$ | async as orderList">
+      <table class="orders-table" *ngIf="orderList.length > 0; else noOrdersTemplate">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Customer ID</th>
+            <th>Created At</th>
+            <th>Updated At</th>
+            <th>Items</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of orderList">
+            <td>{{ order.id }}</td>
+            <td>{{ order.amount | currency }}</td>
+            <td>
+              <select 
+                [value]="order.status" >
+                <option value="Pending">Pending</option>
+                <option value="Prepared">Prepared</option>
+                <option value="Completed">Completed</option>
+                <option value="Failed">Failed</option>
+              </select>
+            </td>
+            <td>{{ order.customerId || 'N/A' }}</td>
+            <td>{{ order.createdAt }}</td>
+            <td>{{ order.updatedAt }}</td>
+            <td>
+              <ul>
+                <li *ngFor="let item of order.items">
+                  {{ item.menuItem.name }} (Qty: {{ item.quantity }})
+                </li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+  
+    <ng-template #noOrdersTemplate>
+      <div class="no-items">No orders found.</div>
+    </ng-template>
+  </div>

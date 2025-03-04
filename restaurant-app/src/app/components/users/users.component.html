@@ -1,1 +1,86 @@
-<p>users works!</p>
+<div class="users-container">
+    <div class="users-header">
+      <h3>All Users</h3>
+      <div class="user-type-toggle-wrapper">
+        <label class="user-type-toggle-label">Filter:</label>
+        <div class="user-type-toggle">
+          <input 
+            type="checkbox" 
+            id="user-type-toggle" 
+            (change)="onUserTypeToggle($event)" 
+            [checked]="isStaffFilter" 
+            hidden 
+          />
+          <label for="user-type-toggle" class="toggle-slider">
+            <span class="toggle-text staff">Staff</span>
+            <span class="toggle-text customers">Customers</span>
+
+            <span class="slider-ball"></span>
+          </label>
+        </div>
+      </div>
+      <button class="add-button" (click)="toggleForm()">Add User</button>
+    </div>
+  
+    <div *ngIf="showForm" class="form-overlay">
+      <div class="form-container">
+        <form [formGroup]="addUserForm" (ngSubmit)="addUser()">
+          <button class="close-button" (click)="toggleForm()">X</button>
+          <label>Name:</label>
+          <input formControlName="name" type="text" />
+          <label>Email:</label>
+          <input formControlName="email" type="email" />
+          <label>Role:</label>
+          <select formControlName="role">
+            <option value="Customer">Customer</option>
+            <option value="Admin">Admin</option>
+            <option value="Waiter">Waiter</option>
+            <option value="KitchenStaff">KitchenStaff</option>
+          </select>
+          <label>Profile Image:</label>
+          <input type="file" (change)="onImageUpload($event)" /> <!-- Changed to file input -->
+            <label>Password:</label>
+          <input formControlName="password" type="password" placeholder="At least 6 characters" />
+          <button type="submit" [disabled]="addUserForm.invalid">Submit</button>
+        </form>
+      </div>
+    </div>
+  
+    <ng-container *ngIf="users$ | async as userList">
+      <table class="users-table" *ngIf="userList.length > 0; else noUsersTemplate">
+        <thead class="user-table-header">
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Profile Image</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of userList">
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.role }}</td>
+            <td>
+              <img 
+                *ngIf="user.profileImg" 
+                [src]="baseUrl + user.profileImg"
+                alt="{{ user.name }}'s profile" 
+                class="profile-image"
+              />
+              <span *ngIf="!user.profileImg">No Image</span>
+            </td>
+            <td><span class="material-symbols-outlined delete-icon" 
+                (click)="onDelete(user.id , user.name)">
+                delete
+              </span></td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+  
+    <ng-template #noUsersTemplate>
+      <div class="no-items">No users found.</div>
+    </ng-template>
+  </div>

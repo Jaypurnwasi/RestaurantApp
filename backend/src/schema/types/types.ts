@@ -12,7 +12,7 @@ export enum Role {
     email: string
     password: string
     role: Role
-    profileImage: string
+    profileImg: string
   }
 
   export type LoginInput = {
@@ -87,10 +87,6 @@ export enum Role {
     isVeg: boolean
     categoryId: string
   }
-
-
-  // Input for Category 
-
 
 export interface AddCategoryInput {
   name: string;

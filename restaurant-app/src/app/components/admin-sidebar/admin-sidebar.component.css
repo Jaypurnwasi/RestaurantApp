@@ -11,6 +11,7 @@
     transition: width 0.3s ease;
     overflow: hidden;
     /* border: 1px solid black; */
+
   }
 
   .sidebar-list {
@@ -37,3 +38,4 @@
     background-color: #E6DCD3; /* Hover color from dashboard */
     
   }
+  

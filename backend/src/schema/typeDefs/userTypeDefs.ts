@@ -12,7 +12,7 @@ type User {
   name: String!
   email: String!
   role: Role!
-  profileImage: String
+  profileImg: String
   
 } 
 
@@ -21,7 +21,7 @@ input CreateUserInput {
   email: String!
   password: String!
   role: Role!
-  profileImage: String
+  profileImg: String
 }
 
 input RemoveUserInput {
@@ -39,12 +39,12 @@ input SignupInput {
   name: String!
   email: String!
   password: String!
-  profileImage: String
+  profileImg: String
 }
 input UpdateUserInput {
   name: String
   email: String
-  profileImage: String
+  profileImg: String
 }
 
 # Queries for Admin
