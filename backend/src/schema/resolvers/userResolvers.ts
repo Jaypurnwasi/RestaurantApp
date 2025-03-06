@@ -227,7 +227,7 @@ Query:{
 
         // Generate JWT token
         const token = jwt.sign(
-          { id: user.id, role: user.role,name:user.name,email:user.email },
+          { id: user.id, role: user.role,name:user.name,email:user.email,profileImg:user.profileImg },
           process.env.KEY as string,
           { expiresIn: "7d" }
         );

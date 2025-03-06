@@ -26,8 +26,9 @@ export class MenuitemComponent {
   editingItemId:string|null = null;
   baseUrl = './assets/images/';
   user: User | null = null;
-  cart$:any;
+  cart$:Cart|null = null;
   selectedCategoryId: string | null = null; // ADDED: Track selected category
+  errorMessage: string = '';
   
 
   addMenuItemForm = new FormGroup({
@@ -63,19 +64,43 @@ export class MenuitemComponent {
       this.cartService.fetchCartItems();
       
       console.log('menu items in menuItemComponents is',this.menuItems$.value)
-      console.log('categories fetched in menu item component', this.categories)
+      // console.log('categories fetched in menu item component', this.categories)
     });
   }
   isAdmin(): boolean {
     const user = this.authService.getCurrentUser();
     return user?.role === 'Admin';
   }
+  // previous stable fetch 
+  // fetchMenuItems() {
+  //   this.menuService.fetchMenuItems(this.isVegFilter)
+  //   this.menuService.menuItems$.subscribe((items:Menuitem[]) => {
+  //     this.menuItems$.next(items)})
 
-  fetchMenuItems() {
-    this.menuService.fetchMenuItems(this.isVegFilter)
-    this.menuService.menuItems$.subscribe((items:Menuitem[]) => {
-      this.menuItems$.next(items)})
+  // }
 
+  async fetchMenuItems() {
+    this.loading = true;
+    this.errorMessage = '';
+    try {
+      if (this.selectedCategoryId) {
+        await this.menuService.fetchMenuItemsByCategory(this.selectedCategoryId, this.isVegFilter);
+        this.menuService.menuItems$.subscribe((items:Menuitem[]) => {
+          this.menuItems$.next(items)})
+
+      } else {
+        this.menuService.fetchMenuItems(this.isVegFilter)
+        this.menuService.menuItems$.subscribe((items:Menuitem[]) => {
+          this.menuItems$.next(items)})
+          this.loading= false
+
+      }
+    } catch (error) {
+      this.errorMessage = 'Failed to fetch menu items by category';
+      console.error('Fetch menu items by category error:', error);
+    } finally {
+      this.loading = false;
+    }
   }
   fetchCategories() {
     this.categoryService.fetchCategories();
@@ -103,6 +128,17 @@ export class MenuitemComponent {
       this.menuService.searchMenuItems(searchValue,this.isVegFilter).subscribe(items => {
         this.menuItems$.next(items);
       });
+    }
+  }
+  selectCategory(categoryId: string | null) {
+    this.selectedCategoryId = categoryId;
+    this.fetchMenuItems();
+  }
+  scrollCategories(direction: 'left' | 'right') {
+    const container = document.querySelector('.categories-nav') as HTMLElement;
+    if (container) {
+      const scrollAmount = 200;
+      container.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
     }
   }
 

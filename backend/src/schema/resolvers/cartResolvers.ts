@@ -138,6 +138,88 @@ export const cartResolvers = {
               });
             }
           },
+          // Below is an optimised approach but requires more testing 
+          // async addItemToCart(_: any, { input }: { input: AddToCartInput }, context: MyContext) {
+          //   if (!context.user) {
+          //     throw new GraphQLError("Authentication required", {
+          //       extensions: { code: "UNAUTHORIZED", status: 401 },
+          //     });
+          //   }
+          
+          //   const { menuItemId, quantity } = input;
+          //   const userId = context.user.id;
+          //   const menuItemObjectId = new mongoose.Types.ObjectId(menuItemId);
+          
+          //   try {
+          //     // Validate inputs
+          //     if (!mongoose.Types.ObjectId.isValid(menuItemId)) {
+          //       throw new GraphQLError("Invalid menuItemId", {
+          //         extensions: { code: "BAD_REQUEST", status: 400 },
+          //       });
+          //     }
+          
+          //     if (!Number.isInteger(quantity) || quantity < 1) {
+          //       throw new GraphQLError("Quantity must be a positive integer", {
+          //         extensions: { code: "BAD_REQUEST", status: 400 },
+          //       });
+          //     }
+          
+          //     // Check if menu item exists and is active
+          //     const menuItemExists = await MenuItem.exists({ _id: menuItemObjectId, isActive: true });
+          //     if (!menuItemExists) {
+          //       throw new GraphQLError("Menu item not found or inactive", {
+          //         extensions: { code: "NOT_FOUND", status: 404 },
+          //       });
+          //     }
+          
+          //     // Check if the item already exists in the cart
+          //     const existingCart = await Cart.findOne({ userId, "items.menuItemId": menuItemObjectId });
+          
+          //     if (existingCart) {
+          //       // If the item exists, increment the quantity
+          //       await Cart.updateOne(
+          //         { userId, "items.menuItemId": menuItemObjectId },
+          //         { $inc: { "items.$.quantity": quantity } }
+          //       );
+          //     } else {
+          //       // If the item doesn't exist, push a new entry
+          //       await Cart.findOneAndUpdate(
+          //         { userId },
+          //         {
+          //           $setOnInsert: { userId }, // Create cart if not exists
+          //           $push: { items: { menuItemId: menuItemObjectId, quantity } },
+          //         },
+          //         { upsert: true, new: true, setDefaultsOnInsert: true }
+          //       );
+          //     }
+          
+          //     // Fetch the updated cart to get the final quantity
+          //     const updatedCart = await Cart.findOne({ userId });
+          
+          //     const finalQuantity = updatedCart?.items.find(item =>
+          //       item.menuItemId.equals(menuItemObjectId)
+          //     )?.quantity || quantity;
+          
+          //     logger.info(`User ${userId} added menu item ${menuItemId} to cart`);
+          
+          //     return {
+          //       menuItemId,
+          //       quantity: finalQuantity,
+          //     };
+          //   } catch (error: any) {
+          //     logger.error(`Error in addItemToCart: ${error.message}`);
+          //     throw error instanceof GraphQLError
+          //       ? error
+          //       : new GraphQLError("Failed to add item to cart", {
+          //           extensions: {
+          //             code: "INTERNAL_SERVER_ERROR",
+          //             status: 500,
+          //             originalError: error.message,
+          //           },
+          //         });
+          //   }
+          // },
+            
            async removeItemFromCart (_: any, { input }: { input: RemoveItemInput}, context: any)
            {
             try {

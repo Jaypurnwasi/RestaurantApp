@@ -80,7 +80,7 @@ export class CategoryService {
       const result = await firstValueFrom(
         this.apollo.mutate<{ deleteCategory: Category }>({
           mutation,
-          variables: { input: { id } },
+          variables: { input:  id  },
         })
         
       );

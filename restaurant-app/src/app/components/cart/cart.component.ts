@@ -7,7 +7,7 @@ import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angula
 import { Apollo, gql } from 'apollo-angular';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-
+import { OrderService } from '../../services/order.service';
 @Component({
   selector: 'app-cart',
   standalone: true,
@@ -37,7 +37,8 @@ export class CartComponent implements OnInit {
 
   constructor(private cartService: CartService,
     private apollo: Apollo,
-    private router: Router
+    private router: Router,
+    private orderService : OrderService
   ) {
     this.cart$ = this.cartService.cart$; // Initialize here to avoid TS error
   }
@@ -77,6 +78,7 @@ export class CartComponent implements OnInit {
       const status = await this.cartService.createOrder(this.selectedTableId, total,true);
       if (status === 'Pending') {
         this.togglePaymentModal();
+        this.orderService.fetchOrders('Live','network-only')
         this.router.navigate(['/orders']);
       } else if (status === 'Failed') {
         this.paymentError = 'Order creation failed. Please try again.';

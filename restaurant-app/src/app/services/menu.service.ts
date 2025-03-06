@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { Menuitem } from '../interfaces/menuitem';
 import { Apollo, gql } from 'apollo-angular';
 import { map } from 'rxjs/operators';
@@ -15,7 +15,7 @@ export class MenuService {
   categories$ = this.categoriesSubject.asObservable();
 
 
-  constructor(private apollo: Apollo) {}
+  constructor(public apollo: Apollo) {}
 
   async fetchMenuItems(isVeg?:boolean): Promise<void> {
     const query = {
@@ -50,7 +50,7 @@ export class MenuService {
       const data = await response.json();
       const menuItems = data.data.getAllMenuItems || [];
 
-      this.menuItemsSubject.next(menuItems); // ✅ Update stored menu items
+      this.menuItemsSubject.next(menuItems); //  Update stored menu items
 
     } catch (error) {
       console.error('Error fetching menu items:', error);
@@ -204,6 +204,49 @@ export class MenuService {
     .valueChanges
     .pipe(map(result => result.data.searchMenuItems));
   }
+
+  async fetchMenuItemsByCategory(categoryId: string, isVeg?: boolean): Promise<Menuitem[]> {
+    const query = gql`
+      query GetMenuItemsByCategory($input: getMenuItemsByCategoryInput) {
+        getMenuItemsByCategory(input: $input) {
+          categoryId
+          description
+          id
+          image
+          isVeg
+          name
+          price
+          isActive
+        }
+      }
+    `;
+
+    try {
+      const result = await firstValueFrom(
+        this.apollo.query<{ getMenuItemsByCategory: Menuitem[] }>({
+          query,
+          variables: {
+            input: {
+              category: categoryId,
+              isveg: isVeg
+            }
+          }
+        })
+      );
+
+      if (result.data) {
+        this.menuItemsSubject.next(result.data.getMenuItemsByCategory);
+        return result.data.getMenuItemsByCategory;
+      }
+      throw new Error('No data returned from getMenuItemsByCategory');
+    } catch (error) {
+      console.error('Error fetching menu items by category:', error);
+      this.menuItemsSubject.next([]); // Clear items on error
+      throw error; // Re-throw for component handling 
+    }
+  }
+
+
   getMenuItems(): Observable<any[]> {
     return this.menuItems$;
   }

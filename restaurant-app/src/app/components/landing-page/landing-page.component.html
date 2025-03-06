@@ -30,12 +30,16 @@
           <h4 class="item-name">{{ item.name }}</h4>
           <div class="item-footer">
             <span class="item-price">{{ item.price | currency:'INR':'symbol' }}</span>
-            <p-button 
-              icon="pi pi-shopping-cart" 
-              label="Add to Cart" 
-              styleClass="p-button-sm add-to-cart-btn" 
-              (click)="addToCart(item)" 
-            />
+            <div  class="cart-controls">
+              <button class="cart-btn minus-btn" (click)="removeFromCart(item)" [disabled]="getCartQuantity(item.id) === 0">-</button>
+              <ng-container *ngIf="getCartQuantity(item.id) === 0; else quantityDisplay">
+                <button class="cart-btn add-to-cart-btn" (click)="addToCart(item)">Add item</button>
+              </ng-container>
+              <ng-template #quantityDisplay>
+                <span class="cart-quantity">Qty: {{ getCartQuantity(item.id) }}</span>
+              </ng-template>
+              <button class="cart-btn plus-btn" (click)="addToCart(item)">+</button>
+            </div>
           </div>
         </div>
       </div>

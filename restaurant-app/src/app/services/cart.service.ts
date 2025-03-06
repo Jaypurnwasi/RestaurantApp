@@ -66,7 +66,6 @@ export class CartService {
         variables: { input: { menuItemId, quantity } }
       })
     );
-
     // Refresh cart after adding
     await this.fetchCartItems();
     
@@ -93,6 +92,9 @@ export class CartService {
     await this.fetchCartItems();
    
   }
+
+  
+  
 
   async createOrder(tableId: string, amount: number,success:boolean): Promise<string> {
     const mutation = gql`

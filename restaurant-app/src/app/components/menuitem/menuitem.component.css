@@ -144,21 +144,19 @@
 }
 
 .edit-menu-button {
-  padding: 5px 15px;
-  border: 1px solid rgba(0, 128, 0, 0.6);
-  border-radius: 8px;
-  background-color: rgba(0, 128, 0, 0.1);
-  color: rgba(0, 128, 0, 0.9);
-  font-size: 0.9rem;
+  padding: 5px 10px;
+  color: rgba(0, 128, 0, 0.747);
+  font-size: 1.2rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  visibility: hidden;
 }
 
 .edit-menu-button:hover {
-  background-color: rgba(0, 128, 0, 0.3);
+  transform: scale(1.1);
+  transition-duration: 0.3s;
   color: rgba(0, 128, 0, 0.945);
-  border-color: rgba(0, 128, 0, 0.8);
 }
 
 .edit-menu-button:active {
@@ -303,10 +301,18 @@ h3 {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  &:hover {
-    transform: translateY(-2px);
+  
+}
+.menu-card:hover{
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  }
+    transform: translateY(-2px);
+
+    .edit-menu-button{
+      visibility: visible;
+    }
+    .delete-icon{
+      visibility: visible;
+    }
 }
 
 .menu-image {
@@ -394,8 +400,19 @@ h3 {
     display: flex;
     justify-content: space-between;
     align-items: center; /* Vertically centers the elements */
-    padding: 1rem;
-  gap: 15px;
+    /* padding: 1rem; */
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+.category-heading{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-style: bold;
+  font-weight: 600;
+
 }
 .add-button{
     height: 40px;
@@ -417,6 +434,7 @@ h3 {
     font-size: 1.8rem;
     font-weight: 500;
     cursor: pointer;
+    visibility: hidden;
 }
 .delete-icon:hover{
     color: rgba(255, 0, 0, 0.822);
@@ -435,6 +453,13 @@ h3 {
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.3s;
+}
+.cart-quantity {
+  padding: 8px 12px;
+  font-size: 1rem;
+  color: #666;
+  font-weight: 500;
+  border-bottom: 1px solid #B27369;
 }
 
 .minus-btn {
@@ -463,6 +488,79 @@ h3 {
 .plus-btn:hover {
   background-color: #45a049;
 }
+
+.categories-container {
+  width: 35%;
+  min-width: 250px;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10px;
+  overflow: auto;
+  scroll-behavior: smooth;
+
+}
+
+.scroll-btn {
+  background-color: #E6DCD3;
+  border: none;
+  padding: 6px 8px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.scroll-btn:hover {
+  background-color: #d3c9c0;
+}
+
+.categories-nav {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 10px;
+  padding: 10px 0;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+.categories-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.category-btn {
+  background-color: #E6DCD3;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #333;
+  transition: background 0.3s, color 0.3s;
+}
+
+.category-btn:hover {
+  background-color: #d3c9c0;
+}
+
+.category-btn.selected {
+  background-color: #B27369;
+  color: white;
+}
+
+/* ADDED: Error Message Style */
+.error {
+  color: #ef4444;
+  text-align: center;
+  margin: 10px 0;
+}
+
+/* .cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+} */
 /* Responsive adjustments */
 @media (max-width: 600px) {
   .cards-grid {

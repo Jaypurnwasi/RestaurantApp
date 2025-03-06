@@ -19,10 +19,10 @@
       </div>
       <div class="cart-actions">
         <div class="table-select">
-          <label for="table">Select Table:</label>
+          <label for="table" class="select-table-label">Select Table:</label>
           <select id="table" [(ngModel)]="selectedTableId" class="table-dropdown">
-            <option value="">-- Select a table --</option>
-            <option *ngFor="let table of tables" [value]="table.id">{{ table.name }}</option>
+            <option value="" class="table-option">-- Select a table --</option>
+            <option *ngFor="let table of tables" [value]="table.id" class="table-option">{{ table.name }}</option>
           </select>
         </div>
         <div class="cart-total">

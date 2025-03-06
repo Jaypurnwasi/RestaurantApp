@@ -15,7 +15,6 @@ export class UserService {
     // this.fetchUsers(); // Initial fetch on service instantiation
     // this.fetchStaffMembers(); // Default to Staff Members
   }
-
   
   fetchStaffMembers(fetchPolicy: 'cache-first' | 'network-only' = 'cache-first'): void {
     this.apollo

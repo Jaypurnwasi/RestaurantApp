@@ -145,21 +145,49 @@
     gap: 10px;
   }
   
-  .table-select label {
+  .select-table-label {
+    font-size: 1rem;
+    font-weight: 600;
     color: #333;
-    font-weight: 500;
-
+    white-space: nowrap; /* Prevents label wrapping */
   }
   
   .table-dropdown {
-    padding: 8px;
+    appearance: none; /* Removes default browser styling */
+    background-color: #fff;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 8px; /* Softer corners */
+    padding: 10px 32px 10px 12px; /* Padding with space for arrow */
     font-size: 1rem;
-    border: 2px solid #B27369;
-
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-position: right 12px center; /* Positions arrow */
+    cursor: pointer;
   }
   
+  .table-dropdown:hover {
+    border-color: #B27369; /* Matches your theme */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Enhanced shadow on hover */
+  }
+  
+  .table-dropdown:focus {
+    outline: none;
+    border-color: #B27369;
+    box-shadow: 0 0 0 3px rgba(178, 115, 105, 0.3); /* Focus ring */
+  }
+  
+  .table-dropdown option {
+    padding: 10px; /* Better spacing for options */
+    color: #333;
+  }
+  
+  /* Ensure disabled state looks distinct */
+  .table-dropdown:disabled {
+    background-color: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+  }
   .cart-total {
     text-align: right;
   }
@@ -277,3 +305,4 @@
     background-color: #ccc;
     cursor: not-allowed;
   }
+  

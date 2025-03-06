@@ -39,7 +39,7 @@ export class OrdersComponent {
 
   ngOnInit(): void {
     this.orders$ = this.orderService.getOrders();
-    this.fetchOrders(); // Initial fetch with default filter
+    this.fetchOrders('network-only'); // Initial fetch with default filter
   }
 
   onStatusToggle(event: Event): void {
@@ -69,7 +69,6 @@ export class OrdersComponent {
   getValidStatuses(currentStatus: string): string[] {
     return this.validStatusTransitions[currentStatus] || [currentStatus];
   }
-
 
 
 }

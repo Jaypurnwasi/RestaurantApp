@@ -11,7 +11,6 @@ import { timeStamp } from "console";
  
 const pubsub = new PubSub();
 
-
 export const orderResolvers = {
 
 Query : {
@@ -166,9 +165,7 @@ Mutation:{
           // Extract input
           const { tableId, amount, success } = input;
           const customerId = context.user.id;
-  
-          
-          
+    
           // Fetch cart items
           const cart = await Cart.findOne({ userId: customerId }).populate("items.menuItemId");
           if (!cart || cart.items.length === 0) {
@@ -193,10 +190,7 @@ Mutation:{
           if(!existingTable){
             throw new GraphQLError("table does not exists", { extensions: { code: "BAD_REQUEST" } });
 
-          }
-
-          
-  
+          }  
           // Convert cart items to order items
           const orderItems = cart.items.map((item) => ({
             menuItem: item.menuItemId._id,

@@ -90,6 +90,6 @@ type Mutation {
 }
 
 type Subscription {
-  orderUpdated: updatedStatus!
+  orderUpdated: updatedStatus
 }
 `;

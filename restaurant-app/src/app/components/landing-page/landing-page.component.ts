@@ -4,6 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { CarouselModule } from 'primeng/carousel';
 import { Menuitem } from '../../interfaces/menuitem';
 import { MenuService } from '../../services/menu.service';
+import { CartService } from '../../services/cart.service';
 @Component({
   selector: 'app-landing-page',
   imports: [CommonModule,CarouselModule,ButtonModule],
@@ -18,7 +19,7 @@ export class LandingPageComponent {
     { breakpoint: '560px', numVisible: 1, numScroll: 1 }
   ];
 
-  constructor(private menuService: MenuService) {}
+  constructor(public menuService: MenuService,private cartService: CartService, ) {}
 
   ngOnInit(): void {
     this.menuService.fetchMenuItems(); // Fetch all items (no veg filter for carousel)
@@ -26,8 +27,21 @@ export class LandingPageComponent {
       this.menuItems = items.slice(0, 6); // Limit to 6 items for carousel
     });
   }
-  addToCart(item: Menuitem) {
-    console.log(`Added ${item.name} to cart`);
+  async addToCart(item: Menuitem) {
+    
+      await this.cartService.addItemToCart(item.id);
+    
+  }
+
+  async removeFromCart(item: Menuitem) {
+      await this.cartService.removeItemFromCart(item.id);
+    
+  }
+
+  getCartQuantity(itemId: string): number {
+    const cart = this.cartService.getCart();
+    const cartItem = cart?.items.find(i => i.menuItem.id === itemId);
+    return cartItem ? cartItem.quantity : 0;
   }
 
 }

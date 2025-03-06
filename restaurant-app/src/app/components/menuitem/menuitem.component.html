@@ -42,7 +42,6 @@
   </div>
 
     <div class="menu-item-header">
-        <h3>All Menu Items</h3>
         <div class="veg-toggle-wrapper">
           <label class="veg-toggle-label">Filter:</label>
           <div class="veg-toggle">
@@ -60,10 +59,35 @@
             </label>
           </div>
         </div>
+        <div class="categories-container">
+          <button class="scroll-btn left-btn" (click)="scrollCategories('left')"><</button>
+          <div class="categories-nav">
+            <button 
+              class="category-btn" 
+              [ngClass]="{'selected': !selectedCategoryId}" 
+              (click)="selectCategory(null)"
+            >
+              All
+            </button>
+            <button 
+              *ngFor="let category of categories" 
+              class="category-btn" 
+              [ngClass]="{'selected': selectedCategoryId === category.id}" 
+              (click)="selectCategory(category.id)"
+            >
+              {{ category.name }}
+            </button>
+          </div>
+          <button class="scroll-btn right-btn" (click)="scrollCategories('right')">></button>
+        </div>
+      
 
         <input type="text" class="search-input" placeholder="Search items" (input)="onSearch($event)"/>
         <button class="add-button" (click)="toggleForm()" *ngIf="user?.role==='Admin'">Add item</button>
     </div>
+
+   
+    <!-- ADDED: Error Display -->
    
     <div class="cards-grid" *ngIf="!loading; else loadingTemplate">
       <div class="menu-card" *ngFor="let item of menuItems$|async">
@@ -77,10 +101,14 @@
             </span>
             <div *ngIf="!isAdmin()" class="cart-controls">
               <button class="cart-btn minus-btn" (click)="removeFromCart(item)" [disabled]="getCartQuantity(item.id) === 0">-</button>
-              <button class="cart-btn add-to-cart-btn" (click)="addToCart(item)">Add item ({{ getCartQuantity(item.id) }})</button>
+              <ng-container *ngIf="getCartQuantity(item.id) === 0; else quantityDisplay">
+                <button class="cart-btn add-to-cart-btn" (click)="addToCart(item)">Add item</button>
+              </ng-container>
+              <ng-template #quantityDisplay>
+                <span class="cart-quantity">Qty: {{ getCartQuantity(item.id) }}</span>
+              </ng-template>
               <button class="cart-btn plus-btn" (click)="addToCart(item)">+</button>
             </div>
-            <!-- <span class="add-to-cart-button" *ngIf="!isAdmin()"> add to cart</span> -->
             </div>
           
           <p class="menu-description">{{ item.description }}</p>
@@ -88,14 +116,14 @@
            <div class="menu-details-values">
             <span class="menu-price">{{ item.price |currency:'INR':'symbol'}}</span>
             <span class="menu-veg" [ngClass]="{'veg': item.isVeg, 'non-veg': !item.isVeg}">
-              {{ item.isVeg ? 'Veg' : 'Non-Veg' }}
+              {{ item.isVeg ? 'Veg'  : 'Non-Veg' }}
             </span>
             <!-- <span class="menu-category">Category: {{ item.categoryId }}</span> -->
             <span class="menu-status" [ngClass]="{'active': item.isActive, 'inactive': !item.isActive}" *ngIf=" isAdmin()" >
               {{ item.isActive ? 'Active' : 'Inactive' }}
             </span>
            </div>
-            <button class="edit-menu-button" (click)="onEdit(item)" *ngIf=" isAdmin()">Edit</button>
+            <span class="edit-menu-button pi pi-pencil" (click)="onEdit(item)" *ngIf=" isAdmin()"></span>
            
           </div>
         </div>

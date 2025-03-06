@@ -8,7 +8,7 @@ import {CookieService} from 'ngx-cookie-service'
 })
 export class AuthService {
   private apiUrl = 'http://localhost:4000/'; // Replace with your actual API URL
-  private currentUserSubject = new BehaviorSubject<any>(null);
+  private currentUserSubject = new BehaviorSubject<User|null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(
@@ -28,7 +28,10 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
    loadUserFromToken(): void {
-    const token = this.cookieService.get('token'); // Get token from cookies
+    
+
+    try{
+      const token = this.cookieService.get('token'); // Get token from cookies
     
     if (token ) {
       const decodedToken: any = this.jwtHelper.decodeToken(token);
@@ -42,6 +45,12 @@ export class AuthService {
       };
       this.currentUserSubject.next(user); // Store user in BehaviorSubject
       console.log('user loaded from token ',user)
+    }
+
+    }
+    catch(error){
+      console.log('error while decoding token in auth service ',error)
+
     }
 
   }
@@ -88,21 +97,30 @@ export class AuthService {
   }
 
   async logout(): Promise<void> {
-    await fetch(`${this.apiUrl}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        query: `
-          mutation Logout {
-            logout
-          }
-        `,
-      }),
-      credentials: 'include',
-    });
 
-    console.log('user logged out ',this.getCurrentUser())
-    this.currentUserSubject.next(null);
+    try{
+      await fetch(`${this.apiUrl}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: `
+            mutation Logout {
+              logout
+            }
+          `,
+        }),
+        credentials: 'include',
+      });
+  
+      console.log('user logged out ',this.getCurrentUser())
+      this.currentUserSubject.next(null);
+
+    }
+    catch(error){
+      console.log('error during logout ',error)
+
+    }
+    
 
 
   }

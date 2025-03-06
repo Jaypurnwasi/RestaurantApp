@@ -24,6 +24,7 @@
     "apollo-angular": "^10.0.3",
     "graphql": "^16.10.0",
     "ngx-cookie-service": "^19.1.2",
+    "primeicons": "^7.0.0",
     "primeng": "^19.0.8",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

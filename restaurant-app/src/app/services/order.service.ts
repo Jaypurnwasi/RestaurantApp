@@ -12,7 +12,9 @@ export class OrderService {
   orders$ = this.ordersSubject.asObservable();
 
   constructor(private apollo: Apollo) {
+
     this.fetchOrders('Previous'); // Default to Previous
+    // this.setupOrderSubscription(); 
   }
 
   fetchOrders(filterType: 'Live' | 'Previous', fetchPolicy: 'cache-first' | 'network-only' = 'cache-first'): void {
@@ -96,6 +98,37 @@ export class OrderService {
     console.log('Updated orders:', updatedOrders); // ADDED: Debug update
     this.ordersSubject.next(updatedOrders);
   }
+
+//   async setupOrderSubscription() {
+//     const subscription = gql`
+//      subscription Subscription {
+//   orderUpdated {
+//     orderId
+//     success
+//     updatedStatus
+//   }
+// }
+//     `;
+
+//     this.apollo.subscribe<{ orderUpdated: { orderId: string; updatedStatus: string; success: boolean } }>({
+//       query: subscription
+//     }).subscribe({
+//       next: (result) => {
+//         const updatedOrder = result.data?.orderUpdated;
+//         if (updatedOrder && updatedOrder.success) {
+//           const currentOrders = this.ordersSubject.value;
+//           const updatedOrders = currentOrders.map(order =>
+//             order.id === updatedOrder.orderId
+//               ? { ...order, status: updatedOrder.updatedStatus as 'Pending' | 'Prepared' | 'Completed' | 'Failed' }
+//               : order
+//           );
+//           this.ordersSubject.next(updatedOrders);
+//           console.log('order updated in subscription service ',updatedOrder)
+//         }
+//       },
+//       error: (err) => console.error('Subscription error:', err)
+//     });
+//   }
 
   getOrders(): Observable<Order[]> {
     return this.orders$;
