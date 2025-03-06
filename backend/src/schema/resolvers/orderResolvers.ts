@@ -204,7 +204,7 @@ Mutation:{
           }));
   
           // Create Order  Status
-          const orderStatus = success ? "Pending" : "Failed";
+          const orderStatus = success ? "Pending" : "Failed"; 
   
           // Create new Order
           const newOrder = await Order.create({
@@ -252,6 +252,7 @@ Mutation:{
           throw new GraphQLError(error.message, { extensions: { code: "INTERNAL_SERVER_ERROR" } });
         }
       },
+
       updateOrderStatus: async (  _: any, { input }: { input: UpdateOrderStatusInput },context: MyContext ) => {
         try {
           // Ensure user is authenticated

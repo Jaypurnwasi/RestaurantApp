@@ -41,7 +41,8 @@
             <td>
               <select 
                 [value]="order.status" 
-                (change)="updateStatus(order.id, $event)" >
+                (change)="updateStatus(order.id, $event)" 
+                [disabled]= "!isAdmin()">
                 <option 
                 *ngFor="let status of getValidStatuses(order.status)" 
                 [value]="status"
@@ -49,7 +50,7 @@
               >
                 {{ status }}
               </option>
-              </select>
+              </select >
             </td>
             <td>{{ order.customerId || 'N/A' }}</td>
             <td>{{ order.createdAt }}</td>

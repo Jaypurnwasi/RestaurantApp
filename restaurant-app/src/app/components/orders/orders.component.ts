@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { OrderService } from '../../services/order.service';
 import { Order } from '../../interfaces/order';
 import { Observable } from 'rxjs';
+import { User } from '../../interfaces/user';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-orders',
@@ -13,6 +15,8 @@ import { Observable } from 'rxjs';
 export class OrdersComponent {
   orders$!: Observable<Order[]>;
   isLiveFilter = true; // Default to Previous (false)
+  user: User | null = null;
+  
 
   validStatusTransitions: Record<string, string[]> = {
     'Pending': ['Pending', 'Prepared', 'Failed',],
@@ -21,7 +25,17 @@ export class OrdersComponent {
     'Failed': ['Failed'],       // No change allowed
   };
 
-  constructor(private orderService: OrderService) {}
+  constructor(private orderService: OrderService, private authService: AuthService,
+  ) { 
+    this.authService.currentUser$.subscribe(user => {
+    this.user = user;
+    });
+    
+  }
+  isAdmin(): boolean {
+    const user = this.authService.getCurrentUser();
+    return user?.role === 'Admin';
+  }
 
   ngOnInit(): void {
     this.orders$ = this.orderService.getOrders();

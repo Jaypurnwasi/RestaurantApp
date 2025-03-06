@@ -1,0 +1,279 @@
+.cart-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  h2 {
+    color: #B27369;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .cart-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+  
+  .cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .cart-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px;
+  }
+  
+  .cart-item-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+  
+  .cart-item-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .cart-item-details h4 {
+    margin: 0;
+    color: #333;
+    font-size: 1.2rem;
+  }
+  
+  .cart-item-details p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+  }
+  
+  .cart-item-price {
+    font-weight: 600;
+    color: #333;
+    margin-right: 15px;
+  }
+  
+  .cart-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .cart-item-quantity {
+    color: #666;
+    font-weight: 500;
+  }
+  
+  .cart-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .minus-btn {
+    background-color: #ef4444;
+    color: white;
+  }
+  
+  .minus-btn:hover {
+    background-color: #dc2626;
+  }
+  
+  .plus-btn {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .plus-btn:hover {
+    background-color: #45a049;
+  }
+  
+  .remove-btn {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .remove-btn:hover {
+    background-color: #dc2626;
+  }
+  
+  .cart-total {
+    margin-top: 20px;
+    text-align: right;
+  }
+  
+  .cart-total h3 {
+    margin: 0;
+    color: #B27369;
+    font-size: 1.5rem;
+  }
+  
+  .empty-cart {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+  }
+
+  .cart-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .table-select {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .table-select label {
+    color: #333;
+    font-weight: 500;
+
+  }
+  
+  .table-dropdown {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    border: 2px solid #B27369;
+
+  }
+  
+  .cart-total {
+    text-align: right;
+  }
+  
+  .cart-total h3 {
+    margin: 0 0 10px;
+    color: #B27369;
+    font-size: 1.5rem;
+  }
+  
+  .payment-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .payment-btn:hover {
+    background-color: #45a049;
+  }
+  
+  .payment-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    text-align: center;
+  }
+  
+  .modal-content h3 {
+    color: #B27369;
+    margin-bottom: 20px;
+  }
+  
+  .form-field {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+  
+  .form-field label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  .form-field input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  .error {
+    color: #ef4444;
+    margin: 10px 0;
+  }
+  
+  .modal-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .cancel-btn {
+    background-color: #666;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .cancel-btn:hover {
+    background-color: #555;
+  }
+  
+  .submit-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .submit-btn:hover {
+    background-color: #45a049;
+  }
+  
+  .submit-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }

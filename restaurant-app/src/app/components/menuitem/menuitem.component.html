@@ -43,7 +43,6 @@
 
     <div class="menu-item-header">
         <h3>All Menu Items</h3>
-
         <div class="veg-toggle-wrapper">
           <label class="veg-toggle-label">Filter:</label>
           <div class="veg-toggle">
@@ -62,7 +61,6 @@
           </div>
         </div>
 
-
         <input type="text" class="search-input" placeholder="Search items" (input)="onSearch($event)"/>
         <button class="add-button" (click)="toggleForm()" *ngIf="user?.role==='Admin'">Add item</button>
     </div>
@@ -77,6 +75,12 @@
             <span class="material-symbols-outlined delete-icon" (click)="onDelete(item.id,item.name)" *ngIf="isAdmin()">
             delete 
             </span>
+            <div *ngIf="!isAdmin()" class="cart-controls">
+              <button class="cart-btn minus-btn" (click)="removeFromCart(item)" [disabled]="getCartQuantity(item.id) === 0">-</button>
+              <button class="cart-btn add-to-cart-btn" (click)="addToCart(item)">Add item ({{ getCartQuantity(item.id) }})</button>
+              <button class="cart-btn plus-btn" (click)="addToCart(item)">+</button>
+            </div>
+            <!-- <span class="add-to-cart-button" *ngIf="!isAdmin()"> add to cart</span> -->
             </div>
           
           <p class="menu-description">{{ item.description }}</p>
@@ -87,11 +91,12 @@
               {{ item.isVeg ? 'Veg' : 'Non-Veg' }}
             </span>
             <!-- <span class="menu-category">Category: {{ item.categoryId }}</span> -->
-            <span class="menu-status" [ngClass]="{'active': item.isActive, 'inactive': !item.isActive}" *ngIf=" isAdmin()">
+            <span class="menu-status" [ngClass]="{'active': item.isActive, 'inactive': !item.isActive}" *ngIf=" isAdmin()" >
               {{ item.isActive ? 'Active' : 'Inactive' }}
             </span>
            </div>
             <button class="edit-menu-button" (click)="onEdit(item)" *ngIf=" isAdmin()">Edit</button>
+           
           </div>
         </div>
       </div>

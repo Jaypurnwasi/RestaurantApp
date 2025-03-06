@@ -9,6 +9,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { StaffComponent } from './components/staff/staff.component';
 import { HomeComponent } from './pages/home/home.component';
 import { CartComponent } from './components/cart/cart.component';
+import { LandingPageComponent } from './components/landing-page/landing-page.component';
 export const routes: Routes = [
   { path: 'login',
      component: LoginComponent ,
@@ -41,12 +42,12 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { role: ['Customer','Admin'] },
     children: [
+      { path: 'home', component: LandingPageComponent }, // ADDED: Banner goes here
       { path: 'menu', component: MenuitemComponent }, // Menu page
       { path: 'cart', component: CartComponent }, // Cart page
       { path: 'orders', component: OrdersComponent }, // Customer orders
       { path: '', redirectTo: 'home', pathMatch: 'full' }, // Default to home
     ],
-
   }
 
 ];

@@ -282,6 +282,8 @@
 
 .menu-items-container {
   padding: 20px;
+  max-width: 80vw;
+  margin:  0 auto;
 }
 
 h3 {
@@ -333,7 +335,7 @@ h3 {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  font-size: 0.85rem;
+  font-size: 0.90rem;
   justify-content: space-between;
   align-items: center;
 }
@@ -341,9 +343,12 @@ h3 {
 .menu-price {
   font-weight: bold;
   color: #2c6e49;
+  margin: 3px;
+
 }
 
 .menu-veg {
+  margin: 3px;
   padding: 2px 8px;
   border-radius: 12px;
   &.veg {
@@ -415,6 +420,48 @@ h3 {
 }
 .delete-icon:hover{
     color: rgba(255, 0, 0, 0.822);
+}
+
+.cart-controls {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cart-btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.minus-btn {
+  background-color: #ef4444;
+  color: white;
+}
+
+.minus-btn:hover {
+  background-color: #dc2626;
+}
+
+.add-to-cart-btn {
+  background-color: #ff9800;
+  color: white;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #f57c00;
+}
+
+.plus-btn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.plus-btn:hover {
+  background-color: #45a049;
 }
 /* Responsive adjustments */
 @media (max-width: 600px) {

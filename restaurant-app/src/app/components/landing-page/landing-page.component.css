@@ -1,0 +1,133 @@
+.banner {
+    background-color: #B27369;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .banner h1 {
+    margin: 0;
+    font-size: 2rem;
+  }
+  
+  .banner p {
+    margin: 10px 0 0;
+    font-size: 1.2rem;
+  }
+  
+  .home-content {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .home-content h2 {
+    color: #B27369;
+  }
+  
+  .home-content p {
+    color: #333;
+  }
+  
+  /* Carousel Styles */
+  :host ::ng-deep .p-carousel {
+    padding: 20px 0; /* Add spacing above and below carousel */
+    max-width: 80vw;
+  margin:  0 auto;
+  }
+  
+  :host ::ng-deep .p-carousel-items-content {
+    display: flex;
+    gap: 20px; /* Space between carousel items */
+  }
+  
+  .carousel-item {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 300px; /* Fixed width for consistency */
+    margin: 0 auto; 
+  }
+  
+  .image-container {
+    position: relative;
+    width: 100%;
+    height: 150px; /* Fixed height for images */
+  }
+  
+  .carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensure images fit without distortion */
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  
+  .veg-tag {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: white;
+  }
+  
+  .veg-tag.veg {
+    background-color: rgba(0, 128, 0, 0.8);
+  }
+  
+  .veg-tag.non-veg {
+    background-color: rgba(255, 0, 0, 0.8);
+  }
+  
+  .item-content {
+    padding: 15px;
+  }
+  
+  .item-name {
+    margin: 0 0 10px;
+    font-size: 1.2rem;
+    color: #333;
+    text-align: center;
+  }
+  
+  .item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .item-price {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: rgba(0, 128, 0, 0.575);
+  }
+  
+  :host ::ng-deep .p-button-sm.add-to-cart-btn {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+    background-color: #ff9800;
+    border-color: #ff9800;
+  }
+  
+  :host ::ng-deep .p-button-sm.add-to-cart-btn:hover {
+    background-color: #f57c00;
+    border-color: #f57c00;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .carousel-item {
+      width: 200px; /* Smaller width on tablets */
+    }
+  }
+  
+  @media (max-width: 560px) {
+    .carousel-item {
+      width: 100%; /* Full width on mobile */
+      max-width: 250px;
+    }
+  }

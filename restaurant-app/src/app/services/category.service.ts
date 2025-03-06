@@ -67,7 +67,7 @@ export class CategoryService {
   // START OF CHANGES
   async deleteCategory(id: string): Promise<void> {
     const mutation = gql`
-      mutation deleteCategory($input: DeleteCategoryInput!) {
+      mutation DeleteCategory($input: DeleteCategoryInput!) {
         deleteCategory(input: $input) {
           id
           name
@@ -80,7 +80,7 @@ export class CategoryService {
       const result = await firstValueFrom(
         this.apollo.mutate<{ deleteCategory: Category }>({
           mutation,
-          variables: { input: { id:id } },
+          variables: { input: { id } },
         })
         
       );

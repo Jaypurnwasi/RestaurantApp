@@ -1,1 +1,60 @@
-<p>cart works!</p>
+<div class="cart-container">
+    <h2>Your Cart</h2>
+    <div class="cart-card" *ngIf="cart$ | async as cart; else emptyCart">
+      <div class="cart-items">
+        <div class="cart-item" *ngFor="let item of cart.items">
+          <img [src]="'./assets/images/' + item.menuItem.image" [alt]="item.menuItem.name" class="cart-item-image" />
+          <div class="cart-item-details">
+            <h4>{{ item.menuItem.name }}</h4>
+            <p>{{ item.menuItem.description }}</p>
+            <span class="cart-item-price">{{ item.menuItem.price | currency:'INR':'symbol' }}</span>
+            <div class="cart-controls">
+              <button class="cart-btn minus-btn" (click)="removeItem(item.menuItem.id)" [disabled]="item.quantity === 0">-</button>
+              <span class="cart-item-quantity">Qty: {{ item.quantity }}</span>
+              <button class="cart-btn plus-btn" (click)="addItem(item.menuItem.id)">+</button>
+            </div>
+            <!-- <button class="remove-btn" (click)="removeItem(item.menuItem.id)">Remove</button> -->
+          </div>
+        </div>
+      </div>
+      <div class="cart-actions">
+        <div class="table-select">
+          <label for="table">Select Table:</label>
+          <select id="table" [(ngModel)]="selectedTableId" class="table-dropdown">
+            <option value="">-- Select a table --</option>
+            <option *ngFor="let table of tables" [value]="table.id">{{ table.name }}</option>
+          </select>
+        </div>
+        <div class="cart-total">
+          <h3>Total: {{ total$ | async }}</h3>
+          <button class="payment-btn" (click)="togglePaymentModal()" [disabled]="!cart.items.length">Make Payment</button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="showPaymentModal" class="modal-overlay">
+        <div class="modal-content">
+          <h3>Payment Details</h3>
+          <form [formGroup]="paymentForm" (ngSubmit)="makePayment()">
+            <div class="form-field">
+              <label for="upiId">UPI ID:</label>
+              <input id="upiId" formControlName="upiId" type="text" placeholder="e.g., 1234" />
+            </div>
+            <div class="form-field">
+              <label for="pin">PIN:</label>
+              <input id="pin" formControlName="pin" type="password" placeholder="e.g., 1234" />
+            </div>
+            <p class="error" *ngIf="paymentError">{{ paymentError }}</p>
+            <div class="modal-actions">
+              <button type="button" class="cancel-btn" (click)="togglePaymentModal()">Cancel</button>
+              <button type="submit" class="submit-btn" [disabled]="paymentForm.invalid">Pay Now</button>
+            </div>
+          </form>
+        </div>
+      </div>
+  
+    <ng-template #emptyCart>
+      <div class="empty-cart">
+        <p>Your cart is empty.</p>
+      </div>
+    </ng-template>
+  </div>

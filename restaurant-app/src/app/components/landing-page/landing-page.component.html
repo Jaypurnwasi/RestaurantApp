@@ -1,0 +1,48 @@
+<div class="banner">
+    <h1>Welcome to Our Restaurant!</h1>
+    <p>Explore our delicious menu and place your order today.</p>
+  </div>
+  
+  <p-carousel 
+    [value]="menuItems" 
+    [numVisible]="3" 
+    [numScroll]="3" 
+    [circular]="true" 
+    [responsiveOptions]="responsiveOptions" 
+    [autoplayInterval]="3000"
+  >
+    <ng-template let-item pTemplate="item">
+      <div class="carousel-item">
+        <div class="image-container">
+          <img 
+            [src]="'./assets/images/' + item.image" 
+            [alt]="item.name" 
+            class="carousel-image" 
+          />
+          <span 
+            class="veg-tag" 
+            [ngClass]="{'veg': item.isVeg, 'non-veg': !item.isVeg}"
+          >
+            {{ item.isVeg ? 'Veg' : 'Non-Veg' }}
+          </span>
+        </div>
+        <div class="item-content">
+          <h4 class="item-name">{{ item.name }}</h4>
+          <div class="item-footer">
+            <span class="item-price">{{ item.price | currency:'INR':'symbol' }}</span>
+            <p-button 
+              icon="pi pi-shopping-cart" 
+              label="Add to Cart" 
+              styleClass="p-button-sm add-to-cart-btn" 
+              (click)="addToCart(item)" 
+            />
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </p-carousel>
+  
+  <div class="home-content">
+    <h2>Welcome, Customer!</h2>
+    <p>This is your home page.</p>
+  </div>

@@ -9,6 +9,8 @@ import { CategoryService } from '../../services/category.service';
 import { BehaviorSubject } from 'rxjs';
 import { User } from '../../interfaces/user';
 import { AuthService } from '../../services/auth.service';
+import { CartService } from '../../services/cart.service';
+import { Cart } from '../../interfaces/cart';
 @Component({
   selector: 'app-menuitem',
   imports: [CommonModule,ReactiveFormsModule],
@@ -24,6 +26,8 @@ export class MenuitemComponent {
   editingItemId:string|null = null;
   baseUrl = './assets/images/';
   user: User | null = null;
+  cart$:any;
+  selectedCategoryId: string | null = null; // ADDED: Track selected category
   
 
   addMenuItemForm = new FormGroup({
@@ -36,7 +40,11 @@ export class MenuitemComponent {
     
   });
 
-  constructor(public menuService: MenuService,private categoryService:CategoryService,private authService: AuthService) {
+  constructor(public menuService: MenuService,
+    private categoryService:CategoryService,
+    private authService: AuthService,
+    private cartService: CartService,
+  ) {
     this.authService.currentUser$.subscribe(user => {
       this.user = user;
     });
@@ -52,6 +60,7 @@ export class MenuitemComponent {
         this.categories = categories;
         console.log('Categories:', this.categories); // Debugging
       });
+      this.cartService.fetchCartItems();
       
       console.log('menu items in menuItemComponents is',this.menuItems$.value)
       console.log('categories fetched in menu item component', this.categories)
@@ -66,7 +75,15 @@ export class MenuitemComponent {
     this.menuService.fetchMenuItems(this.isVegFilter)
     this.menuService.menuItems$.subscribe((items:Menuitem[]) => {
       this.menuItems$.next(items)})
+
   }
+  fetchCategories() {
+    this.categoryService.fetchCategories();
+    this.categoryService.categories$.subscribe((categories) => {
+      this.categories = categories;
+    });
+  }
+  
 
   onVegToggle(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
@@ -153,6 +170,24 @@ export class MenuitemComponent {
     if (confirm(`Are you sure you want to delete this item? ${name}`)) {
       await this.menuService.deleteMenuItem(itemId);
     }
+  }
+
+  async addToCart(item: Menuitem) {
+    if (!this.isAdmin()) {
+      await this.cartService.addItemToCart(item.id);
+    }
+  }
+
+  async removeFromCart(item: Menuitem) {
+    if (!this.isAdmin()) {
+      await this.cartService.removeItemFromCart(item.id);
+    }
+  }
+
+  getCartQuantity(itemId: string): number {
+    const cart = this.cartService.getCart();
+    const cartItem = cart?.items.find(i => i.menuItem.id === itemId);
+    return cartItem ? cartItem.quantity : 0;
   }
 
 }
