@@ -256,7 +256,7 @@ Query:{
 
     async signup(_: any, { input }: { input: SignupInput }, { res }: any) {
       try {
-        const { name, email, password, profileImage } = input;
+        const { name, email, password, profileImg} = input;
 
         // Check if email already exists
         const existingUser = await User.findOne({ email });
@@ -276,22 +276,21 @@ Query:{
           email,
           password: hashedPassword,
           role: Role.CUSTOMER, // Hardcoded as "Customer"
-          profileImage,
+          profileImg,
         });
 
         await newUser.save();
 
         // Generate JWT token
         const token = jwt.sign(
-          { id: newUser.id, role: newUser.role },
+          { id: newUser.id, role: newUser.role,name:newUser.name,email:newUser.email,profileImg:newUser.profileImg },
           process.env.KEY as string,
           { expiresIn: "7d" }
         );
 
         // Set token in HTTP-only cookie
         res.cookie("token", token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
+          secure: process.env.NODE_ENV === "production"?true:false, 
           sameSite: "strict",
           maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
