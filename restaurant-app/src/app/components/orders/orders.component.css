@@ -1,5 +1,11 @@
 .orders-container {
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+     width: 80vw;
+    margin: 0 auto;
+   
   }
   
   h3 {
@@ -113,7 +119,7 @@
   
   .orders-table th,
   .orders-table td {
-    padding: 15px 20px;
+    padding: 15px 30px;
     text-align: left;
     border-bottom: 1px solid #ddd;
     color: #333;
@@ -126,7 +132,7 @@
     text-transform: uppercase;
     font-size: 0.9rem;
   }
-  
+ 
   .orders-table tr:hover {
     background-color: #f5f0ec;
   }

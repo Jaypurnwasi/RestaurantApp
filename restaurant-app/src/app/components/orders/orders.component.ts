@@ -16,7 +16,15 @@ export class OrdersComponent {
   orders$!: Observable<Order[]>;
   isLiveFilter = true; // Default to Previous (false)
   user: User | null = null;
-  
+  loading = false
+  tables = [
+    { id: "67b6cf6cd768b459dabe8aa5", name: "table_1" },
+    { id: "67b6cfda8ee98a7a3b948539", name: "table_2" },
+    { id: "67b6cfe08ee98a7a3b94853a", name: "table_3" },
+    { id: "67b6cfe78ee98a7a3b94853b", name: "table_4" },
+    { id: "67b6cfed8ee98a7a3b94853c", name: "table_5" },
+    { id: "67b6cff48ee98a7a3b94853d", name: "table_6" }
+  ];
 
   validStatusTransitions: Record<string, string[]> = {
     'Pending': ['Pending', 'Prepared', 'Failed',],
@@ -31,6 +39,10 @@ export class OrdersComponent {
     this.user = user;
     });
     
+  }
+  ngOnInit(): void {
+    this.orders$ = this.orderService.getOrders();
+    this.fetchOrders('network-only'); // Initial fetch with default filter
   }
   getStatusStyle(status: string): any {
     switch (status) {
@@ -64,22 +76,20 @@ export class OrdersComponent {
     const user = this.authService.getCurrentUser();
     return user?.role === 'Admin';
   }
-
-  ngOnInit(): void {
-    this.orders$ = this.orderService.getOrders();
-    this.fetchOrders('network-only'); // Initial fetch with default filter
+  getTableName(tableId: string): string {
+    const table = this.tables.find(t => t.id === tableId);
+    return table ? table.name : 'Unknown Table';
   }
-
+  
   onStatusToggle(event: Event): void {
     this.isLiveFilter = (event.target as HTMLInputElement).checked; // true = Live, false = Previous
     this.fetchOrders('network-only');
   }
 
-  fetchOrders(fetchPolicy: 'cache-first' | 'network-only' = 'network-only'): void {
+   fetchOrders(fetchPolicy: 'cache-first' | 'network-only' = 'network-only'){
     const filterType = this.isLiveFilter ? 'Live' : 'Previous';
-    this.orderService.fetchOrders(filterType,fetchPolicy);
+    this.orderService.fetchOrders(filterType,fetchPolicy)
     console.log('orders fetched  ')
-
   }
 
   async updateStatus(orderId: string, event: Event): Promise<void> {
@@ -93,8 +103,6 @@ export class OrdersComponent {
     } catch (error: any) {
       console.error('Error updating order status:', error);
     }
-    
-
   }
   getValidStatuses(currentStatus: string): string[] {
     return this.validStatusTransitions[currentStatus] || [currentStatus];

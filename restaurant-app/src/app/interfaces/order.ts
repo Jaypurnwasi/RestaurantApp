@@ -3,6 +3,7 @@ export interface Order {
   amount: number;
   createdAt: string;
   customerId: string | null;
+  customerName:string;
   items: {
     menuItem: {
       id: string;

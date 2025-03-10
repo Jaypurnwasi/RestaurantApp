@@ -5,10 +5,11 @@ import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { MenuService } from './services/menu.service';
 import { Apollo } from 'apollo-angular';
 import { UserService } from './services/user.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet,FontAwesomeModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   standalone:true
@@ -18,7 +19,8 @@ import { UserService } from './services/user.service';
 export class AppComponent {
   
   title = 'restaurant-app';
-  constructor(private authService: AuthService,private menuService: MenuService,private userService:UserService) { //private 
+  constructor(private authService: AuthService,private menuService: MenuService,private userService:UserService) { 
+    //private 
      // Load user on app start
     //  this.authService.loadUserFromToken()
     //  console.log(this.authService.getCurrentUser())   
@@ -28,7 +30,6 @@ export class AppComponent {
     // This ensures the user is loaded on app start
     this.authService.loadUserFromToken(); // Ensure user is loaded on startup
     console.log('Current User on Init:', this.authService.getCurrentUser());
-
     await this.menuService.fetchMenuItems();
 
   }

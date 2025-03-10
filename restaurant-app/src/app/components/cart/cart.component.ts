@@ -8,6 +8,7 @@ import { Apollo, gql } from 'apollo-angular';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { OrderService } from '../../services/order.service';
+import { TableService } from '../../services/table.service';
 @Component({
   selector: 'app-cart',
   standalone: true,
@@ -38,13 +39,17 @@ export class CartComponent implements OnInit {
   constructor(private cartService: CartService,
     private apollo: Apollo,
     private router: Router,
-    private orderService : OrderService
+    private orderService : OrderService,
+    private tableService: TableService
   ) {
     this.cart$ = this.cartService.cart$; // Initialize here to avoid TS error
   }
 
 
   ngOnInit(): void {
+    this.selectedTableId = this.tableService.getTableId() || '';
+    
+    console.log('tableId in cart component is ',this.selectedTableId)
     this.cartService.fetchCartItems();
     this.cart$.subscribe(() => {
       this.total$.next(this.cartService.getTotal());

@@ -6,11 +6,13 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Category } from '../../interfaces/category';
 import { CategoryService } from '../../services/category.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { User } from '../../interfaces/user';
 import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
 import { Cart } from '../../interfaces/cart';
+import { TableService } from '../../services/table.service';
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-menuitem',
   imports: [CommonModule,ReactiveFormsModule],
@@ -29,6 +31,8 @@ export class MenuitemComponent {
   cart$:Cart|null = null;
   selectedCategoryId: string | null = null; // ADDED: Track selected category
   errorMessage: string = '';
+  private unsubscribe$ = new Subject<void>()
+  tableId: string = '';
   
 
   addMenuItemForm = new FormGroup({
@@ -45,6 +49,9 @@ export class MenuitemComponent {
     private categoryService:CategoryService,
     private authService: AuthService,
     private cartService: CartService,
+    private tableService : TableService,
+    private route: ActivatedRoute,
+    private router: Router,
   ) {
     this.authService.currentUser$.subscribe(user => {
       this.user = user;
@@ -52,20 +59,42 @@ export class MenuitemComponent {
   }
 
   ngOnInit(): void {  
-    this.menuService.menuItems$.subscribe((items:Menuitem[]) => {
-      this.menuItems$.next(items);
-      this.loading = false;
+    this.loading = true;
+    this.menuService.fetchMenuItems();
+    this.categoryService.fetchCategories();
+    this.cartService.fetchCartItems();
 
-      this.categoryService.fetchCategories();
-      this.categoryService.categories$.subscribe((categories) => {
-        this.categories = categories;
-        console.log('Categories:', this.categories); // Debugging
-      });
-      this.cartService.fetchCartItems();
-      
-      console.log('menu items in menuItemComponents is',this.menuItems$.value)
-      // console.log('categories fetched in menu item component', this.categories)
+    this.route.queryParams.subscribe(params => {
+      if (params['tableId']) {
+        this.tableId = params['tableId'];
+        this.tableService.setTableId(this.tableId); // Save for later use
+      }
     });
+    console.log('table id fetched in menuItems is ',this.tableId)
+
+    if(!this.authService.getCurrentUser()){
+      this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
+
+    }
+
+
+    // Used combineLatest to avoid nested subscriptions
+    combineLatest([this.menuService.menuItems$, this.categoryService.categories$])
+      .pipe(takeUntil(this.unsubscribe$)) // Cleanup when component is destroyed
+      .subscribe(([menuItems, categories]) => {
+        this.menuItems$.next(menuItems);
+        this.categories = categories;
+        this.loading = false;
+
+        console.log('Menu items:', this.menuItems$.value);
+        console.log('Categories:', this.categories);
+      });
+      this.loading= false
+
+  }
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
   isAdmin(): boolean {
     const user = this.authService.getCurrentUser();
@@ -112,9 +141,21 @@ export class MenuitemComponent {
 
   onVegToggle(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
-    this.isVegFilter = checked ? true : undefined; // `true` for Veg, `undefined` for all
+    this.isVegFilter = checked ? true : undefined; // `true` for Veg, false for non veg `undefined` for all
     this.fetchMenuItems();
     console.log('veg toggle clicked',this.isVegFilter)
+  }
+  onNonVegToggle(event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+  
+    // If Non-Veg is checked, disable Veg filter
+    if (checked) {
+      this.isVegFilter = false; // Show only Non-Veg
+    } else {
+      this.isVegFilter = undefined; // Show All when unchecked
+    }
+  
+    this.fetchMenuItems();
   }
 
   onSearch(event: Event) {
@@ -142,8 +183,6 @@ export class MenuitemComponent {
     }
   }
 
-
-
   toggleForm() {
 
     if (this.isAdmin()) { // Guarded for Admin only
@@ -159,8 +198,6 @@ export class MenuitemComponent {
     const file = event.target.files[0];
     this.addMenuItemForm.patchValue({ image: file ? file.name : '' });
   }
-
-
 
   async addMenuItem() {
     if (this.addMenuItemForm.valid) {

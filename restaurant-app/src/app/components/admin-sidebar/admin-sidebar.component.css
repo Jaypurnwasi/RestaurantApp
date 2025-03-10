@@ -1,18 +1,18 @@
 .admin-sidebar {
-    width: 250px;
-    background-color: #FAF7F3; /* Match navbar #FAF7F3 */
-    color: black;
-    padding: 20px 10px;
-    /* border-radius: 10px; */
-    /* margin: 10px; */
-    height: calc(100vh - 80px); /* Adjust based on navbar height */
-    display: flex;
-    flex-direction: column;
-    transition: width 0.3s ease;
-    overflow: hidden;
-    /* border: 1px solid black; */
-
-  }
+  width: 250px;
+  background-color: #FAF7F3;
+  color: black;
+  padding: 20px 10px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  position: sticky;
+  top: 0px; /* Height of navbar (40px content + 20px padding) */
+  left: 0;
+  z-index: 1000;
+}
 
   .sidebar-list {
    list-style: none;

@@ -13,8 +13,9 @@ export class OrderService {
 
   constructor(private apollo: Apollo) {
 
-    this.fetchOrders('Live','network-only'); // Default to Previous
+    this.fetchOrders('Live','network-only'); 
     this.setupOrderSubscription(); 
+    // this.setupCreateOrderSubscription()
   }
 
   fetchOrders(filterType: 'Live' | 'Previous', fetchPolicy: 'cache-first' | 'network-only' = 'network-only'): void {
@@ -27,6 +28,7 @@ export class OrderService {
               amount
               createdAt
               customerId
+              customerName
               items {
                 menuItem {
                   id
@@ -117,6 +119,28 @@ export class OrderService {
         const updatedOrder = result.data?.orderUpdated;
         this.fetchOrders('Live','network-only')
        
+      },
+      error: (err) => console.error('Subscription error:', err)
+    });
+  }
+
+  async setupCreateOrderSubscription() {
+    const subscription = gql`
+     subscription Subscription {
+    orderCreated {
+    amount
+    status
+    }
+  }
+    `;
+
+    this.apollo.subscribe<{ orderCreated: { amount: string; status: string;  } }>({
+      query: subscription
+    }).subscribe({
+      next: (result) => {
+        const updatedOrder = result.data?.orderCreated;
+        this.fetchOrders('Live','network-only')
+
       },
       error: (err) => console.error('Subscription error:', err)
     });

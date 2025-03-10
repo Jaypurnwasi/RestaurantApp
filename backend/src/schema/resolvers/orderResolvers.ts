@@ -8,6 +8,8 @@ import { MyContext,CreateOrderInput, OrderStatus,UpdateOrderStatusInput} from ".
 import Table from "../../models/Table";
 import { PubSub } from "graphql-subscriptions";
 import { timeStamp } from "console";
+import User from "../../models/User";
+import { subscribe } from "diagnostics_channel";
  
 const pubsub = new PubSub();
 
@@ -111,7 +113,11 @@ Query : {
           path: "items.menuItem",
           model: MenuItem, // Ensures full MenuItem details are included
         })
-        .populate("customerId")
+        .populate({
+          path: "customerId",
+          model: User,  // Ensure you have the User model populated
+          select: "name", // Only fetch the customer's name
+        })
         .sort({ createdAt: -1 })
         .lean();
   
@@ -141,6 +147,9 @@ Query : {
         amount: order.amount,
         status: order.status,
         customerId: order.customerId ? order.customerId._id : null,
+        customerName: order.customerId && typeof order.customerId !== "string"
+        ? (order.customerId as unknown as { name: string }).name
+        : "Unknown",
         createdAt: order.createdAt.toLocaleString(),
         updatedAt: order.updatedAt.toLocaleString(),
         
@@ -225,8 +234,9 @@ Mutation:{
           await Cart.findOneAndDelete({ userId: customerId });
   
           // Return newly created order
+          pubsub.publish('ORDER_CREATED',{orderCreated:newOrder})
           
-          return {
+          return {  
             id: newOrder._id,
             tableId: newOrder.tableId,
             items: await Promise.all(
@@ -324,6 +334,9 @@ Mutation:{
 Subscription: {
   orderUpdated: {
     subscribe: () => pubsub.asyncIterableIterator("ORDER_UPDATED"),
+  },
+  orderCreated:{
+    subscribe:()=> pubsub.asyncIterableIterator("ORDER_CREATED"),
   }
 },
 

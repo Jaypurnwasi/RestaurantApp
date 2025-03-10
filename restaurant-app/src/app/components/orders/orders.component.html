@@ -22,21 +22,36 @@
     </div>
   
     <ng-container *ngIf="orders$ | async as orderList">
-      <table class="orders-table" *ngIf="orderList.length > 0; else noOrdersTemplate">
+      <table class="orders-table center"  *ngIf="orderList.length > 0; else noOrdersTemplate">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Amount</th>
-            <th>Status</th>
-            <th>Created At</th>
-            <th>Updated At</th>
+            <th *ngIf="isAdmin()">ID</th>
+            <th *ngIf="isAdmin()">Customer</th>
             <th>Items</th>
+            <th>table_no</th>
+            <th>Amount</th>
+            <th>Created At</th>
+            <th>Updated At</th> 
+            <th>Status</th>
           </tr>
-        </thead>
+        </thead>  
         <tbody>
           <tr *ngFor="let order of orderList">
-            <td>{{ order.id }}</td>
+            <td *ngIf="isAdmin()">{{ order.id }}</td>
+            <td *ngIf="isAdmin()">{{order.customerName}}</td>
+            <td>
+              <ul>
+                <li *ngFor="let item of order.items" class="item-list">
+                  {{ item.menuItem.name }} (Qty: {{ item.quantity }})
+                </li>
+              </ul>
+            </td>
+            <td>{{ getTableName(order.tableId)}}</td>
             <td>{{ order.amount | currency }}</td>
+            
+            <td>{{ order.createdAt }}</td>
+            <td>{{ order.updatedAt }}</td>
+            
             <td>
               <select 
                 [value]="order.status" 
@@ -52,21 +67,16 @@
               </option>
               </select >
             </td>
-            <td>{{ order.createdAt }}</td>
-            <td>{{ order.updatedAt }}</td>
-            <td>
-              <ul>
-                <li *ngFor="let item of order.items">
-                  {{ item.menuItem.name }} (Qty: {{ item.quantity }})
-                </li>
-              </ul>
-            </td>
           </tr>
         </tbody>
       </table>
     </ng-container>
   
-    <ng-template #noOrdersTemplate>
-      <div class="no-items">No orders found.</div>
+    <ng-template #noOrdersTemplate  >
+      <div class="no-items">No orders found. </div>
+    </ng-template>
+
+    <ng-template #loadingTemplate >
+      <div class="loading" *ngIf="loading">Loading menu items...</div>
     </ng-template>
   </div>

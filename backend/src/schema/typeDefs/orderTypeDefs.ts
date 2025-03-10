@@ -36,6 +36,7 @@ type Order {
   amount: Int!
   status: OrderStatus!
   customerId: ID!
+  customerName: String
   createdAt: String!
   updatedAt: String!
 }
@@ -91,5 +92,6 @@ type Mutation {
 
 type Subscription {
   orderUpdated: updatedStatus
+  orderCreated: Order
 }
 `;

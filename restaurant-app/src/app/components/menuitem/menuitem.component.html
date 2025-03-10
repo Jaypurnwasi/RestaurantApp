@@ -43,7 +43,7 @@
 
     <div class="menu-item-header">
         <div class="veg-toggle-wrapper">
-          <label class="veg-toggle-label">Filter:</label>
+          <label class="veg-toggle-label"><img src="assets/images/veg.png" alt="Veg" width="30px" height="30px" > </label>
           <div class="veg-toggle">
             <input 
               type="checkbox" 
@@ -53,11 +53,30 @@
               hidden 
             />
             <label for="veg-toggle" class="toggle-slider">
-              <span class="toggle-text veg">Veg</span>
-              <span class="toggle-text all">All</span>
+              <span class="toggle-text veg">On</span>
+              <span class="toggle-text all">Off</span>
+              <span class="slider-ball"> </span>
+            </label>
+          </div>
+      
+          <label class="veg-toggle-label"><img src="assets/images/non-veg.png" alt="Veg" width="30px" height="30px"> </label>
+
+          <div class="veg-toggle">
+            <input 
+              type="checkbox" 
+              id="nonveg-toggle" 
+              (change)="onNonVegToggle($event)" 
+              [checked]="isVegFilter === false" 
+              hidden 
+            />
+            <label for="nonveg-toggle" class="toggle-slider nonveg-slider">
+              <span class="toggle-text nonveg">On</span>
+              <span class="toggle-text all">Off</span>
               <span class="slider-ball"></span>
             </label>
           </div>
+          
+          
         </div>
         <div class="categories-container">
           <button class="scroll-btn left-btn" (click)="scrollCategories('left')"><</button>

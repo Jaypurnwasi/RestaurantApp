@@ -20,6 +20,8 @@
     "@angular/router": "^19.1.7",
     "@apollo/client": "^3.13.1",
     "@auth0/angular-jwt": "^5.2.0",
+    "@fortawesome/angular-fontawesome": "^1.0.0",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@primeng/themes": "^19.0.8",
     "apollo-angular": "^10.0.3",
     "graphql": "^16.10.0",
