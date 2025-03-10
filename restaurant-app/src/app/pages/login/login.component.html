@@ -1,5 +1,5 @@
 <div class="login-container">
-    <h2>Login</h2>
+    <h2 class="login-header">Login</h2>
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div>
         <label>Email</label>
@@ -13,12 +13,16 @@
         <label>Password</label>
         <input type="password" formControlName="password" />
         <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error">
-          Password must be at least 6 characters.
+          Password must be at least 4 characters.
         </div>
       </div>
   
-      <button type="submit" [disabled]="loginForm.invalid">Login</button>
+      <button type="submit" [disabled]="loginForm.invalid" class="login-button">Login</button>
     </form>
+    <div class="signup-section">
+      <span>New user?</span>
+      <button class="signup-btn" (click)="onSignup()">Sign Up</button>
+    </div>
   
     <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
   </div>

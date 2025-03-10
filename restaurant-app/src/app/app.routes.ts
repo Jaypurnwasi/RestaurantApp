@@ -10,10 +10,16 @@ import { StaffComponent } from './components/staff/staff.component';
 import { HomeComponent } from './pages/home/home.component';
 import { CartComponent } from './components/cart/cart.component';
 import { LandingPageComponent } from './components/landing-page/landing-page.component';
+import { SignUpComponent } from './pages/sign-up/sign-up.component';
 export const routes: Routes = [
   { path: 'login',
      component: LoginComponent ,
    
+    },
+    {
+      path:'signup',
+      component:SignUpComponent
+
     },
   {
     path:'admin',
@@ -40,7 +46,7 @@ export const routes: Routes = [
     path:'',
     component:HomeComponent,
     canActivate: [AuthGuard],
-    data: { role: ['Customer','Admin'] },
+    data: { role: ['Customer'] },
     children: [
       { path: 'home', component: LandingPageComponent }, // ADDED: Banner goes here
       { path: 'menu', component: MenuitemComponent }, // Menu page

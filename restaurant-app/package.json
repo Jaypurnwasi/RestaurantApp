@@ -23,6 +23,7 @@
     "@primeng/themes": "^19.0.8",
     "apollo-angular": "^10.0.3",
     "graphql": "^16.10.0",
+    "graphql-ws": "^6.0.4",
     "ngx-cookie-service": "^19.1.2",
     "primeicons": "^7.0.0",
     "primeng": "^19.0.8",

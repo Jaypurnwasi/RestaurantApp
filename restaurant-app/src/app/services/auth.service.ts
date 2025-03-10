@@ -96,6 +96,42 @@ export class AuthService {
     }
   }
 
+  async signup(name: string, email: string, password: string, profileImg: string): Promise<User> {
+    const query = {
+      query: `
+        mutation Signup($input: SignupInput!) {
+          signup(input: $input) {
+            id
+            name
+            email
+            profileImg
+            role
+          }
+        }
+      `,
+      variables: {
+        input: { name, email, password, profileImg },
+      },
+    };
+
+    try {
+      const response = await fetch(this.apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(query),
+        credentials: 'include',
+      });
+
+      if (!response.ok) throw new Error('Signup failed');
+      const result = await response.json();
+      const user: User = result.data.signup;
+      return user;
+    } catch (error) {
+      console.error('Error during signup:', error);
+      throw error;
+    }
+  }
+
   async logout(): Promise<void> {
 
     try{

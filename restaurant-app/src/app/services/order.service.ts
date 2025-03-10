@@ -13,11 +13,11 @@ export class OrderService {
 
   constructor(private apollo: Apollo) {
 
-    this.fetchOrders('Previous'); // Default to Previous
-    // this.setupOrderSubscription(); 
+    this.fetchOrders('Live','network-only'); // Default to Previous
+    this.setupOrderSubscription(); 
   }
 
-  fetchOrders(filterType: 'Live' | 'Previous', fetchPolicy: 'cache-first' | 'network-only' = 'cache-first'): void {
+  fetchOrders(filterType: 'Live' | 'Previous', fetchPolicy: 'cache-first' | 'network-only' = 'network-only'): void {
     this.apollo
       .watchQuery<{ getAllOrders: Order[] }>({
         query: gql`
@@ -95,40 +95,32 @@ export class OrderService {
     const updatedOrders = this.ordersSubject.value.map(order =>
       order.id === updatedOrderId ? { ...order, status: updatedStatus as 'Pending' | 'Prepared' | 'Completed' | 'Failed' } : order
     );
-    console.log('Updated orders:', updatedOrders); // ADDED: Debug update
+    console.log('Updated orders :', updatedOrders); // ADDED: Debug update
     this.ordersSubject.next(updatedOrders);
   }
 
-//   async setupOrderSubscription() {
-//     const subscription = gql`
-//      subscription Subscription {
-//   orderUpdated {
-//     orderId
-//     success
-//     updatedStatus
-//   }
-// }
-//     `;
+  async setupOrderSubscription() {
+    const subscription = gql`
+     subscription Subscription {
+    orderUpdated {
+    orderId
+    success
+    updatedStatus
+  }
+}
+    `;
 
-//     this.apollo.subscribe<{ orderUpdated: { orderId: string; updatedStatus: string; success: boolean } }>({
-//       query: subscription
-//     }).subscribe({
-//       next: (result) => {
-//         const updatedOrder = result.data?.orderUpdated;
-//         if (updatedOrder && updatedOrder.success) {
-//           const currentOrders = this.ordersSubject.value;
-//           const updatedOrders = currentOrders.map(order =>
-//             order.id === updatedOrder.orderId
-//               ? { ...order, status: updatedOrder.updatedStatus as 'Pending' | 'Prepared' | 'Completed' | 'Failed' }
-//               : order
-//           );
-//           this.ordersSubject.next(updatedOrders);
-//           console.log('order updated in subscription service ',updatedOrder)
-//         }
-//       },
-//       error: (err) => console.error('Subscription error:', err)
-//     });
-//   }
+    this.apollo.subscribe<{ orderUpdated: { orderId: string; updatedStatus: string; success: boolean } }>({
+      query: subscription
+    }).subscribe({
+      next: (result) => {
+        const updatedOrder = result.data?.orderUpdated;
+        this.fetchOrders('Live','network-only')
+       
+      },
+      error: (err) => console.error('Subscription error:', err)
+    });
+  }
 
   getOrders(): Observable<Order[]> {
     return this.orders$;

@@ -64,4 +64,8 @@ export class LoginComponent {
       this.errorMessage = 'Invalid email or password';
     }
   }
+
+  async onSignup(){
+    this.router.navigate(['/signup'])
+  }
 }

@@ -1,0 +1,42 @@
+<div class="signup-container">
+    <h2 class="signup-header">Sign Up</h2>
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <div>
+        <label>Name</label>
+        <input type="text" formControlName="name" />
+        <div *ngIf="signupForm.get('name')?.invalid && signupForm.get('name')?.touched" class="error">
+          Name is required.
+        </div>
+      </div>
+
+      <div>
+        <label>Email</label>
+        <input type="email" formControlName="email" />
+        <div *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched" class="error">
+          Valid email is required.
+        </div>
+      </div>
+  
+      <div>
+        <label>Password</label>
+        <input type="password" formControlName="password" />
+        <div *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched" class="error">
+          Password must be at least 4 characters.
+        </div>
+      </div>
+
+      <div>
+        <label>Profile Image </label>
+        <input type="file"  (change)="onImageUpload($event)" placeholder="Enter image URL" />
+      </div>
+  
+      <button type="submit" [disabled]="signupForm.invalid" class="signup-button" >Sign Up</button>
+    </form>
+    
+    <div class="login-section">
+      <span>Already have an account?</span>
+      <button class="login-btn" (click)="onLogin()">Login</button>
+    </div>
+  
+    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+</div>

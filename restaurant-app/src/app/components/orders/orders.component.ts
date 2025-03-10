@@ -32,6 +32,34 @@ export class OrdersComponent {
     });
     
   }
+  getStatusStyle(status: string): any {
+    switch (status) {
+      case 'Pending':
+        return { 'background-color': '#ffe082', 'color': '#333' }; // Light yellow
+      case 'Prepared':
+        return { 'background-color': '#81c784', 'color': '#fff' }; // Light green
+      case 'Failed':
+        return { 'background-color': '#ef5350', 'color': '#fff' }; // Light red
+      case 'Completed':
+        return { 'background-color': '#42a5f5', 'color': '#fff' }; // Light blue
+      default:
+        return { 'background-color': '#fff', 'color': '#333' }; // Default white
+    }
+  }
+  getStatusClass(status: string): string {
+    switch (status) {
+      case 'Pending':
+        return 'status-pending';
+      case 'Prepared':
+        return 'status-prepared';
+      case 'Failed':
+        return 'status-failed';
+      case 'Completed':
+        return 'status-completed';
+      default:
+        return '';
+    }
+  }
   isAdmin(): boolean {
     const user = this.authService.getCurrentUser();
     return user?.role === 'Admin';
@@ -47,9 +75,11 @@ export class OrdersComponent {
     this.fetchOrders('network-only');
   }
 
-  fetchOrders(fetchPolicy: 'cache-first' | 'network-only' = 'cache-first'): void {
+  fetchOrders(fetchPolicy: 'cache-first' | 'network-only' = 'network-only'): void {
     const filterType = this.isLiveFilter ? 'Live' : 'Previous';
     this.orderService.fetchOrders(filterType,fetchPolicy);
+    console.log('orders fetched  ')
+
   }
 
   async updateStatus(orderId: string, event: Event): Promise<void> {
@@ -58,12 +88,12 @@ export class OrdersComponent {
       await this.orderService.updateOrderStatus(orderId, status);
       this.fetchOrders('network-only');
 
+
       // No need to manually filter here; subscription handles UI update
     } catch (error: any) {
       console.error('Error updating order status:', error);
     }
-    // this.fetchOrders()
-    // this.orders$ = this.orderService.getOrders();
+    
 
   }
   getValidStatuses(currentStatus: string): string[] {

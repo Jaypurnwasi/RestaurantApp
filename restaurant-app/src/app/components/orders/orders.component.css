@@ -153,6 +153,25 @@
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
+  .status-pending {
+    background-color: #daa916da !important; /* Light yellow */
+    color: #333 !important;
+  }
+  
+  .status-prepared {
+    background-color: #81c784 !important; /* Light green */
+    color: #fff !important;
+  }
+  
+  .status-failed {
+    background-color: #ef5350 !important; /* Light red */
+    color: #fff !important;
+  }
+  
+  .status-completed {
+    background-color: #42a5f5 !important; /* Light blue */
+    color: #fff !important;
+  }
   
   @media (max-width: 600px) {
     .orders-header {

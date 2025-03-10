@@ -41,7 +41,8 @@
               <select 
                 [value]="order.status" 
                 (change)="updateStatus(order.id, $event)" 
-                [disabled]= "!isAdmin()">
+                [disabled]= "!isAdmin()"
+                [ngClass]="getStatusClass(order.status)">
                 <option 
                 *ngFor="let status of getValidStatuses(order.status)" 
                 [value]="status"

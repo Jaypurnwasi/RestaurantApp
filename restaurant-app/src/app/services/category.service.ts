@@ -67,30 +67,29 @@ export class CategoryService {
   // START OF CHANGES
   async deleteCategory(id: string): Promise<void> {
     const mutation = gql`
-      mutation DeleteCategory($input: DeleteCategoryInput!) {
+      mutation Mutation($input: deleteCategoryInput!) {
         deleteCategory(input: $input) {
           id
           name
         }
       }
     `;
-  
+
     try {
-      console.log('deleting category ',id)
+      console.log('deleting category ', id);
       const result = await firstValueFrom(
         this.apollo.mutate<{ deleteCategory: Category }>({
           mutation,
-          variables: { input:  id  },
+          variables: { input: { id } },
         })
-        
       );
-  
+
       console.log('Mutation Result:', result); // Log the result
-  
+
       if (!result.data || !result.data.deleteCategory) {
         throw new Error('Failed to delete category: No category returned');
       }
-  
+
       const deletedCategory = result.data.deleteCategory;
       const updatedCategories = this.categoriesSubject.value.filter(
         (cat) => cat.id !== deletedCategory.id
