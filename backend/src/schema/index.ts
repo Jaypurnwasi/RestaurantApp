@@ -9,6 +9,17 @@ import { categoryTypeDefs } from "./typeDefs/categoryTypedef";
 import { cartTypeDefs } from "./typeDefs/cartTypeDefs";
 import { orderTypeDefs } from "./typeDefs/orderTypeDefs";
 
-
-export const typeDefs = [userTypeDefs,menuItemTypedefs,categoryTypeDefs,cartTypeDefs,orderTypeDefs];
-export const resolvers = [userResolvers,menuItemResolvers,categoryResolvers,cartResolvers,orderResolvers]
+export const typeDefs = [
+  userTypeDefs,
+  menuItemTypedefs,
+  categoryTypeDefs,
+  cartTypeDefs,
+  orderTypeDefs,
+];
+export const resolvers = [
+  userResolvers,
+  menuItemResolvers,
+  categoryResolvers,
+  cartResolvers,
+  orderResolvers,
+];

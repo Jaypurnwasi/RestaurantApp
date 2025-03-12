@@ -22,12 +22,15 @@
   }
 
 
-  @media (max-width: 768px) {
+  @media (max-width: 650px) {
     /* .admin-sidebar {
       width: 0;
       overflow: hidden;
     } */
     .admin-sidebar.active {
       width: 250px;
+    }
+    .admin-sidebar{
+      display: none;
     }
   }

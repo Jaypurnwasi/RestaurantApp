@@ -43,7 +43,7 @@
 
     <div class="menu-item-header">
         <div class="veg-toggle-wrapper">
-          <label class="veg-toggle-label"><img src="assets/images/veg.png" alt="Veg" width="30px" height="30px" > </label>
+          <label class="veg-toggle-label"><img src="assets/images/veg.png" alt="Veg" width="24px" height="24px" > </label>
           <div class="veg-toggle">
             <input 
               type="checkbox" 
@@ -53,13 +53,13 @@
               hidden 
             />
             <label for="veg-toggle" class="toggle-slider">
-              <span class="toggle-text veg">On</span>
-              <span class="toggle-text all">Off</span>
-              <span class="slider-ball"> </span>
+              <span class="toggle-text veg">On</span> 
+               <span class="toggle-text all">Off</span>
+              <span class="slider-ball">  </span>
             </label>
           </div>
       
-          <label class="veg-toggle-label"><img src="assets/images/non-veg.png" alt="Veg" width="30px" height="30px"> </label>
+          <label class="veg-toggle-label"><img src="assets/images/non-veg.png" alt="Veg" width="24px" height="24px"> </label>
 
           <div class="veg-toggle">
             <input 
@@ -72,7 +72,7 @@
             <label for="nonveg-toggle" class="toggle-slider nonveg-slider">
               <span class="toggle-text nonveg">On</span>
               <span class="toggle-text all">Off</span>
-              <span class="slider-ball"></span>
+              <span class="slider-ball "></span>
             </label>
           </div>
           
@@ -118,7 +118,9 @@
             <span class="material-symbols-outlined delete-icon" (click)="onDelete(item.id,item.name)" *ngIf="isAdmin()">
             delete 
             </span>
-            <div *ngIf="!isAdmin()" class="cart-controls">
+           
+            <div class="loader" *ngIf="itemLoading[item.id]"></div>
+            <div *ngIf="!isAdmin()&& !itemLoading[item.id]" class="cart-controls" >
               <button class="cart-btn minus-btn" (click)="removeFromCart(item)" [disabled]="getCartQuantity(item.id) === 0">-</button>
               <ng-container *ngIf="getCartQuantity(item.id) === 0; else quantityDisplay">
                 <button class="cart-btn add-to-cart-btn" (click)="addToCart(item)">Add item</button>

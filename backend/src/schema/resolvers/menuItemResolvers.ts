@@ -9,23 +9,15 @@ import {
 } from "../types/types";
 import Category from "../../models/Category";
 import logger from "../../utils/logger";
-import mongoose from "mongoose";
 import { PubSub } from "graphql-subscriptions";
-import { subscribe } from "diagnostics_channel";
-import { log } from "console";
 import { capitalizeWords } from "../../utils/helper";
 
 const pubsub = new PubSub();
 
 export const menuItemResolvers = {
   Query: {
-    async getAllMenuItems(
-      _: any,
-      { isVeg }: { isVeg?: boolean },
-      context: MyContext
-    ) {
+    async getAllMenuItems(_: unknown, { isVeg }: { isVeg?: boolean }, context: MyContext) {
       try {
-        // **Authentication Check**
         if (!context.user) {
           logger.warn("[getAllMenuItems] Unauthorized access attempt.");
           throw new GraphQLError("Authentication required", {
@@ -36,17 +28,13 @@ export const menuItemResolvers = {
         // **Validation: isVeg must be Boolean if provided**
         if (isVeg !== undefined && typeof isVeg !== "boolean") {
           logger.warn(`[getAllMenuItems] Invalid isVeg filter: ${isVeg}`);
-          throw new GraphQLError(
-            "Invalid value for isVeg. Must be true or false.",
-            {
-              extensions: { code: "BAD_REQUEST", status: 400 },
-            }
-          );
+          throw new GraphQLError("Invalid value for isVeg. Must be true or false.", {
+            extensions: { code: "BAD_REQUEST", status: 400 },
+          });
         }
 
         // **Filters**: Customers can only see active menu items
-
-        const filters: any = { isActive: true };
+        const filters: Record<string, string | boolean> = { isActive: true };
 
         // Apply vegetarian filter if provided
         if (isVeg !== undefined) {
@@ -75,7 +63,7 @@ export const menuItemResolvers = {
       }
     },
 
-    async getMenuItemById(_: any, { id }: { id: string }, context: MyContext) {
+    async getMenuItemById(_: unknown, { id }: { id: string }, context: MyContext) {
       try {
         if (!context.user) {
           logger.warn(`user not authenticated to acces menu item`);
@@ -92,25 +80,19 @@ export const menuItemResolvers = {
 
         const menuItem = await MenuItem.findById(id);
         if (!menuItem) {
-          logger.warn(
-            `menu item with id ${id} does not exists error in find menu item by id`
-          );
+          logger.warn(`menu item with id ${id} does not exists error in find menu item by id`);
 
-          throw new GraphQLError(
-            "error in findMenuItemById menu item does not exist",
-            { extensions: { code: "item not found", status: 404 } }
-          );
+          throw new GraphQLError("error in findMenuItemById menu item does not exist", {
+            extensions: { code: "item not found", status: 404 },
+          });
         }
 
         if (!menuItem.isActive) {
-          logger.warn(
-            `menu item with id ${id} does not exists error in find menu item by id`
-          );
+          logger.warn(`menu item with id ${id} does not exists error in find menu item by id`);
 
-          throw new GraphQLError(
-            "error in findMenuItemById menu item does not exist",
-            { extensions: { code: "item is inactive", status: 404 } }
-          );
+          throw new GraphQLError("error in findMenuItemById menu item does not exist", {
+            extensions: { code: "item is inactive", status: 404 },
+          });
         }
 
         return menuItem;
@@ -125,17 +107,16 @@ export const menuItemResolvers = {
       }
     },
     async getMenuItemsByCategory(
-      _: any,
+      _: unknown,
       { input }: { input: getMenuItemsByCategoryInput },
       context: MyContext
     ) {
       try {
         if (!context.user) {
           logger.warn(`user not authenticated to acces menu item by category`);
-          throw new GraphQLError(
-            "Authentication error in getMenuItemByCategory",
-            { extensions: { code: "token not found", status: 400 } }
-          );
+          throw new GraphQLError("Authentication error in getMenuItemByCategory", {
+            extensions: { code: "token not found", status: 400 },
+          });
         }
 
         const { category, isveg } = input;
@@ -160,7 +141,7 @@ export const menuItemResolvers = {
           );
         }
 
-        const filter: any = {
+        const filter: Record<string, string | boolean> = {
           categoryId: category,
           isActive: true,
         };
@@ -195,24 +176,21 @@ export const menuItemResolvers = {
       }
     },
     async searchMenuItems(
-      _: any,
+      _: unknown,
       { input }: { input: searchMenuItemsInput },
       context: MyContext
     ) {
       try {
         const { category, isVeg, name } = input;
-        // check validation
+
         if (!context.user) {
           logger.warn(`unauthenticated request  to search menu items  `);
-          throw new GraphQLError(
-            `un authenticated request to serach menu items `,
-            { extensions: { code: "token not found", status: 403 } }
-          );
+          throw new GraphQLError(`un authenticated request to serach menu items `, {
+            extensions: { code: "token not found", status: 403 },
+          });
         }
         if (!name) {
-          logger.warn(
-            `name not provided to search item by user ${context.user.id} `
-          );
+          logger.warn(`name not provided to search item by user ${context.user.id} `);
           throw new GraphQLError(`name is not provided to search items `, {
             extensions: { code: "Bad request", status: 400 },
           });
@@ -226,7 +204,6 @@ export const menuItemResolvers = {
         query.name = { $regex: new RegExp(name, "i") }; // Case-insensitive search
 
         if (category) {
-          // Validate categoryId
           const existingCategory = await Category.findById(category);
 
           if (!existingCategory) {
@@ -248,10 +225,9 @@ export const menuItemResolvers = {
 
         if (!menuItems) {
           logger.warn(`no items found in search with category : ${category} `);
-          throw new GraphQLError(
-            `no items found in search try changing search parameters`,
-            { extensions: { code: "bad request", status: 404 } }
-          );
+          throw new GraphQLError(`no items found in search try changing search parameters`, {
+            extensions: { code: "bad request", status: 404 },
+          });
         }
 
         logger.info(
@@ -271,11 +247,7 @@ export const menuItemResolvers = {
   },
 
   Mutation: {
-    async addMenuItem(
-      _: any,
-      { input }: { input: AddMenuItemInput },
-      context: MyContext
-    ) {
+    async addMenuItem(_: unknown, { input }: { input: AddMenuItemInput }, context: MyContext) {
       try {
         if (!context.user) {
           logger.warn("[addMenuItem] Unauthorized access attempt.");
@@ -285,9 +257,7 @@ export const menuItemResolvers = {
         }
 
         if (context.user.role !== "Admin") {
-          logger.warn(
-            `[addMenuItem] Unauthorized role access by userId: ${context.user.id}`
-          );
+          logger.warn(`[addMenuItem] Unauthorized role access by userId: ${context.user.id}`);
           throw new GraphQLError("Unauthorized", {
             extensions: { code: "FORBIDDEN", status: 403 },
           });
@@ -298,7 +268,6 @@ export const menuItemResolvers = {
         // **Trim Values to Avoid Unnecessary Spaces**
         const trimmedName = capitalizeWords(name).trim();
         const trimmedDescription = description.trim();
-        // name = capitalizeWords(name)
 
         if (trimmedName.length < 3 || trimmedName.length > 50) {
           logger.warn(
@@ -313,42 +282,28 @@ export const menuItemResolvers = {
           logger.warn(
             "[addMenuItem] Validation failed: description  length must be between 3-150 characters."
           );
-          throw new GraphQLError(
-            "Description must be between 10 and 150 characters",
-            {
-              extensions: { code: "BAD_REQUEST", status: 400 },
-            }
-          );
+          throw new GraphQLError("Description must be between 10 and 150 characters", {
+            extensions: { code: "BAD_REQUEST", status: 400 },
+          });
         }
 
         if (price <= 0) {
-          logger.warn(
-            "[addMenuItem] Validation failed: Price must be positive."
-          );
+          logger.warn("[addMenuItem] Validation failed: Price must be positive.");
           throw new GraphQLError("Price must be a positive number", {
             extensions: { code: "BAD_REQUEST", status: 400 },
           });
         }
 
-        // if (!/^(https?:\/\/.*\.(?:png|jpg|jpeg|svg))$/.test(image)) {
-        //   logger.warn("[addMenuItem] Validation failed: Invalid image URL format.");
-        //   throw new GraphQLError("Invalid image URL format", {
-        //     extensions: { code: "BAD_REQUEST", status: 400 },
-        //   });
-        // }
-
-        // **Check if Category Exists**
+        // Check if Category Exists
         const categoryExists = await Category.findById(categoryId);
         if (!categoryExists) {
-          logger.warn(
-            `[addMenuItem] Validation failed: Invalid category ID (${categoryId}).`
-          );
+          logger.warn(`[addMenuItem] Validation failed: Invalid category ID (${categoryId}).`);
           throw new GraphQLError("Invalid category ID", {
             extensions: { code: "BAD_REQUEST", status: 400 },
           });
         }
 
-        // **Check for Duplicate Name in the catefory  **
+        // Check for Duplicate Name in the catefory  **
         const existingItem = await MenuItem.findOne({
           name: trimmedName,
           categoryId,
@@ -358,15 +313,11 @@ export const menuItemResolvers = {
           logger.warn(
             `[addMenuItem] Duplicate menu item detected: ${trimmedName} in category ${categoryId}.`
           );
-          throw new GraphQLError(
-            "A menu item with this name already exists in same category",
-            {
-              extensions: { code: "BAD_REQUEST", status: 400 },
-            }
-          );
+          throw new GraphQLError("A menu item with this name already exists in same category", {
+            extensions: { code: "BAD_REQUEST", status: 400 },
+          });
         }
 
-        // **Create New Menu Item**
         const newItem = await MenuItem.create({
           name: trimmedName,
           description: trimmedDescription,
@@ -376,9 +327,7 @@ export const menuItemResolvers = {
           categoryId,
         });
 
-        logger.info(
-          `menu item added ${name} in category ${categoryId} by user ${context.user.id}`
-        );
+        logger.info(`menu item added ${name} in category ${categoryId} by user ${context.user.id}`);
         pubsub.publish("MENU_ITEM_ADDED", { menuItemAdded: newItem });
 
         return newItem;
@@ -392,10 +341,9 @@ export const menuItemResolvers = {
       try {
         if (!context.user) {
           logger.warn(`authentication required to delete a menu item ${id}`);
-          throw new GraphQLError(
-            "unauthenticated request to  delete menu item ",
-            { extensions: { code: "error in delete menu Item", status: 401 } }
-          );
+          throw new GraphQLError("unauthenticated request to  delete menu item ", {
+            extensions: { code: "error in delete menu Item", status: 401 },
+          });
         }
 
         if (context.user.role !== "Admin") {
@@ -424,9 +372,7 @@ export const menuItemResolvers = {
         existingItem.isActive = false;
         await existingItem.save();
 
-        logger.info(
-          `menu item delted succesfully ${id} by user ${context.user.id}`
-        );
+        logger.info(`menu item delted succesfully ${id} by user ${context.user.id}`);
 
         pubsub.publish("MENU_ITEM_DELETED", { menuItemDeleted: existingItem });
 
@@ -441,7 +387,7 @@ export const menuItemResolvers = {
     },
 
     async updateMenuItem(
-      _: any,
+      _: unknown,
       { input }: { input: UpdateMenuItemInput },
       context: MyContext
     ) {
@@ -456,17 +402,13 @@ export const menuItemResolvers = {
 
         // 2 Authorization Check (Only Admins Can Update)
         if (context.user.role !== "Admin") {
-          logger.warn(
-            `[updateMenuItem] Unauthorized role access by userId: ${context.user.id}`
-          );
+          logger.warn(`[updateMenuItem] Unauthorized role access by userId: ${context.user.id}`);
           throw new GraphQLError("Unauthorized", {
             extensions: { code: "FORBIDDEN", status: 403 },
           });
         }
 
-        // 3️ Extract ID and Other Input Fields
-        const { id, name, description, image, price, isVeg, categoryId } =
-          input;
+        const { id, name, description, image, price, isVeg, categoryId } = input;
 
         if (!id) {
           logger.warn("[updateMenuItem] Missing menu item ID.");
@@ -484,21 +426,16 @@ export const menuItemResolvers = {
           });
         }
 
-        //  5️ Check If Menu Item is Active
         if (!existingItem.isActive) {
-          logger.warn(
-            `[updateMenuItem] Attempt to update inactive menu item: ${id}`
-          );
+          logger.warn(`[updateMenuItem] Attempt to update inactive menu item: ${id}`);
           throw new GraphQLError("Cannot update an inactive menu item", {
             extensions: { code: "BAD_REQUEST", status: 400 },
           });
         }
 
-        // 6️ Extract and Trim Input Values
         const trimmedName = name?.trim();
         const trimmedDescription = description?.trim();
 
-        //  7️ Validate Name
         if (trimmedName) {
           if (trimmedName.length < 3 || trimmedName.length > 50) {
             logger.warn(
@@ -509,7 +446,7 @@ export const menuItemResolvers = {
             });
           }
 
-          //  8️ Check for Duplicate Name in Same Category
+          //   Check for Duplicate Name in Same Category
           const duplicateItem = await MenuItem.findOne({
             name: trimmedName,
             categoryId: categoryId || existingItem.categoryId,
@@ -530,7 +467,6 @@ export const menuItemResolvers = {
           }
         }
 
-        //  9️ Validate Description
         if (
           trimmedDescription &&
           (trimmedDescription.length < 3 || trimmedDescription.length > 150)
@@ -538,25 +474,19 @@ export const menuItemResolvers = {
           logger.warn(
             `[updateMenuItem] Validation failed: Description length must be between 3-150 characters.`
           );
-          throw new GraphQLError(
-            "Description must be between 3 and 150 characters",
-            {
-              extensions: { code: "BAD_REQUEST", status: 400 },
-            }
-          );
+          throw new GraphQLError("Description must be between 3 and 150 characters", {
+            extensions: { code: "BAD_REQUEST", status: 400 },
+          });
         }
 
-        //  Validate Price
         if (price !== undefined && price <= 0) {
-          logger.warn(
-            "[updateMenuItem] Validation failed: Price must be positive."
-          );
+          logger.warn("[updateMenuItem] Validation failed: Price must be positive.");
           throw new GraphQLError("Price must be a positive number", {
             extensions: { code: "BAD_REQUEST", status: 400 },
           });
         }
 
-        // 1️1️ Validate Category if Changed
+        // Validate Category if Changed
         if (categoryId && categoryId !== existingItem.categoryId.toString()) {
           const categoryExists = await Category.findById(categoryId);
           if (!categoryExists) {
@@ -566,17 +496,7 @@ export const menuItemResolvers = {
             });
           }
         }
-        // if(image){
-        //   if (!/^(https?:\/\/.*\.(?:png|jpg|jpeg|svg))$/.test(image)) {
-        //     logger.warn("[updateMenuItem] Validation failed: Invalid image URL format.");
-        //     throw new GraphQLError("Invalid image URL format", {
-        //       extensions: { code: "BAD_REQUEST", status: 400 },
-        //     });
-        //    }
 
-        // }
-
-        //  1️2️ Update the Menu Item
         const updatedItem = await MenuItem.findByIdAndUpdate(
           id,
           {
@@ -587,14 +507,14 @@ export const menuItemResolvers = {
             isVeg: isVeg !== undefined ? isVeg : existingItem.isVeg,
             categoryId: categoryId || existingItem.categoryId,
           },
-          { new: true } // Returns the updated document
+          { new: true }
         );
 
         logger.info(
           `[updateMenuItem] Menu item updated successfully: ${id} by user ${context.user.id}`
         );
 
-        //  1️3️ Publish Update Event for Subscriptions
+        //   Publish Update Event for Subscriptions
         pubsub.publish("MENU_ITEM_UPDATED", { menuItemUpdated: updatedItem });
 
         return updatedItem;
@@ -613,9 +533,7 @@ export const menuItemResolvers = {
         try {
           return pubsub.asyncIterableIterator("MENU_ITEM_ADDED");
         } catch (error: any) {
-          logger.error(
-            `error in menu item added subscription ${error.message}`
-          );
+          logger.error(`error in menu item added subscription ${error.message}`);
           throw new GraphQLError("error in menu item added subscription ", {
             extensions: { code: "subscription error", status: 500 },
           });
@@ -628,9 +546,7 @@ export const menuItemResolvers = {
         try {
           return pubsub.asyncIterableIterator("MENU_ITEM_DELETED");
         } catch (error: any) {
-          logger.error(
-            `error in menu item deleted subscription ${error.message}`
-          );
+          logger.error(`error in menu item deleted subscription ${error.message}`);
           throw new GraphQLError("error in menu item deletded subscription ", {
             extensions: { code: "subscription error", status: 500 },
           });
@@ -643,9 +559,7 @@ export const menuItemResolvers = {
         try {
           return pubsub.asyncIterableIterator("MENU_ITEM_UPDATED");
         } catch (error: any) {
-          logger.error(
-            `error in menu item updated subscription ${error.message}`
-          );
+          logger.error(`error in menu item updated subscription ${error.message}`);
           throw new GraphQLError("error in menu item updated subscription ", {
             extensions: { code: "subscription error", status: 500 },
           });

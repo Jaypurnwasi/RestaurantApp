@@ -59,7 +59,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let user of userList">
-            <td>{{ user.name }}</td>
+            <td>{{ user.name  }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.role }}</td>
             <td>
@@ -79,8 +79,8 @@
         </tbody>
       </table>
     </ng-container>
-  
     <ng-template #noUsersTemplate>
       <div class="no-items">No users found.</div>
     </ng-template>
+    <div class="loader" *ngIf="loading"></div>
   </div>

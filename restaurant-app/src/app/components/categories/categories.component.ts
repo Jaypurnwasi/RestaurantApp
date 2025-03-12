@@ -11,23 +11,29 @@ import { Category } from '../../interfaces/category';
   styleUrls: ['./categories.component.css'],
   standalone: true,
 })
+
 export class CategoriesComponent implements OnInit {
   categories: Category[] = [];
-  loading = true;
-  // START OF CHANGES
+  loading = false;
   newCategoryName: string = ''; // For input binding
-  // END OF CHANGES
 
   constructor(private categoryService: CategoryService) {}
 
   ngOnInit(): void {
+    this.loading = true; // Ensure loading starts
     this.categoryService.categories$.subscribe((categories) => {
-      this.categories = categories;
-      this.loading = false;
+      if (categories.length === 0) {
+        this.loading = true; // Keep loading if no data received yet
+      } else {
+        this.categories = categories;
+        this.loading = false; // Only stop loading when actual data is received
+      }
       console.log('Categories fetched:', this.categories);
     });
+  
     this.categoryService.fetchCategories();
   }
+
 
   // START OF CHANGES
   async addCategory() {
@@ -45,6 +51,7 @@ export class CategoriesComponent implements OnInit {
     }
   }
   // END OF CHANGES
+ 
 
   async onDelete(id: string, name: string): Promise<void> {
     if (confirm(`Are you sure you want to delete ${name}?`)) {

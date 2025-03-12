@@ -9,7 +9,7 @@ enum Role {
 
 type User {
   id: ID!
-  name: String!
+  name: String
   email: String!
   role: Role!
   profileImg: String
@@ -36,9 +36,9 @@ input LoginInput {
   password: String!
 }
 input SignupInput {
-  name: String!
+  name: String
   email: String!
-  password: String!
+  password: String
   profileImg: String
 }
 input UpdateUserInput {
@@ -69,8 +69,6 @@ type Mutation {
 
   
 }
-`
-
-
+`;
 
 // export default userTypeDefs

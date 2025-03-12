@@ -306,3 +306,14 @@
     cursor: not-allowed;
   }
   
+  @media (max-width: 500px) {
+    .cart-actions{
+      display: flex;
+      flex-direction: column;
+    }
+    .cart-total{
+      display: flex;
+      gap: 1rem;
+    }
+  
+  }

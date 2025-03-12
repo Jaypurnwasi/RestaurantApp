@@ -1,4 +1,4 @@
-export const  menuItemTypedefs = `#graphql
+export const menuItemTypedefs = `#graphql
 # MenuItem Type
 type MenuItem {
   id: ID!
@@ -73,4 +73,4 @@ type Subscription {
     menuItemUpdated:MenuItem
   }
 
-`
+`;

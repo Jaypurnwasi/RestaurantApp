@@ -1,4 +1,3 @@
-
 export const categoryTypeDefs = `#graphql
   type Category {
     id: ID!
@@ -30,4 +29,3 @@ export const categoryTypeDefs = `#graphql
     deleteCategory(input:deleteCategoryInput!): Category!
   }
 `;
-

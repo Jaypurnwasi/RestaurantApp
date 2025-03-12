@@ -42,6 +42,7 @@ export class OrdersComponent {
   }
   ngOnInit(): void {
     this.orders$ = this.orderService.getOrders();
+    
     this.fetchOrders('network-only'); // Initial fetch with default filter
   }
   getStatusStyle(status: string): any {
@@ -89,6 +90,7 @@ export class OrdersComponent {
    fetchOrders(fetchPolicy: 'cache-first' | 'network-only' = 'network-only'){
     const filterType = this.isLiveFilter ? 'Live' : 'Previous';
     this.orderService.fetchOrders(filterType,fetchPolicy)
+
     console.log('orders fetched  ')
   }
 
@@ -99,7 +101,7 @@ export class OrdersComponent {
       this.fetchOrders('network-only');
 
 
-      // No need to manually filter here; subscription handles UI update
+
     } catch (error: any) {
       console.error('Error updating order status:', error);
     }

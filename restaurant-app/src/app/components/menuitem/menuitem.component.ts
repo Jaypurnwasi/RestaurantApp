@@ -23,8 +23,9 @@ export class MenuitemComponent {
   menuItems$ = new BehaviorSubject<Menuitem[]>([]);
   isVegFilter: boolean | undefined = undefined; // `true` for Veg, `false` for Non-Veg, `undefined` for all
    categories: Category[] = [];
-  loading = true;
-  showForm = false;
+  loading = false;
+  itemLoading: { [key: string]: boolean } = {};
+   showForm = false;
   editingItemId:string|null = null;
   baseUrl = './assets/images/';
   user: User | null = null;
@@ -59,7 +60,6 @@ export class MenuitemComponent {
   }
 
   ngOnInit(): void {  
-    this.loading = true;
     this.menuService.fetchMenuItems();
     this.categoryService.fetchCategories();
     this.cartService.fetchCartItems();
@@ -77,7 +77,6 @@ export class MenuitemComponent {
 
     }
 
-
     // Used combineLatest to avoid nested subscriptions
     combineLatest([this.menuService.menuItems$, this.categoryService.categories$])
       .pipe(takeUntil(this.unsubscribe$)) // Cleanup when component is destroyed
@@ -89,7 +88,6 @@ export class MenuitemComponent {
         console.log('Menu items:', this.menuItems$.value);
         console.log('Categories:', this.categories);
       });
-      this.loading= false
 
   }
   ngOnDestroy(): void {
@@ -100,13 +98,6 @@ export class MenuitemComponent {
     const user = this.authService.getCurrentUser();
     return user?.role === 'Admin';
   }
-  // previous stable fetch 
-  // fetchMenuItems() {
-  //   this.menuService.fetchMenuItems(this.isVegFilter)
-  //   this.menuService.menuItems$.subscribe((items:Menuitem[]) => {
-  //     this.menuItems$.next(items)})
-
-  // }
 
   async fetchMenuItems() {
     this.loading = true;
@@ -118,10 +109,9 @@ export class MenuitemComponent {
           this.menuItems$.next(items)})
 
       } else {
-        this.menuService.fetchMenuItems(this.isVegFilter)
+        await this.menuService.fetchMenuItems(this.isVegFilter)
         this.menuService.menuItems$.subscribe((items:Menuitem[]) => {
           this.menuItems$.next(items)})
-          this.loading= false
 
       }
     } catch (error) {
@@ -247,13 +237,23 @@ export class MenuitemComponent {
 
   async addToCart(item: Menuitem) {
     if (!this.isAdmin()) {
-      await this.cartService.addItemToCart(item.id);
+      this.itemLoading[item.id] = true
+      try {
+        await this.cartService.addItemToCart(item.id);
+      } finally {
+        this.itemLoading[item.id] = false; // Hide loader after process
+      }
     }
   }
 
   async removeFromCart(item: Menuitem) {
     if (!this.isAdmin()) {
-      await this.cartService.removeItemFromCart(item.id);
+      this.itemLoading[item.id] = true
+      try{
+        await this.cartService.removeItemFromCart(item.id);
+      } finally{
+        this.itemLoading[item.id] = false
+      }
     }
   }
 

@@ -17,7 +17,7 @@ export class UsersComponent implements OnInit {
   showForm = false;
   baseUrl = './assets/images/'; // Same base URL as MenuitemComponent
   isStaffFilter = true; // Default to Staff Members
-
+  loading = false;
   // Define role enum type explicitly
   addUserForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -84,9 +84,6 @@ export class UsersComponent implements OnInit {
     this.fetchUsers();
   }
 
-  // fetchUsers(): void {
-  //   this.userService.refreshUsers();
-  // }
   fetchUsers(): void {
     if (this.isStaffFilter) {
       this.userService.fetchStaffMembers();

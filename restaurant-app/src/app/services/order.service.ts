@@ -15,7 +15,7 @@ export class OrderService {
 
     this.fetchOrders('Live','network-only'); 
     this.setupOrderSubscription(); 
-    // this.setupCreateOrderSubscription()
+    this.setupCreateOrderSubscription()
   }
 
   fetchOrders(filterType: 'Live' | 'Previous', fetchPolicy: 'cache-first' | 'network-only' = 'network-only'): void {
