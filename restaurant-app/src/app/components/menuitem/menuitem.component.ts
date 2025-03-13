@@ -13,11 +13,16 @@ import { CartService } from '../../services/cart.service';
 import { Cart } from '../../interfaces/cart';
 import { TableService } from '../../services/table.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { Toast } from 'primeng/toast';
+import { ButtonModule } from 'primeng/button';
 @Component({
   selector: 'app-menuitem',
-  imports: [CommonModule,ReactiveFormsModule],
+  imports: [CommonModule,ReactiveFormsModule,Toast,ButtonModule],
   templateUrl: './menuitem.component.html',
-  styleUrl: './menuitem.component.css'
+  styleUrl: './menuitem.component.css',
+  providers: [MessageService]
+
 })
 export class MenuitemComponent {
   menuItems$ = new BehaviorSubject<Menuitem[]>([]);
@@ -53,6 +58,7 @@ export class MenuitemComponent {
     private tableService : TableService,
     private route: ActivatedRoute,
     private router: Router,
+    private messageService: MessageService
   ) {
     this.authService.currentUser$.subscribe(user => {
       this.user = user;
@@ -97,6 +103,15 @@ export class MenuitemComponent {
   isAdmin(): boolean {
     const user = this.authService.getCurrentUser();
     return user?.role === 'Admin';
+  }
+
+  showSuccess(msg:string){
+    this.messageService.add({ severity: 'success', summary: 'success', detail: msg, life: 3000 });
+
+  }
+  showError(msg:string){
+    this.messageService.add({ severity: 'error', summary: 'error', detail: msg, life: 3000 });
+
   }
 
   async fetchMenuItems() {
@@ -204,9 +219,24 @@ export class MenuitemComponent {
   
       if (this.editingItemId) {
         console.log('update item function called')
-        await this.menuService.updateMenuItem(updatedItem);
+        try{
+          await this.menuService.updateMenuItem(updatedItem);
+          this.showSuccess('Item updated succesfully');
+
+        }
+        catch(error){
+          this.showError('error while updating item ')
+        }
       } else {
-        await this.menuService.addMenuItem(updatedItem);
+          try{
+            await this.menuService.addMenuItem(updatedItem);
+            this.showSuccess('Item added succesfully');
+
+          }
+          catch(error){
+            this.showError('error while adding item')
+          }
+        
       }
   
       this.showForm = false;
@@ -231,17 +261,26 @@ export class MenuitemComponent {
   
   async onDelete(itemId: string,name:string) {
     if (confirm(`Are you sure you want to delete this item? ${name}`)) {
-      await this.menuService.deleteMenuItem(itemId);
+
+      try{
+        await this.menuService.deleteMenuItem(itemId);
+      this.showSuccess('Item deleted succesfully')
+      }
+      catch(error){
+        this.showError('error while deleting item')
+
+      }
+      
     }
   }
 
   async addToCart(item: Menuitem) {
     if (!this.isAdmin()) {
-      this.itemLoading[item.id] = true
+      this.itemLoading[item.id] = true  
       try {
         await this.cartService.addItemToCart(item.id);
       } finally {
-        this.itemLoading[item.id] = false; // Hide loader after process
+        this.itemLoading[item.id] = false; // Hide loader after 
       }
     }
   }

@@ -9,12 +9,16 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { OrderService } from '../../services/order.service';
 import { TableService } from '../../services/table.service';
+import { Toast } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule,FormsModule],
+  imports: [CommonModule,ReactiveFormsModule,FormsModule,Toast],
   templateUrl: './cart.component.html',
-  styleUrl: './cart.component.css'
+  styleUrl: './cart.component.css',
+  providers:[MessageService]
 })
 export class CartComponent implements OnInit {
   cart$: Observable<Cart | null>;
@@ -30,6 +34,8 @@ export class CartComponent implements OnInit {
   selectedTableId: string = '';
   showPaymentModal = false;
   paymentError = '';
+  itemLoading: { [key: string]: boolean } = {};
+  loading = false
 
   paymentForm = new FormGroup({
     upiId: new FormControl('', Validators.required),
@@ -40,7 +46,8 @@ export class CartComponent implements OnInit {
     private apollo: Apollo,
     private router: Router,
     private orderService : OrderService,
-    private tableService: TableService
+    private tableService: TableService,
+    private messageService : MessageService
   ) {
     this.cart$ = this.cartService.cart$; // Initialize here to avoid TS error
   }
@@ -55,6 +62,15 @@ export class CartComponent implements OnInit {
       this.total$.next(this.cartService.getTotal());
     });
   }
+  showSuccess(msg:string) {
+    this.messageService.add({ severity: 'success', summary: 'success', detail: msg, life: 3000 });
+  }
+
+  showError(msg:string){
+    this.messageService.add({ severity: 'error', summary: 'error', detail: msg, life: 3000 });
+
+  }
+
   togglePaymentModal() {
     this.showPaymentModal = !this.showPaymentModal;
     this.paymentError = '';
@@ -78,7 +94,7 @@ export class CartComponent implements OnInit {
       this.paymentError = 'Please select a table and ensure cart is not empty';
       return;
     }
-
+    this.loading = true
     try {
       const status = await this.cartService.createOrder(this.selectedTableId, total,true);
       if (status === 'Pending') {
@@ -87,18 +103,30 @@ export class CartComponent implements OnInit {
         this.router.navigate(['/orders']);
       } else if (status === 'Failed') {
         this.paymentError = 'Order creation failed. Please try again.';
-      }
+      } 
+      this.showSuccess('order placed succesfully')
     } catch (error) {
       this.paymentError = 'Payment processing error. Please try again.';
       console.error('CreateOrder error:', error);
+      this.showError('error while placing order')
     }
+    this.loading = false
   }
 
-  async addItem(menuItemId: string) {
-    await this.cartService.addItemToCart(menuItemId);
-  }
+  async addItem(id: string) {
 
-  async removeItem(menuItemId: string) {
-    await this.cartService.removeItemFromCart(menuItemId);
-  }
+    this.itemLoading[id] = true  
+      try {
+        await this.cartService.addItemToCart(id);
+      } finally {
+        this.itemLoading[id] = false; // Hide loader after 
+      }  }
+
+  async removeItem(id: string) {
+    this.itemLoading[id] = true
+    try{
+      await this.cartService.removeItemFromCart(id);
+    } finally{
+      this.itemLoading[id] = false
+    }  }
 }

@@ -8,7 +8,8 @@
             <h4>{{ item.menuItem.name }}</h4>
             <p>{{ item.menuItem.description }}</p>
             <span class="cart-item-price">{{ item.menuItem.price | currency:'INR':'symbol' }}</span>
-            <div class="cart-controls">
+            <div class="loader" *ngIf="itemLoading[item.menuItem.id]"></div>
+            <div class="cart-controls" *ngIf="!itemLoading[item.menuItem.id]">
               <button class="cart-btn minus-btn" (click)="removeItem(item.menuItem.id)" [disabled]="item.quantity === 0">-</button>
               <span class="cart-item-quantity">Qty: {{ item.quantity }}</span>
               <button class="cart-btn plus-btn" (click)="addItem(item.menuItem.id)">+</button>
@@ -31,7 +32,10 @@
       </div>
     </div>
     <div *ngIf="showPaymentModal" class="modal-overlay">
-        <div class="modal-content">
+      <div class="loader loader-payment" *ngIf="loading" ></div>
+
+        <div class="modal-content" *ngIf="!loading">
+
           <h3>Payment Details</h3>
           <form [formGroup]="paymentForm" (ngSubmit)="makePayment()">
             <div class="form-field">
@@ -56,4 +60,6 @@
         <p>Your cart is empty.</p>
       </div>
     </ng-template>
+    <p-toast/>
+
   </div>

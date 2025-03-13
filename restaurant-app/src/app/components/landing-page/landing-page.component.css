@@ -1,3 +1,8 @@
+.container{
+  display: flex;
+  flex-direction: column;
+  background-color: #E6DCD3;
+}
 .banner {
     background-color: #B27369;
     color: white;
@@ -40,7 +45,83 @@
     display: flex;
     gap: 20px; /* Space between carousel items */
   }
+
+ /* Hero section  */
+
+ .hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 0;
+  gap: 4rem;
+  width: 80vw;
+  margin: 0 auto;
+  height: 65vh;
+ }
+
+.hero-text {
+  width: 40%;
+}
+
+.hero-text h1 {
+  font-size: 48px;
+  line-height: 1.2;
+  color: #B27369; /* Muted coral for the heading */
+}
+
+.hero-text p {
+  margin: 20px 0;
+  color: #666; /* Gray for secondary text */
+}
+
+.hero-text button {
+  background-color: #B27369; /* Muted coral for the button */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.hero-text button:hover {
+  background-color: #8F5A52; /* Darker coral on hover */
+}
+
+.hero-image {
+  width: 40%;
+  text-align: center;
+  font-style: italic;
+  color: #999; /* Light gray for placeholder text */
+  border-radius: 20px;
+  ;
+}
+.hero-image-main{
+  border: 2px solid #8F5A52;
+  border-radius: 48px; 
+}
   
+ /* corousel section */
+ .carousel-section{
+  display:flex;
+  flex-direction: column;
+  width: 80vw;
+  justify-content: center;
+  margin:  0 auto;
+ }
+
+ .trendy-recipes {
+  padding: 50px 0;
+  text-align: center;
+  font-size: 36px;
+    color: #B27369; /* Muted coral for the heading */
+}
+
+.trendy-recipes h2 {
+  font-size: 32px;
+  margin-bottom: 30px;
+  color: #B27369; /* Muted coral for the heading */
+}
+
   .carousel-item {
     background-color: #fff;
     border-radius: 10px;
@@ -166,6 +247,29 @@
 .plus-btn:hover {
   background-color: #45a049;
 }
+
+.view-more {
+  background-color: transparent;
+  border: 1px solid #B27369; /* Muted coral border */
+  padding: 10px 24px;
+  border-radius: 20px;
+  margin-top: 20px;
+  cursor: pointer;
+  color: #B27369; /* Muted coral text */
+}
+.view-more-button{
+  display: flex;
+  justify-content: center;
+}
+
+.view-more:hover {
+  background-color: #B27369; /* Muted coral background on hover */
+  color: white;
+}
+
+
+
+
 
   
   /* Responsive Adjustments */

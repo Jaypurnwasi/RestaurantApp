@@ -130,5 +130,7 @@ export class CartService {
     if (!cart || !cart.items) return 0;
     return cart.items.reduce((total, item) => total + (item.menuItem.price * item.quantity), 0);
   }
+
+  
   
 }

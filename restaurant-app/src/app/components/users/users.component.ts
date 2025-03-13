@@ -4,13 +4,16 @@ import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angula
 import { UserService } from '../../services/user.service';
 import { User } from '../../interfaces/user';
 import { Observable } from 'rxjs';
+import { MessageService } from 'primeng/api';
+import { Toast } from 'primeng/toast';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,Toast],
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css'],
+  providers:[MessageService]
 })
 export class UsersComponent implements OnInit {
   users$!: Observable<User[]>; // Declare as Observable, initialize in ngOnInit
@@ -27,11 +30,21 @@ export class UsersComponent implements OnInit {
     password: new FormControl('', [Validators.required, Validators.minLength(4)]), // Added password
   });
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService,
+    private messageService: MessageService,
+  ) {}
 
   ngOnInit(): void {
     this.users$ = this.userService.getUsers(); // Initialize here after userService is available
     this.fetchUsers(); // Ensure initial fetch
+  }
+  showSuccess(msg:string){
+    this.messageService.add({ severity: 'success', summary: 'success', detail: msg, life: 3000 });
+
+  }
+  showError(msg:string){
+    this.messageService.add({ severity: 'error', summary: 'error', detail: msg, life: 3000 });
+
   }
 
   toggleForm(): void {
@@ -60,8 +73,10 @@ export class UsersComponent implements OnInit {
         await this.userService.createUser(newUser);
         this.showForm = false;
         this.addUserForm.reset({ role: 'Customer' });
+        this.showSuccess('user added succesfully');
       } catch (error: any) {
         console.error('Error adding user:', error);
+        this.showError('error while adding user');
       }
     }
   }
@@ -74,8 +89,10 @@ export class UsersComponent implements OnInit {
     if (confirm(`Are you sure you want to delete ${name}?`)) {
       try {
         await this.userService.removeUser(userId);
+        this.showSuccess('user deleted succesfully')
       } catch (error: any) {
         console.error('Error deleting user:', error);
+        this.showError('error while deleting user')
       }
     }
   }

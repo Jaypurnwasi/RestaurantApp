@@ -5,12 +5,16 @@ import { Order } from '../../interfaces/order';
 import { Observable } from 'rxjs';
 import { User } from '../../interfaces/user';
 import { AuthService } from '../../services/auth.service';
-
+import { MessageService } from 'primeng/api';
+import { Toast } from 'primeng/toast';
+import { ButtonModule } from 'primeng/button';
 @Component({
   selector: 'app-orders',
-  imports: [CommonModule],
+  imports: [CommonModule,Toast,ButtonModule],
   templateUrl: './orders.component.html',
-  styleUrl: './orders.component.css'
+  styleUrl: './orders.component.css',
+  providers: [MessageService]
+
 })
 export class OrdersComponent {
   orders$!: Observable<Order[]>;
@@ -33,7 +37,9 @@ export class OrdersComponent {
     'Failed': ['Failed'],       // No change allowed
   };
 
-  constructor(private orderService: OrderService, private authService: AuthService,
+  constructor(private orderService: OrderService,
+     private authService: AuthService,
+     private messageService : MessageService,
   ) { 
     this.authService.currentUser$.subscribe(user => {
     this.user = user;
@@ -45,6 +51,15 @@ export class OrdersComponent {
     
     this.fetchOrders('network-only'); // Initial fetch with default filter
   }
+  showSuccess(msg:string){
+    this.messageService.add({ severity: 'success', summary: 'success', detail: msg, life: 3000 });
+
+  }
+  showError(msg:string){
+    this.messageService.add({ severity: 'error', summary: 'error', detail: msg, life: 3000 });
+
+  }
+
   getStatusStyle(status: string): any {
     switch (status) {
       case 'Pending':
@@ -99,11 +114,11 @@ export class OrdersComponent {
     try {
       await this.orderService.updateOrderStatus(orderId, status);
       this.fetchOrders('network-only');
-
-
+      this.showSuccess('status updated successfully')
 
     } catch (error: any) {
       console.error('Error updating order status:', error);
+      this.showError('error while updating status')
     }
   }
   getValidStatuses(currentStatus: string): string[] {

@@ -1,9 +1,24 @@
-<div class="banner">
+<div class="container">
+  <div class="banner">
     <h1>Welcome to Our Restaurant!</h1>
     <p>Explore our delicious menu and place your order today.</p>
   </div>
-  
-  <p-carousel 
+
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Delicious Dishes <br> for Food Lovers</h1>
+      <p>Ea qui nostrum molestiae. Mea ea deleniti omittam, an sit errem evertitur, minimum est ad audiam.</p>
+      <button>Explore recipes</button>
+    </div>
+    <div class="hero-image">
+      <img src="./assets/images/hero-image.avif" alt="hero image" class="hero-image-main">
+    </div>
+  </section>
+
+    <section class="carousel-section">
+      <h2 class="trendy-recipes">Trendy Recipes</h2>
+
+      <p-carousel 
     [value]="menuItems" 
     [numVisible]="3" 
     [numScroll]="3" 
@@ -45,9 +60,23 @@
         </div>
       </div>
     </ng-template>
-  </p-carousel>
+      </p-carousel>
+
+      <div class="view-more-button">
+        <button class="view-more">View more</button>
+
+
+      </div>
+    </section>
+    
+    
+
+  
+  
   
   <div class="home-content">
     <h2>Welcome, Customer!</h2>
     <p>This is your home page.</p>
   </div>
+
+</div>
