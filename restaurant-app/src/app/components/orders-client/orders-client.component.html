@@ -1,0 +1,76 @@
+
+<div class="orders-container-parent">
+    <div class="orders-container">
+        <div class="orders-header">
+          <!-- <h3>All Orders</h3> -->
+          <div class="status-toggle-wrapper">
+            <label class="status-toggle-label">Filter:</label>
+            <div class="status-toggle">
+              <input 
+                type="checkbox" 
+                id="status-toggle" 
+                (change)="onStatusToggle($event)" 
+                [checked]="isLiveFilter" 
+                hidden 
+              />
+              <label for="status-toggle" class="toggle-slider">
+                <span class="toggle-text live">Live</span>
+                <span class="toggle-text previous">Previous</span>
+                <span class="slider-ball"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      
+        <ng-container *ngIf="orders$ | async as orderList">
+          <div class="orders-grid" *ngIf="orderList.length > 0; else noOrdersTemplate">
+            <div class="order-card" *ngFor="let order of orderList">
+              <div class="order-card-header">
+                <div class="order-id" *ngIf="isAdmin()">#{{ order.id }}</div>
+                <div class="order-status">
+                  <select 
+                    [value]="order.status" 
+                    (change)="updateStatus(order.id, $event)" 
+                    [disabled]="!isAdmin()"
+                    [ngClass]="getStatusClass(order.status)">
+                    <option 
+                      *ngFor="let status of getValidStatuses(order.status)" 
+                      [value]="status"
+                      [disabled]="status !== order.status && !validStatusTransitions[order.status].includes(status)"
+                    >
+                      {{ status }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+      
+              <div class="order-details">
+                <div class="order-customer" *ngIf="isAdmin()"> {{ order.customerName }}</div>
+                <div class="order-items">
+                   Items:
+                  <ul class="list-items">
+                    <li *ngFor="let item of order.items">
+                      {{ item.menuItem.name }} (Qty: {{ item.quantity }})
+                    </li>
+                  </ul>
+                </div>
+                <div class="order-table"> Table: {{ getTableName(order.tableId) }}</div>
+                <div class="order-amount"> Amount: {{ order.amount | currency }}</div>
+              </div>
+      
+              <div class="order-footer">
+                <span> Created: {{ order.createdAt }}</span>
+                <span> Updated: {{ order.updatedAt }}</span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      
+        <ng-template #noOrdersTemplate>
+          <div class="no-orders">No orders found.</div>
+        </ng-template>
+      </div>
+
+</div>
+
+  

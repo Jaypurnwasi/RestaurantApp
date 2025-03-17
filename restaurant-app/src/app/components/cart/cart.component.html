@@ -1,4 +1,5 @@
-<div class="cart-container">
+<div class="cart-container-parent">
+  <div class="cart-container">
     <h2>Your Cart</h2>
     <div class="cart-card" *ngIf="cart$ | async as cart; else emptyCart">
       <div class="cart-items">
@@ -63,3 +64,5 @@
     <p-toast/>
 
   </div>
+
+</div>

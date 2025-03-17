@@ -81,7 +81,7 @@ export class MenuitemComponent {
     if(!this.authService.getCurrentUser()){
       this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
 
-    }
+    } 
 
     // Used combineLatest to avoid nested subscriptions
     combineLatest([this.menuService.menuItems$, this.categoryService.categories$])

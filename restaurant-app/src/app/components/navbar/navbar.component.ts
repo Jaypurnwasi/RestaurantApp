@@ -34,4 +34,5 @@ export class UserNavbarComponent {
     this.authService.logout();
     this.router.navigate(['/login']); // Redirect to login after logout
   }
+  
 }
