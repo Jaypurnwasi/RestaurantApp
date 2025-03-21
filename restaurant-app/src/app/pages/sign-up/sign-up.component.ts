@@ -52,7 +52,7 @@ export class SignUpComponent {
   }
 
   onLogin() {
-    this.router.navigate(['/login']);
+    this.router.navigate(['/signin']);
   }
 
 }

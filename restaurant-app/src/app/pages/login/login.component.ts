@@ -43,32 +43,11 @@ export class LoginComponent {
   });
 
     console.log('table id on login ',this.tableId) 
+    // if(this.authService.getCurrentUser()){
+    //   this.routeUser()
+    // }
   }
 
-  
-  routeUser(){
-    console.log('route user called')
-    const user:User|null = this.authService.getCurrentUser()
-    console.log('current user :',user)
-    if(user){
-      switch (user.role) {
-        case 'Admin':
-          this.router.navigate(['/admin']);
-          break;
-        case 'KitchenStaff':
-          this.router.navigate(['/staff']);
-          break;
-        case 'Waiter':
-          this.router.navigate(['/staff']);
-          break;
-        case 'Customer':
-          this.router.navigate(['/']);
-          break;
-        default:
-          this.router.navigate(['/login']);
-      }
-    }
-}
 
   async onSubmit() {
     if (this.loginForm.invalid) {
@@ -87,7 +66,7 @@ export class LoginComponent {
       else{
         this.authService.setCurrentUser(user);
         console.log('User logged in:', this.authService.getCurrentUser());
-        this.routeUser()
+        this.authService.routeUser()
 
       }
 

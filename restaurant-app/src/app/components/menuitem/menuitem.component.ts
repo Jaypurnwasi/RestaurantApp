@@ -66,9 +66,10 @@ export class MenuitemComponent {
   }
 
   ngOnInit(): void {  
+    window.scrollTo(0, 0);
     this.menuService.fetchMenuItems();
     this.categoryService.fetchCategories();
-    this.cartService.fetchCartItems();
+     this.cartService.fetchCartItems();
 
     this.route.queryParams.subscribe(params => {
       if (params['tableId']) {
@@ -79,7 +80,7 @@ export class MenuitemComponent {
     console.log('table id fetched in menuItems is ',this.tableId)
 
     if(!this.authService.getCurrentUser()){
-      this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
+      this.router.navigate(['/signin'], { queryParams: { returnUrl: this.router.url } });
 
     } 
 
@@ -278,7 +279,7 @@ export class MenuitemComponent {
     if (!this.isAdmin()) {
       this.itemLoading[item.id] = true  
       try {
-        await this.cartService.addItemToCart(item.id);
+        await this.cartService.addItemToCart(item.id,item);
       } finally {
         this.itemLoading[item.id] = false; // Hide loader after 
       }
@@ -289,7 +290,7 @@ export class MenuitemComponent {
     if (!this.isAdmin()) {
       this.itemLoading[item.id] = true
       try{
-        await this.cartService.removeItemFromCart(item.id);
+        await this.cartService.removeItemFromCart(item.id,item);
       } finally{
         this.itemLoading[item.id] = false
       }

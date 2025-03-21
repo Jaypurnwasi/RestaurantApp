@@ -15,6 +15,10 @@ type User {
   profileImg: String
   
 } 
+type ResponseMessage {
+    success: Boolean!
+    message: String!
+  }
 
 input CreateUserInput {
   name: String!
@@ -47,6 +51,7 @@ input UpdateUserInput {
   profileImg: String
 }
 
+
 # Queries for Admin
 type Query {
   
@@ -58,14 +63,17 @@ type Query {
 
 # Mutations for Admin
 type Mutation {
-  createUser(input: CreateUserInput!): User!   # done 
-  login(input: LoginInput!): User!              # done
-  signup(input: SignupInput!): User!            # done
-  removeUser(input: RemoveUserInput!): User!     #done
-  deleteAccount: User!                           #done
-  updateUser(input: UpdateUserInput!): User!    #done
-  updatePassword(input: UpdatePasswordInput!): Boolean! #done
-  logout:Boolean!                             #done
+  createUser(input: CreateUserInput!): User!   
+  login(input: LoginInput!): User!              
+  signup(input: SignupInput!): User!            
+  removeUser(input: RemoveUserInput!): User!    
+  deleteAccount: User!                           
+  updateUser(input: UpdateUserInput!): User!  
+  updatePassword(input: UpdatePasswordInput!): Boolean! 
+  logout:Boolean!    
+  signIn(email:String!):User!     
+  requestOTP(email: String!): ResponseMessage
+  verifyOTP(email: String!, otp: String!): ResponseMessage         
 
   
 }

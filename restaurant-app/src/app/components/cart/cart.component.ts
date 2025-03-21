@@ -11,6 +11,7 @@ import { OrderService } from '../../services/order.service';
 import { TableService } from '../../services/table.service';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { Menuitem } from '../../interfaces/menuitem';
 
 @Component({
   selector: 'app-cart',
@@ -113,19 +114,20 @@ export class CartComponent implements OnInit {
     this.loading = false
   }
 
-  async addItem(id: string) {
+  async addItem(id: string,item:Menuitem) {
 
     this.itemLoading[id] = true  
       try {
-        await this.cartService.addItemToCart(id);
+        await this.cartService.addItemToCart(id,item);
       } finally {
         this.itemLoading[id] = false; // Hide loader after 
-      }  }
+      } 
+     }
 
-  async removeItem(id: string) {
+  async removeItem(id: string, item:Menuitem) {
     this.itemLoading[id] = true
     try{
-      await this.cartService.removeItemFromCart(id);
+      await this.cartService.removeItemFromCart(id,item);
     } finally{
       this.itemLoading[id] = false
     }  }

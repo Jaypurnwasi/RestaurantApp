@@ -12,6 +12,7 @@ import { CartComponent } from './components/cart/cart.component';
 import { LandingPageComponent } from './components/landing-page/landing-page.component';
 import { SignUpComponent } from './pages/sign-up/sign-up.component';
 import { OrdersClientComponent } from './components/orders-client/orders-client.component';
+import { SignInComponent } from './pages/sign-in/sign-in.component';
 export const routes: Routes = [
   { path: 'login',
      component: LoginComponent ,
@@ -22,6 +23,8 @@ export const routes: Routes = [
       component:SignUpComponent
 
     },
+    {path:'signin',component:SignInComponent},
+
   {
     path:'admin',
     component:AdminComponent,

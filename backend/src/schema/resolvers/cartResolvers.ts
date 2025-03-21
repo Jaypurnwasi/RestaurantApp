@@ -127,7 +127,6 @@ export const cartResolvers = {
             quantity,
           });
         }
-
         // Save the updated cart
         await cart.save();
 

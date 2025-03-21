@@ -7,9 +7,9 @@ import { MenuService } from '../../services/menu.service';
 import { CartService } from '../../services/cart.service';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
-import { FaConfig, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCoffee } from '@fortawesome/free-solid-svg-icons';
-import { PrimeIcons } from 'primeng/api';
+import { Router, RouterLink ,RouterLinkActive} from '@angular/router';
 interface Iblog{
   id:string,
   name:string,
@@ -20,7 +20,7 @@ interface Iblog{
 }
 @Component({
   selector: 'app-landing-page',
-  imports: [CommonModule,CarouselModule,ButtonModule,FontAwesomeModule],
+  imports: [CommonModule,CarouselModule,ButtonModule,FontAwesomeModule,RouterLink,RouterLinkActive],
   templateUrl: './landing-page.component.html',
   styleUrl: './landing-page.component.css'
 })
@@ -36,7 +36,7 @@ export class LandingPageComponent {
     { breakpoint: '560px', numVisible: 1, numScroll: 1 },
   ];
 
-  constructor(public menuService: MenuService,private cartService: CartService, private http: HttpClient) {}
+  constructor(public menuService: MenuService,private cartService: CartService, private http: HttpClient, private router : Router) {}
 
   ngOnInit(): void {
     this.menuService.fetchMenuItems(); // Fetch all items (no veg filter for carousel)
@@ -61,11 +61,11 @@ export class LandingPageComponent {
   }
   
   async addToCart(item: Menuitem) { 
-      await this.cartService.addItemToCart(item.id); 
+      await this.cartService.addItemToCart(item.id,item); 
   }
 
   async removeFromCart(item: Menuitem) {
-      await this.cartService.removeItemFromCart(item.id);
+      await this.cartService.removeItemFromCart(item.id,item);
     
   }
 
@@ -78,6 +78,9 @@ export class LandingPageComponent {
   getAllBlogs():Observable<Iblog[]>{
     return this.http.get<{ recipes: Iblog[] }>('https://dummyjson.com/recipes')
     .pipe(map(response => response.recipes));
+  }
+  goToMenu() {
+    this.router.navigate(['/menu']); // Absolute navigation to /menu
   }
 
 }

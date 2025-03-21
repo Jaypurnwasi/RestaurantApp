@@ -14,7 +14,7 @@ export class AuthGuard implements CanActivate {
     // Check if the user is authenticated
     if (!currentUser) {
       console.log('User not authenticated, redirecting to login');
-      this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+      this.router.navigate(['/signin'], { queryParams: { returnUrl: state.url } });
       return false;
     }
 
@@ -29,7 +29,7 @@ export class AuthGuard implements CanActivate {
 
     if (!allowedRoles.includes(currentUser.role)) {
       console.log(`User role ${currentUser.role} not in allowed roles ${allowedRoles.join(', ')}`);
-      this.router.navigate(['/login']); // Or redirect to an unauthorized page
+      this.router.navigate(['/signin']); // Or redirect to an unauthorized page
       return false;
     }
 

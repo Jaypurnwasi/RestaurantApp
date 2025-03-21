@@ -1,10 +1,10 @@
-interface CartItem {
+export interface CartItem {
     menuItem: {
       categoryId: string;
       description: string;
       id: string;
       image: string;
-      isActive: boolean;
+      isActive?: boolean;
       isVeg: boolean;
       name: string;
       price: number;

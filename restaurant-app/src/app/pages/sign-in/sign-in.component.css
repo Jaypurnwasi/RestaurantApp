@@ -1,0 +1,122 @@
+.signup-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 30px;
+    background: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    justify-content: center;
+    
+}
+
+.signup-header {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #B27369;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+label {
+    display: block;
+    text-align: left;
+    font-size: 16px;
+    color: #B27369;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #B27369;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+
+.error {
+    color: #d9534f;
+    font-size: 14px;
+    margin-top: 5px;
+    text-align: left;
+}
+
+button {
+    padding: 10px;
+    font-size: 16px;
+    max-width: 100px;
+    font-weight: bold;
+    color: white;
+    background: #B27369;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:disabled {
+    background: #E6DCD3;
+    cursor: not-allowed;
+}
+
+.signup-button:hover:not(:disabled) {
+    background: #b27369e0;
+}
+
+.send-otp-section{
+
+    display: flex;
+    justify-content: space-between;
+    
+}
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #FFF;
+    border-bottom-color: #b27369e0;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+    } 
+
+    .signup-section{
+        display: flex;
+        margin-top: 2rem;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+    
+      }
+      .signup-btn{
+        border: 1px solid #B27369;
+        color: #B27369;
+        background-color: white;
+        padding: 8px 12px;
+      }
+      

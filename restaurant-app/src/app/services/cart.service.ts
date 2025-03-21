@@ -3,7 +3,8 @@ import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject } from 'rxjs';
 import { firstValueFrom } from 'rxjs';
 import { Cart } from '../interfaces/cart';
-
+import { Menuitem } from '../interfaces/menuitem';
+import { CartItem } from '../interfaces/cart';
 
 
 @Injectable({
@@ -50,7 +51,7 @@ export class CartService {
     }
   }
 
-  async addItemToCart(menuItemId: string, quantity: number = 1): Promise<void> {
+  async addItemToCart(menuItemId: string, item:Menuitem,quantity: number = 1): Promise<void> {
     const mutation = gql`
       mutation AddItemToCart($input: AddToCartInput!) {
         addItemToCart(input: $input) {
@@ -67,11 +68,15 @@ export class CartService {
       })
     );
     // Refresh cart after adding
-    await this.fetchCartItems();
+    // await this.fetchCartItems();
+    if(result.data){
+      this.updateCartState(menuItemId,quantity,item)
+
+    }
     
   }
 
-  async removeItemFromCart(menuItemId: string, quantity: number = 1): Promise<void> {
+  async removeItemFromCart(menuItemId: string,item:Menuitem, quantity: number = 1): Promise<void> {
     const mutation = gql`
       mutation ($input: DecreaseQuantityInput!) {
       decreaseItemQuantity(input: $input) {
@@ -89,7 +94,12 @@ export class CartService {
     );
 
     // Refresh cart after removing
-    await this.fetchCartItems();
+    // await this.fetchCartItems();
+
+    if(result.data){
+      this.updateCartState(menuItemId,-quantity,item)
+    }
+    
    
   }
 
@@ -119,6 +129,32 @@ export class CartService {
     );
 
     return result.data?.createOrder.status || 'Failed'; // Default to 'Failed' if no status
+  }
+
+  private updateCartState(menuItemId: string, quantityChange: number,menuItem:Menuitem): void {
+    console.log('update cart state called')
+    const currentCart = this.cartSubject.getValue();
+    if (!currentCart) return;
+
+    const updatedCart: Cart = JSON.parse(JSON.stringify(currentCart));
+
+    const itemIndex = updatedCart.items.findIndex(item => item.menuItem.id === menuItemId);
+
+    if (itemIndex > -1) {
+      // Update existing item quantity
+      updatedCart.items[itemIndex].quantity += quantityChange;
+
+      // If quantity is 0 or negative, remove item
+      if (updatedCart.items[itemIndex].quantity <= 0) {
+        updatedCart.items.splice(itemIndex, 1);
+      }
+    } else if (quantityChange > 0) {
+      // Add new item if it doesn't exist
+      updatedCart.items.push({ menuItem, quantity: quantityChange });
+    }
+
+    // Emit new cart state
+    this.cartSubject.next(updatedCart);
   }
   
   getCart(): Cart | null {

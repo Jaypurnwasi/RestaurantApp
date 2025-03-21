@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject ,Observable} from 'rxjs';
+import { BehaviorSubject ,firstValueFrom,map,Observable} from 'rxjs';
 import { User } from '../interfaces/user';
 import {JwtHelperService} from '@auth0/angular-jwt'
 import {CookieService} from 'ngx-cookie-service'
+import { Apollo,gql } from 'apollo-angular';
+import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root',
 })
@@ -13,7 +15,9 @@ export class AuthService {
 
   constructor(
     private jwtHelper: JwtHelperService,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private apollo: Apollo,
+    private router:Router
   )
    {
     this.loadUserFromToken(); // Load user on service init
@@ -29,7 +33,6 @@ export class AuthService {
   }
    loadUserFromToken(): void {
     
-
     try{
       const token = this.cookieService.get('token'); // Get token from cookies
     
@@ -160,5 +163,97 @@ export class AuthService {
 
 
   }
+
+  async signIn(email:string){
+
+    const mutation = gql`
+    mutation Mutation($email: String!) {
+    signIn(email: $email) {
+    email
+    id
+    name
+    profileImg
+    role
+  }
+} 
+    `
+    try{
+      const result = await firstValueFrom(this.apollo.mutate<{signIn:User}>({
+        mutation,
+        variables:{email}
+      })) 
+ 
+      return  result.data?.signIn;
+
+    }
+    catch(error){
+      console.log('error while signIn ',error);
+      return null;
+    
+    } 
+
+  }
+  requestOTP(email:string):Observable<{message: string; success: boolean} >{
+
+    const REQUEST_OTP = gql`
+  mutation Mutation($email: String!) {
+    requestOTP(email: $email) {
+      message
+      success
+    }
+  }
+
   
+`;
+return  this.apollo.mutate({
+  mutation: REQUEST_OTP,
+  variables: { email }
+}).pipe(
+  map((res: any) => res.data.requestOTP)
+);
+
+  }
+  
+  verifyOTP(email:string,otp:string):Observable<{message: string; success: boolean} >{
+
+    const VERIFY_OTP = gql`
+  mutation Mutation($email: String!, $otp: String!) {
+    verifyOTP(email: $email, otp: $otp) {
+      message
+      success
+    }
+  }
+`;
+return this.apollo.mutate({
+  mutation: VERIFY_OTP,
+  variables: { email, otp }
+}).pipe(
+  map((res: any) => res.data.verifyOTP)
+);
+
+  }  
+
+  routeUser(){
+    console.log('route user called')
+    const user:User|null = this.getCurrentUser()
+    console.log('current user :',user)
+    if(user){
+      switch (user.role) {
+        case 'Admin':
+          this.router.navigate(['/admin']);
+          break;
+        case 'KitchenStaff':
+          this.router.navigate(['/staff']);
+          break;
+        case 'Waiter':
+          this.router.navigate(['/staff']);
+          break;
+        case 'Customer':
+          this.router.navigate(['/']);
+          break;
+        default:
+          this.router.navigate(['/signin']);
+      }
+    }
+}
 }

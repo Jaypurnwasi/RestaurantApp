@@ -2,6 +2,7 @@ import { GraphQLError } from "graphql";
 import User from "../../models/User";
 import { IUser } from "../../models/User";
 import { Role } from "../types/types";
+import { sendOTP } from "../../utils/mail";
 import {
   CreateUserInput,
   LoginInput,
@@ -17,6 +18,7 @@ import dotenv from "dotenv";
 // import { Query } from "mongoose";
 
 dotenv.config();
+const otpStore = new Map<string, { otp: string, expiresAt: number }>();
 
 export const userResolvers = {
   Query: {
@@ -276,6 +278,7 @@ export const userResolvers = {
           throw new GraphQLError("User with this email already exists", {
             extensions: { code: "BAD_REQUEST", status: 400 },
           });
+          
         }
         // Hash password
         let hashedPassword = "";
@@ -517,5 +520,149 @@ export const userResolvers = {
         });
       }
     },
+    async requestOTP(_: unknown, { email }: { email: string }){
+      try{
+
+        const user = await User.findOne({ email });
+        if (!user) {
+          logger.error(`OTP request failed No user found with email ${email}`);
+          throw new GraphQLError("Invalid email ", {
+            extensions: { code: "UNAUTHORIZED", status: 401 },
+          });
+        }
+
+        const otp = Math.floor((1000+ (Math.random()*9000))).toString();
+        const expiresAt = Date.now() + 2 * 60 * 1000; // OTP valid for 2 minutes
+  
+        otpStore.set(email, { otp, expiresAt });
+        console.log('otp generated',otp)
+  
+        // Send OTP via email
+        const sent = await sendOTP(email, otp);
+        if (!sent)
+           throw new GraphQLError('Failed to send OTP');
+  
+        return { success: true, message: 'OTP sent successfully' }
+
+      }
+      catch(error:any){
+        console.log('error while sending otp ',error)
+        throw new GraphQLError(error.message,{extensions:{code:'internal server error'}})
+      }
+      
+    },
+     async verifyOTP (_: unknown, { email, otp }: { email: string, otp: string }){
+
+      try{
+        const storedOTP = otpStore.get(email);
+      if (!storedOTP) 
+        throw new GraphQLError('No OTP found. Request a new one.', { extensions: { code: 'NOT_FOUND' } });
+
+      // Check OTP expiration
+      if (Date.now() > storedOTP.expiresAt) {
+        otpStore.delete(email);
+        throw new GraphQLError('OTP expired. Request a new one.', { extensions: { code: 'EXPIRED' } });
+      }
+
+      // Verify OTP
+      if (storedOTP.otp !== otp) 
+        throw new GraphQLError('Invalid OTP', { extensions: { code: 'INVALID_OTP' } });
+
+      otpStore.delete(email); // Remove OTP after verification
+      console.log('otp verified succesfully by user ',email);
+      return { success: true, message: 'OTP verified successfully' };
+
+      }
+      catch(error:any){
+        console.log('error while verifying otp ',error)
+        throw new GraphQLError(error.message,{extensions:{code:'internal server error'}})
+
+      }
+      
+    },
+
+    async signIn(_: unknown, { email }: { email: string }, { res }: MyContext) {
+      try {
+
+        // Check if email already exists
+        const existingUser = await User.findOne({ email });
+
+        if(!existingUser){
+          console.log('invalid user trying to sing in ',email);
+          throw new GraphQLError('Error during SignIn', {
+            extensions: {
+              code: "User not found",
+              status: 404,
+            },
+          });
+          
+        }
+          const token = jwt.sign(
+            {
+              id: existingUser.id,
+              role: existingUser.role,
+              name: existingUser.name,
+              email: existingUser.email,
+              profileImg: existingUser.profileImg,
+            },
+            process.env.KEY as string,
+            { expiresIn: "7d" }
+          );
+
+          res.cookie("token", token, {
+            secure: process.env.NODE_ENV === "production" ? true : false,
+            sameSite: "strict",
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+          });
+
+          console.log('user signed In ',existingUser.email)
+
+          return existingUser;
+      
+       
+        // below implementaion will be used if it is needed to combine login and signup functionality
+
+        // Create new user with role "Customer"
+        // const newUser = new User({
+        //   email,
+        //   role: Role.CUSTOMER, // Hardcoded as "Customer"
+        //   profileImg:"",
+        // });
+
+        // await newUser.save();
+
+        // // Generate JWT token
+        // const token = jwt.sign(
+        //   {
+        //     id: newUser.id,
+        //     role: newUser.role,
+        //     name: newUser.name,
+        //     email: newUser.email,
+        //     profileImg: newUser.profileImg,
+        //   },
+        //   process.env.KEY as string,
+        //   { expiresIn: "7d" }
+        // );
+
+        // // Set token in HTTP-only cookie
+        // res.cookie("token", token, {
+        //   secure: process.env.NODE_ENV === "production" ? true : false,
+        //   sameSite: "strict",
+        //   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        // });
+
+        // logger.info(`New customer signed up: ${email}`);
+
+        // return newUser;
+      } catch (error: any) {
+        throw new GraphQLError(error.message || "Internal Server Error", {
+          extensions: {
+            code: error.extensions?.code || "INTERNAL_SERVER_ERROR",
+            status: error.extensions?.status || 500,
+          },
+        });
+      }
+    },
+
   },
 };

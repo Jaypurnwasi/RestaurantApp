@@ -59,7 +59,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let user of userList">
-            <td>{{ user.name  }}</td>
+            <td>{{ user.name ||"unknown" }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.role }}</td>
             <td>

@@ -11,9 +11,9 @@
             <span class="cart-item-price">{{ item.menuItem.price | currency:'INR':'symbol' }}</span>
             <div class="loader" *ngIf="itemLoading[item.menuItem.id]"></div>
             <div class="cart-controls" *ngIf="!itemLoading[item.menuItem.id]">
-              <button class="cart-btn minus-btn" (click)="removeItem(item.menuItem.id)" [disabled]="item.quantity === 0">-</button>
+              <button class="cart-btn minus-btn" (click)="removeItem(item.menuItem.id,item.menuItem)" [disabled]="item.quantity === 0">-</button>
               <span class="cart-item-quantity">Qty: {{ item.quantity }}</span>
-              <button class="cart-btn plus-btn" (click)="addItem(item.menuItem.id)">+</button>
+              <button class="cart-btn plus-btn" (click)="addItem(item.menuItem.id,item.menuItem)">+</button>
             </div>
           </div>
         </div>

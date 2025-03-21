@@ -461,6 +461,11 @@ footer {
   margin: 6px;
 }
 
+/* Utility classes*/
+.link{
+  text-decoration: none;
+}
+
   /* Responsive Adjustments */
   @media screen and (max-width: 1024px) {
     .hero {
