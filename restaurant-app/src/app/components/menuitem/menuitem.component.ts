@@ -69,7 +69,7 @@ export class MenuitemComponent {
     window.scrollTo(0, 0);
     this.menuService.fetchMenuItems();
     this.categoryService.fetchCategories();
-     this.cartService.fetchCartItems();
+      this.cartService.fetchCartItems();
 
     this.route.queryParams.subscribe(params => {
       if (params['tableId']) {

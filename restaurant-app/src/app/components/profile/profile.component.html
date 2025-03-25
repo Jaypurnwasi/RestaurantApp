@@ -1,0 +1,77 @@
+<div class="profile-page-container">
+
+  <button class="hamburger-btn" (click)="toggleSidebar()" aria-label="Toggle sidebar">
+    <span class="hamburger-icon">{{ isSidebarOpen ? '✖' : '☰' }}</span>
+  </button>
+    <!-- Sidebar (Left) -->
+    <nav class="sidebar" [ngClass]="{ 'open': isSidebarOpen }">
+      <div class="user-info">
+        <img [src]="'./assets/images/' + user?.profileImg" alt="User avatar" class="user-avatar">
+        <div class="user-details">
+          <span class="user-name">{{ user?.name }}</span>
+          <span class="user-email">{{ user?.email }}</span>
+        </div>
+      </div>
+      <ul class="nav-list">
+        <li *ngFor="let item of navItems" 
+            class="nav-item" 
+            [ngClass]="{ 'active': item.active }" 
+            (click)="onNavClick(item.text)">
+          <span class="nav-text">{{ item.text }}</span>
+        </li>
+        <li class="nav-item">
+          <button class="logout-btn" (click)="logout()">Logout</button>
+        </li>
+      </ul>
+    </nav>
+  
+    <!-- Main Content (Center) -->
+    <main class="main-content">
+      <!-- Profile Section -->
+      <section class="profile-section" *ngIf="activeSection === 'profile'">
+        <header class="profile-header">
+          <img [src]="'./assets/images/' + user?.profileImg" alt="User avatar" class="profile-avatar">
+          <div class="profile-info">
+            <h1 class="profile-name">{{ user?.name }}</h1>
+            <p class="profile-email">{{ user?.email }}</p>
+          </div>
+        </header>
+        <form class="profile-form" [formGroup]="profileForm" (ngSubmit)="saveProfileChanges()">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" formControlName="name" [value]="user?.name" name="name">
+          </div>
+          <div class="form-group">
+            <label for="email">Email account</label>
+            <input type="email" id="email" formControlName = "email" [value]="user?.email" name="email" >
+          </div> 
+          <div class="form-group">
+            <label for="profimeImg" name = "profileImg">Profile pic</label>
+            <input type="file"  (change)="onImageUpload($event)">
+          </div>
+          <button type="submit" class="save-btn">Save Changes</button>
+        </form>
+      </section>
+  
+      <!-- Settings Section -->
+      <section class="settings-section" *ngIf="activeSection === 'settings'">
+        <h2>Settings</h2>
+        <div class="settings-options">
+          <div class="settings-group">
+            <label for="theme">Theme</label>
+            <select id="theme" [(ngModel)]="selectedTheme" name="theme">
+              <option *ngFor="let theme of themes" [value]="theme">{{ theme }}</option>
+            </select>
+          </div>
+          <div class="settings-group">
+            <label for="language">Language</label>
+            <select id="language" [(ngModel)]="selectedLanguage" name="language">
+              <option *ngFor="let lang of languages" [value]="lang">{{ lang }}</option>
+            </select>
+          </div>
+        </div>
+        <button class="save-btn" (click)="saveSettings()">Save Settings</button>
+      </section>
+    </main>
+    <p-toast></p-toast>
+  </div>

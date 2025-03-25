@@ -14,7 +14,7 @@
   <!-- Desktop Navbar Options -->
   <div class="nav-options desktop-only">
     <a routerLink="menu" routerLinkActive="active">Menu</a>
-    <a routerLink="cart" routerLinkActive="active">Cart</a>
+    <a routerLink="cart" routerLinkActive="active"> {{ cartLength > 0 ? 'Cart (' + cartLength + ')' : 'Cart' }}</a>
     <a routerLink="orders" routerLinkActive="active">Orders</a>
   </div>
 
@@ -25,6 +25,9 @@
       alt="Profile" 
       class="profile-pic"
       *ngIf="user?.profileImg"
+      title="profile"
+      routerLink="profile"
+      
     />
     <span *ngIf="!user?.profileImg" class="profile-pic-placeholder">No Image</span>
     <button class="logout-btn" (click)="logout()">Logout</button>
@@ -43,6 +46,8 @@
       <a routerLink="menu" routerLinkActive="active" (click)="toggleMenu()">Menu</a>
       <a routerLink="cart" routerLinkActive="active" (click)="toggleMenu()">Cart</a>
       <a routerLink="orders" routerLinkActive="active" (click)="toggleMenu()">Orders</a>
+      <a routerLink="profile" routerLinkActive="active" (click)="toggleMenu()">Profile</a>
+
     </div>
 
     <!-- Mobile User Actions -->

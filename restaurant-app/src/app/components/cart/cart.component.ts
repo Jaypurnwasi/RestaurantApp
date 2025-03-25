@@ -61,7 +61,7 @@ export class CartComponent implements OnInit {
     this.cartService.fetchCartItems();
     this.cart$.subscribe(() => {
       this.total$.next(this.cartService.getTotal());
-    });
+    }); 
   }
   showSuccess(msg:string) {
     this.messageService.add({ severity: 'success', summary: 'success', detail: msg, life: 3000 });

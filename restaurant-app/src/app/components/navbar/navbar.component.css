@@ -59,6 +59,7 @@
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid white;
+  cursor: pointer;
 }
 
 .profile-pic-placeholder {

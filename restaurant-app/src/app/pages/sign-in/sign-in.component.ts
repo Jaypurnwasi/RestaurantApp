@@ -63,8 +63,11 @@ export class SignInComponent {
   }
 
   async sendOTP() {
+
     const email = this.signInForm.get('email')?.value;
     if (!email) return;
+    if (this.signInForm.invalid) return;
+
     this.sendOtpLoader = true;
 
     this.authService.requestOTP(email).subscribe({
@@ -89,6 +92,7 @@ export class SignInComponent {
 
   async onSubmit() {
     if (this.signInForm.invalid) return;
+    if(this.otpForm.invalid) return;
 
     const { email } = this.signInForm.value;
     const {otp} = this.otpForm.value;

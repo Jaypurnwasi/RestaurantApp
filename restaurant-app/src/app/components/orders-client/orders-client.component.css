@@ -30,7 +30,13 @@
   .status-toggle-wrapper {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 8px; .order-status select {
+      padding: 5px;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
   }
   
   .status-toggle-label {
@@ -122,14 +128,12 @@
     color: #444;
     font-size: 0.9rem;
   }
-  
-  .order-status select {
-    padding: 5px;
-    border: none;
-    border-radius: 5px;
-    font-size: 0.9rem;
-    cursor: pointer;
+  .order-status{
+    padding: 4px 6px;
+    border-radius: 8px;
+
   }
+ 
   
   .order-details {
     margin-top: 10px;
@@ -152,31 +156,37 @@
  
   .order-footer {
     margin-top: 10px;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     color: #777;
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
+    gap: 0.5rem;
   }
   
   /* Status Colors */
   .status-pending {
-    background-color: #daa916da !important;
-    color: #333 !important;
+    background-color: #daa916fb ;
+    color: rgba(0, 0, 0, 0.651) ;
   }
   
   .status-prepared {
-    background-color: #81c784 !important;
-    color: #fff !important;
+
+    background-color: rgba(0, 128, 0, 0.8) ;
+    color: white ;
   }
   
+  
   .status-failed {
-    background-color: #ef5350 !important;
-    color: #fff !important;
+
+    background-color: #ef5350 ;
+    color: #fff ;
   }
   
   .status-completed {
-    background-color: #42a5f5 !important;
-    color: #fff !important;
+
+    background-color: #2b87d3 ;
+    color: #fff ;
   }
   
   .no-orders {
@@ -186,6 +196,15 @@
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .order-heading{
+    font-size: 1.1rem;
+    color: #b46659;;
+  
+  }
+  .order-flex{
+    display: flex;
+    justify-content: space-between;
   }
   
   /* Responsive Design */
@@ -199,5 +218,15 @@
     .orders-grid {
       grid-template-columns: 1fr;
     }
+  }
+
+  @media (max-width:350px){
+    .order-flex{
+      flex-direction: column;
+    }
+    .status-toggle-wrapper{
+      flex-direction: column;
+    }
+    
   }
   

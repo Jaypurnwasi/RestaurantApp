@@ -7,8 +7,8 @@
           <img [src]="'./assets/images/' + item.menuItem.image" [alt]="item.menuItem.name" class="cart-item-image" />
           <div class="cart-item-details">
             <h4>{{ item.menuItem.name }}</h4>
-            <p>{{ item.menuItem.description }}</p>
-            <span class="cart-item-price">{{ item.menuItem.price | currency:'INR':'symbol' }}</span>
+            <p>{{ item.menuItem.description }}</p> 
+            <span class="cart-item-price">{{ item.menuItem.price*item.quantity | currency:'INR':'symbol' }}</span>
             <div class="loader" *ngIf="itemLoading[item.menuItem.id]"></div>
             <div class="cart-controls" *ngIf="!itemLoading[item.menuItem.id]">
               <button class="cart-btn minus-btn" (click)="removeItem(item.menuItem.id,item.menuItem)" [disabled]="item.quantity === 0">-</button>

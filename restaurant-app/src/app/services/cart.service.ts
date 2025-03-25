@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { Cart } from '../interfaces/cart';
 import { Menuitem } from '../interfaces/menuitem';
 import { CartItem } from '../interfaces/cart';
+import { AuthService } from './auth.service';
 
 
 @Injectable({
@@ -14,7 +15,7 @@ export class CartService {
   private cartSubject = new BehaviorSubject<Cart | null>(null);
   cart$ = this.cartSubject.asObservable();
 
-  constructor(private apollo: Apollo) {}
+  constructor(private apollo: Apollo, private authService : AuthService) {}
 
   async fetchCartItems(): Promise<void> {
     const query = gql`
@@ -49,6 +50,8 @@ export class CartService {
     if (result.data) {
       this.cartSubject.next(result.data.getAllCartItems);
     }
+
+    console.log('cart in cart service fetch cart items',this.getCart())
   }
 
   async addItemToCart(menuItemId: string, item:Menuitem,quantity: number = 1): Promise<void> {
@@ -92,7 +95,6 @@ export class CartService {
         variables: { input: { menuItemId } }
       })
     );
-
     // Refresh cart after removing
     // await this.fetchCartItems();
 
@@ -100,11 +102,7 @@ export class CartService {
       this.updateCartState(menuItemId,-quantity,item)
     }
     
-   
   }
-
-  
-  
 
   async createOrder(tableId: string, amount: number,success:boolean): Promise<string> {
     const mutation = gql`
@@ -131,10 +129,14 @@ export class CartService {
     return result.data?.createOrder.status || 'Failed'; // Default to 'Failed' if no status
   }
 
-  private updateCartState(menuItemId: string, quantityChange: number,menuItem:Menuitem): void {
+  private  updateCartState(menuItemId: string, quantityChange: number,menuItem:Menuitem) {
     console.log('update cart state called')
-    const currentCart = this.cartSubject.getValue();
-    if (!currentCart) return;
+    let currentCart = this.cartSubject.getValue();
+    if (!currentCart) {
+      const tempCart:Cart = {id:'',items:[],userId:this.authService.getCurrentUser()?.id as string}
+      currentCart = tempCart;
+  
+    }
 
     const updatedCart: Cart = JSON.parse(JSON.stringify(currentCart));
 
@@ -155,6 +157,7 @@ export class CartService {
 
     // Emit new cart state
     this.cartSubject.next(updatedCart);
+    console.log('cart in updat cart is ',updatedCart);
   }
   
   getCart(): Cart | null {

@@ -27,40 +27,33 @@
             <div class="order-card" *ngFor="let order of orderList">
               <div class="order-card-header">
                 <div class="order-id" *ngIf="isAdmin()">#{{ order.id }}</div>
-                <div class="order-status">
-                  <select 
-                    [value]="order.status" 
-                    (change)="updateStatus(order.id, $event)" 
-                    [disabled]="!isAdmin()"
-                    [ngClass]="getStatusClass(order.status)">
-                    <option 
-                      *ngFor="let status of getValidStatuses(order.status)" 
-                      [value]="status"
-                      [disabled]="status !== order.status && !validStatusTransitions[order.status].includes(status)"
-                    >
-                      {{ status }}
-                    </option>
-                  </select>
+                <div class="order-status" [ngClass]="getStatusClass(order.status)">
+                
+                      {{ order.status }}
+                    
                 </div>
               </div>
       
               <div class="order-details">
                 <div class="order-customer" *ngIf="isAdmin()"> {{ order.customerName }}</div>
-                <div class="order-items">
-                   Items:
+                <div class="order-items order-flex" >
+                  <span [ngClass]="!isAdmin()?'order-heading':''">Items:</span>
+                   
                   <ul class="list-items">
                     <li *ngFor="let item of order.items">
-                      {{ item.menuItem.name }} (Qty: {{ item.quantity }})
+                      {{ item.menuItem.name }} ( {{ item.quantity }} )
                     </li>
                   </ul>
                 </div>
-                <div class="order-table"> Table: {{ getTableName(order.tableId) }}</div>
-                <div class="order-amount"> Amount: {{ order.amount | currency }}</div>
+                <div class="order-table order-flex" >  <span [ngClass]="!isAdmin()?'order-heading':''">Table:</span> <span>{{ getTableName(order.tableId) }}</span> </div>
+                <div class="order-amount order-flex">  <span [ngClass]="!isAdmin()?'order-heading':''">Amount:</span> {{ order.amount | currency:'INR' }}</div>
               </div>
       
-              <div class="order-footer">
-                <span> Created: {{ order.createdAt }}</span>
-                <span> Updated: {{ order.updatedAt }}</span>
+              <div class="order-footer " >
+                <span class="order-flex"><span class="order-heading"> Created: </span> <span>{{ order.createdAt }}</span>
+              </span>
+              <span class="order-flex"><span class="order-heading"> Updated: </span><span>{{ order.updatedAt }}</span> </span>
+                
               </div>
             </div>
           </div>

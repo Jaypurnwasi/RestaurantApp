@@ -1,5 +1,5 @@
 <!-- src/app/components/admin/menu-items/menuitems.component.html -->
- <div class="menu-items-parent-container">
+<div class="menu-items-parent-container">
   <div class="menu-items-container">
     <div *ngIf="showForm && isAdmin()" class="form-overlay">
       <div *ngIf="showForm" class="form-container">
@@ -7,20 +7,20 @@
           <button class="close-button" (click)="toggleForm()">X</button>
           <label>Name:</label>
           <input formControlName="name" type="text" />
-  
+
           <label>Description:</label>
           <textarea formControlName="description"></textarea>
-  
+
           <label>Price:</label>
           <input formControlName="price" type="number" />
-  
+
           <label>Category:</label>
           <select formControlName="categoryId">
             <option *ngFor="let category of categories" [value]="category.id">
               {{ category.name }}
             </option>
           </select>
-  
+
           <div class="form-field">
             <label class="form-label">Veg:</label>
             <div class="checkbox-wrapper">
@@ -33,17 +33,17 @@
               <label for="isVegCheckbox" class="checkbox-visual"></label>
             </div>
           </div>
-  
+
           <label>Image:</label>
           <input type="file" (change)="onImageUpload($event)" />
-  
+
           <button type="submit" [disabled]="addMenuItemForm.invalid">
             Submit
           </button>
         </form>
       </div>
     </div>
-  
+
     <div class="menu-item-header">
       <div class="veg-toggle-wrapper">
         <label class="veg-toggle-label"
@@ -68,7 +68,7 @@
             <span class="slider-ball"> </span>
           </label>
         </div>
-  
+
         <label class="veg-toggle-label"
           ><img
             src="assets/images/non-veg.png"
@@ -77,7 +77,7 @@
             height="24px"
           />
         </label>
-  
+
         <div class="veg-toggle">
           <input
             type="checkbox"
@@ -114,7 +114,10 @@
             {{ category.name }}
           </button>
         </div>
-        <button class="scroll-btn right-btn" (click)="scrollCategories('right')">
+        <button
+          class="scroll-btn right-btn"
+          (click)="scrollCategories('right')"
+        >
           >
         </button>
       </div>
@@ -132,9 +135,9 @@
         Add item
       </button>
     </div>
-  
+
     <!-- ADDED: Error Display -->
-  
+
     <div class="cards-grid" *ngIf="!loading; else loadingTemplate">
       <div class="menu-card" *ngFor="let item of menuItems$ | async">
         <img
@@ -152,7 +155,7 @@
             >
               delete
             </span>
-  
+
             <div class="loader" *ngIf="itemLoading[item.id]"></div>
             <div
               *ngIf="!isAdmin() && !itemLoading[item.id]"
@@ -162,6 +165,7 @@
                 class="cart-btn minus-btn"
                 (click)="removeFromCart(item)"
                 [disabled]="getCartQuantity(item.id) === 0"
+                *ngIf="getCartQuantity(item.id)"
               >
                 -
               </button>
@@ -171,9 +175,9 @@
                 <button
                   class="cart-btn add-to-cart-btn"
                   (click)="addToCart(item)"
-                  style="width: 90px;"
+                  style="width: 90px"
                 >
-                  Add item
+                  Add
                 </button>
               </ng-container>
               <ng-template #quantityDisplay>
@@ -181,13 +185,23 @@
                   >Qty: {{ getCartQuantity(item.id) }}</span
                 >
               </ng-template>
-              <button class="cart-btn plus-btn" (click)="addToCart(item)">
+              <button
+                class="cart-btn plus-btn"
+                (click)="addToCart(item)"
+                *ngIf="getCartQuantity(item.id)"
+              >
                 +
               </button>
             </div>
           </div>
-  
-          <p class="menu-description">{{ item.description.length>15? item.description.slice(0,20)+'...':item.description }}</p>
+
+          <p class="menu-description">
+            {{
+              item.description.length > 15
+                ? item.description.slice(0, 20) + "..."
+                : item.description
+            }}
+          </p>
           <div class="menu-details">
             <div class="menu-details-values">
               <span class="menu-price">{{
@@ -220,12 +234,10 @@
         No menu items found.
       </div>
     </div>
-  
+
     <ng-template #loadingTemplate>
       <div class="loading">Loading menu items...</div>
     </ng-template>
     <p-toast />
   </div>
-
- </div>
-
+</div>

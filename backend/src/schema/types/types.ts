@@ -42,9 +42,9 @@ export interface RemoveUserInput {
 }
 
 export interface UpdateUserInput {
-  name: string;
-  email: string;
-  profileImage: string;
+  name?: string;
+  email?: string;
+  profileImg?: string;
 }
 
 export interface UpdatePasswordInput {

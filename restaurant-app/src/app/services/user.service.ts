@@ -3,6 +3,7 @@ import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User } from '../interfaces/user';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,7 @@ export class UserService {
   private usersSubject = new BehaviorSubject<User[]>([]);
   users$ = this.usersSubject.asObservable();
 
-  constructor(private apollo: Apollo) {
+  constructor(private apollo: Apollo,private authService:AuthService) {
     // this.fetchUsers(); // Initial fetch on service instantiation
     // this.fetchStaffMembers(); // Default to Staff Members
   }
@@ -131,7 +132,51 @@ export class UserService {
     );
     this.usersSubject.next(updatedUsers);
   }
+  async updateUser(user:Partial<User>){
+    const {name,email,profileImg} = user;
+    console.log('user profile in update user service ',profileImg)
+    const mutation = gql`
+
+  mutation Mutation($input: UpdateUserInput!) {
+  updateUser(input: $input) {
+    email
+    id
+    name
+    profileImg
+    role
+   }
+  }
+    `
+
+    try{
+      const result = await firstValueFrom(this.apollo.mutate<{updateUser:User}>({
+        mutation,
+        variables:{input:{email,name,profileImg}}
+      })
   
+      );
+      if(!result.data){
+  
+        console.log('cannot update user ')
+        return;
+      }
+  
+      const newUser = result.data.updateUser;
+      this.authService.setCurrentUser(newUser)
+      console.log('user updated new user is ',newUser)
+  
+      return newUser;
+
+    }
+    catch(error:any){
+      console.log('error while updating user (service)',error.message)
+      throw error;
+      
+    }
+   
+
+  }
+
   getUsers(): Observable<User[]> {
     return this.users$; // Return typed observable
   }

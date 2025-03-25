@@ -408,7 +408,7 @@ export const userResolvers = {
           });
         }
 
-        const { name, email, profileImage } = input;
+        const { name, email,profileImg } = input;
         const updatedFields: Partial<IUser> = {};
 
         // Prevent updating to an existing email
@@ -424,7 +424,7 @@ export const userResolvers = {
         }
 
         if (name) updatedFields.name = name;
-        if (profileImage) updatedFields.profileImg = profileImage;
+        if (profileImg) updatedFields.profileImg = profileImg;
 
         const updatedUser = await User.findByIdAndUpdate(context.user.id, updatedFields, {
           new: true,
@@ -436,6 +436,26 @@ export const userResolvers = {
             extensions: { code: "NOT_FOUND", status: 404 },
           });
         }
+
+        const token = jwt.sign(
+          {
+            id: updatedUser.id,
+            role: updatedUser.role,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            profileImg: updatedUser.profileImg,
+          },
+          process.env.KEY as string,
+          { expiresIn: "7d" }
+        );
+
+        // Set token in HTTP-only cookie
+        context.res.cookie("token", token, {
+          secure: process.env.NODE_ENV === "production" ? true : false,
+          sameSite: "strict",
+          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
+        console.log('user updated succesfully in update user resolver',updatedUser)
 
         return updatedUser;
       } catch (error: any) {
@@ -522,14 +542,22 @@ export const userResolvers = {
     },
     async requestOTP(_: unknown, { email }: { email: string }){
       try{
-
-        const user = await User.findOne({ email });
-        if (!user) {
-          logger.error(`OTP request failed No user found with email ${email}`);
-          throw new GraphQLError("Invalid email ", {
-            extensions: { code: "UNAUTHORIZED", status: 401 },
+        if (!email) {
+          throw new GraphQLError('Email is required', {
+            extensions: {
+              code: 'BAD_REQUEST',
+              status: 400,
+            },
           });
         }
+
+        // const user = await User.findOne({ email });
+        // if (!user) {
+        //   logger.error(`OTP request failed No user found with email ${email}`);
+        //   throw new GraphQLError("Invalid email ", {
+        //     extensions: { code: "UNAUTHORIZED", status: 401 },
+        //   });
+        // }
 
         const otp = Math.floor((1000+ (Math.random()*9000))).toString();
         const expiresAt = Date.now() + 2 * 60 * 1000; // OTP valid for 2 minutes
@@ -553,7 +581,16 @@ export const userResolvers = {
     },
      async verifyOTP (_: unknown, { email, otp }: { email: string, otp: string }){
 
+
       try{
+        if (!email) {
+          throw new GraphQLError('Email is required', {
+            extensions: {
+              code: 'BAD_REQUEST',
+              status: 400,
+            },
+          });
+        }
         const storedOTP = otpStore.get(email);
       if (!storedOTP) 
         throw new GraphQLError('No OTP found. Request a new one.', { extensions: { code: 'NOT_FOUND' } });
@@ -583,77 +620,57 @@ export const userResolvers = {
 
     async signIn(_: unknown, { email }: { email: string }, { res }: MyContext) {
       try {
-
-        // Check if email already exists
-        const existingUser = await User.findOne({ email });
-
-        if(!existingUser){
-          console.log('invalid user trying to sing in ',email);
-          throw new GraphQLError('Error during SignIn', {
+        
+        if (!email) {
+          throw new GraphQLError('Email is required', {
             extensions: {
-              code: "User not found",
-              status: 404,
+              code: 'BAD_REQUEST',
+              status: 400,
             },
           });
-          
         }
-          const token = jwt.sign(
-            {
-              id: existingUser.id,
-              role: existingUser.role,
-              name: existingUser.name,
-              email: existingUser.email,
-              profileImg: existingUser.profileImg,
-            },
-            process.env.KEY as string,
-            { expiresIn: "7d" }
-          );
+        // Check if email already exists
+        let user = await User.findOne({ email });
 
-          res.cookie("token", token, {
-            secure: process.env.NODE_ENV === "production" ? true : false,
-            sameSite: "strict",
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        if(user){
+          console.log('existing user signed in requested',user.email)
+
+        }
+        else{
+          user = new User({
+            email,
+            role: Role.CUSTOMER, // Hardcoded as "Customer"
+            profileImg:"",
           });
+  
+          await user.save();
+          console.log('new user signned in requested',user.email)
 
-          console.log('user signed In ',existingUser.email)
+        }
+          
+        // Generate JWT token
+        const token = jwt.sign(
+          {
+            id: user.id,
+            role: user.role,
+            name: user.name,
+            email: user.email,
+            profileImg: user.profileImg,
+          },
+          process.env.KEY as string,
+          { expiresIn: "7d" }
+        );
 
-          return existingUser;
-      
-       
-        // below implementaion will be used if it is needed to combine login and signup functionality
+        // Set token in HTTP-only cookie
+        res.cookie("token", token, {
+          secure: process.env.NODE_ENV === "production" ? true : false,
+          sameSite: "strict",
+          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
 
-        // Create new user with role "Customer"
-        // const newUser = new User({
-        //   email,
-        //   role: Role.CUSTOMER, // Hardcoded as "Customer"
-        //   profileImg:"",
-        // });
+        logger.info(`sign in succesful for user : ${email}`);
 
-        // await newUser.save();
-
-        // // Generate JWT token
-        // const token = jwt.sign(
-        //   {
-        //     id: newUser.id,
-        //     role: newUser.role,
-        //     name: newUser.name,
-        //     email: newUser.email,
-        //     profileImg: newUser.profileImg,
-        //   },
-        //   process.env.KEY as string,
-        //   { expiresIn: "7d" }
-        // );
-
-        // // Set token in HTTP-only cookie
-        // res.cookie("token", token, {
-        //   secure: process.env.NODE_ENV === "production" ? true : false,
-        //   sameSite: "strict",
-        //   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-        // });
-
-        // logger.info(`New customer signed up: ${email}`);
-
-        // return newUser;
+        return user;
       } catch (error: any) {
         throw new GraphQLError(error.message || "Internal Server Error", {
           extensions: {

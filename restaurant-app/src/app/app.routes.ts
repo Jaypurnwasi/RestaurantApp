@@ -13,6 +13,7 @@ import { LandingPageComponent } from './components/landing-page/landing-page.com
 import { SignUpComponent } from './pages/sign-up/sign-up.component';
 import { OrdersClientComponent } from './components/orders-client/orders-client.component';
 import { SignInComponent } from './pages/sign-in/sign-in.component';
+import { ProfileComponent } from './components/profile/profile.component';
 export const routes: Routes = [
   { path: 'login',
      component: LoginComponent ,
@@ -55,8 +56,8 @@ export const routes: Routes = [
       { path: 'home', component: LandingPageComponent }, // ADDED: Banner goes here
       { path: 'menu', component: MenuitemComponent }, // Menu page
       { path: 'cart', component: CartComponent }, // Cart page
-      { path: 'orders', component: OrdersComponent }, // Customer orders
-      { path:'dumy',component:OrdersClientComponent},
+      { path: 'orders', component: OrdersClientComponent }, // Customer orders
+      {path:'profile',component:ProfileComponent},
       { path: '', redirectTo: 'home', pathMatch: 'full' }, // Default to home
     ],
   }

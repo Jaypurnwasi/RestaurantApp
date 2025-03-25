@@ -6,6 +6,7 @@ import { MenuService } from './services/menu.service';
 import { Apollo } from 'apollo-angular';
 import { UserService } from './services/user.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { CartService } from './services/cart.service';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 export class AppComponent {
   
   title = 'restaurant-app';
-  constructor(private authService: AuthService,private menuService: MenuService,private userService:UserService) { 
+  constructor(private authService: AuthService,private menuService: MenuService,private userService:UserService,private cartService: CartService) { 
     //private 
      // Load user on app start
     //  this.authService.loadUserFromToken()
@@ -31,6 +32,7 @@ export class AppComponent {
     this.authService.loadUserFromToken(); // Ensure user is loaded on startup
     console.log('Current User on Init:', this.authService.getCurrentUser());
     await this.menuService.fetchMenuItems();
+    await this.cartService.fetchCartItems()
 
   }
 

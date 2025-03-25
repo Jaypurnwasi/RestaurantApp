@@ -454,6 +454,7 @@ h3 {
   display: flex;
   align-items: center;
   gap: 5px;
+  /* width: 141px; */
 }
 
 .cart-btn {
@@ -475,6 +476,7 @@ h3 {
 .minus-btn {
   background-color: #ef4444;
   color: white;
+  width: 33px;
 }
 
 .minus-btn:hover {
@@ -482,12 +484,16 @@ h3 {
 }
 
 .add-to-cart-btn {
-  background-color: #ff9800;
-  color: white;
+  background-color: white;
+  color: #b27369;
+  border: 1px solid #b27369;
+  font-weight: 600;
 }
 
 .add-to-cart-btn:hover {
-  background-color: #f57c00;
+  transition: 0.5s;
+  background-color: #b27369;
+  color: white;
 }
 
 .plus-btn {

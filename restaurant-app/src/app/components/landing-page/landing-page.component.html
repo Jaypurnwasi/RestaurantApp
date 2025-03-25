@@ -31,7 +31,7 @@
     <p-carousel
       [value]="menuItems"
       [numVisible]="3"
-      [numScroll]="3"
+      [numScroll]="2"
       [circular]="true"
       [responsiveOptions]="responsiveOptions"
       [autoplayInterval]="3000"
@@ -62,6 +62,8 @@
                   class="cart-btn minus-btn"
                   (click)="removeFromCart(item)"
                   [disabled]="getCartQuantity(item.id) === 0"
+                  *ngIf="getCartQuantity(item.id)"
+
                 >
                   -
                 </button>
@@ -72,7 +74,7 @@
                     class="cart-btn add-to-cart-btn"
                     (click)="addToCart(item)"
                   >
-                    Add item
+                    Add 
                   </button>
                 </ng-container>
                 <ng-template #quantityDisplay>
@@ -80,7 +82,8 @@
                     >Qty: {{ getCartQuantity(item.id) }}</span
                   >
                 </ng-template>
-                <button class="cart-btn plus-btn" (click)="addToCart(item)">
+                <button class="cart-btn plus-btn" (click)="addToCart(item)" *ngIf="getCartQuantity(item.id)"
+                >
                   +
                 </button>
               </div>
