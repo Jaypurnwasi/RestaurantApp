@@ -1,0 +1,60 @@
+<nav class="navbar">
+  <!-- Logo -->
+  <div class="logo">
+    <a a routerLink="home" routerLinkActive="active">
+      <img src="assets/images/logo.svg" alt="App Logo">
+
+    </a> </div>
+
+  <!-- Hamburger menu (visible on mobile) -->
+  <button class="hamburger" (click)="toggleMenu()" aria-label="Toggle menu">
+    <fa-icon [icon]="faBars"></fa-icon>
+  </button>
+
+  <!-- Desktop Navbar Options -->
+  <div class="nav-options desktop-only">
+    <a routerLink="menu" routerLinkActive="active">Menu</a>
+    <a routerLink="cart" routerLinkActive="active"> {{ cartLength > 0 ? 'Cart (' + cartLength + ')' : 'Cart' }}</a>
+    <a routerLink="orders" routerLinkActive="active">Orders</a>
+  </div>
+
+  <!-- Desktop User Actions -->
+  <div class="user-actions desktop-only">
+    <img 
+      [src]="'./assets/images/' + user?.profileImg"
+      alt="Profile" 
+      class="profile-pic"
+      *ngIf="user?.profileImg"
+      title="profile"
+      routerLink="profile"
+      
+    />
+    <span *ngIf="!user?.profileImg" class="profile-pic-placeholder">No Image</span>
+    <button class="logout-btn" (click)="logout()">Logout</button>
+  </div>
+
+  <!-- Mobile Menu (nav options and user actions) -->
+  <div class="nav-content" [ngClass]="{'mobile-menu-open': isMenuOpen}">
+    <!-- Mobile Navbar Options -->
+    <div class="nav-options mobile-only">
+      <img 
+      [src]="'./assets/images/' + user?.profileImg"
+      alt="Profile" 
+      class="profile-pic"
+      *ngIf="user?.profileImg"
+    />
+      <a routerLink="menu" routerLinkActive="active" (click)="toggleMenu()">Menu</a>
+      <a routerLink="cart" routerLinkActive="active" (click)="toggleMenu()">Cart</a>
+      <a routerLink="orders" routerLinkActive="active" (click)="toggleMenu()">Orders</a>
+      <a routerLink="profile" routerLinkActive="active" (click)="toggleMenu()">Profile</a>
+
+    </div>
+
+    <!-- Mobile User Actions -->
+    <div class="user-actions mobile-only">
+     
+      <span *ngIf="!user?.profileImg" class="profile-pic-placeholder">No Image</span>
+      <button class="logout-btn" (click)="logout(); toggleMenu()">Logout</button>
+    </div>
+  </div>
+</nav>

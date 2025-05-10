@@ -1,0 +1,52 @@
+.admin-sidebar {
+  max-width: 250px;
+  background-color: #FAF7F3;
+  color: black;
+  padding: 20px 10px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  position: sticky;
+  top: 0px; /* Height of navbar (40px content + 20px padding) */
+  left: 0px;
+  z-index: 10;
+}
+
+  .sidebar-list {
+   list-style: none;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+  }
+
+  .menu-item a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    color: black;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.1s, color 0.1s;
+  }
+
+  .menu-item a:hover {
+    background-color: #E6DCD3; /* Hover color from dashboard */
+    
+  }
+  .menu-item a.active{
+    background-color:#E6DCD3 ;
+  }
+  
+  
+
+  @media (max-width: 650px) {
+    .admin-sidebar {
+      display: none;
+    }
+  }
+  

@@ -1,0 +1,42 @@
+<div class="categories-container">
+  <div class="category-header">
+    <h3>All Categories</h3>
+    <!-- START OF CHANGES -->
+    <div class="add-category-wrapper">
+      <input 
+        type="text" 
+        class="add-category-input" 
+        placeholder="New category name" 
+        [(ngModel)]="newCategoryName" 
+        (keyup.enter)="addCategory()"
+      />
+      <button class="add-button" (click)="addCategory()">Add Category</button>
+    </div>
+    <!-- END OF CHANGES -->
+  </div>
+
+  <div class="cards-grid" *ngIf="!loading; else loadingTemplate">
+    <div class="category-card" *ngFor="let category of categories">
+      <div class="category-content">
+        <div class="category-name-delete">
+          <h4 class="category-name">{{ category.name }}</h4>
+          <span class="material-symbols-outlined delete-icon" (click)="onDelete(category.id, category.name)">
+            delete
+          </span>
+        </div>
+        <p class="category-id">ID: {{ category.id }}</p>
+      </div>
+    </div>
+    <div class="no-items" *ngIf="categories.length === 0">
+      No categories found.
+    </div>
+  </div>
+
+
+
+  <ng-template #loadingTemplate>
+    <div class="loading">Loading categories...</div>
+  </ng-template>
+  <p-toast />
+  
+</div>

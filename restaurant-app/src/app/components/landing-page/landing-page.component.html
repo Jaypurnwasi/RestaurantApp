@@ -1,0 +1,174 @@
+<div class="container">
+  <div class="banner">
+    <h1>Welcome to Our Restaurant!</h1>
+    <p>Explore our delicious menu and place your order today.</p>
+  </div>
+
+  <section class="hero">
+    <div class="hero-text">
+      <h1>
+        Delicious Dishes <br />
+        for Food Lovers
+      </h1>
+      <p>
+        Ea qui nostrum molestiae. Mea ea deleniti omittam, an sit errem
+        evertitur, minimum est ad audiam.
+      </p>
+      <a routerLink="/menu" routerLinkActive="active"> <button> Explore recipes</button></a>
+    </div>
+    <div class="hero-image">
+      <img
+        src="./assets/images/hero-image.avif"
+        alt="hero image"
+        class="hero-image-main"
+      />
+    </div>
+  </section>
+
+  <section class="carousel-section">
+    <h2 class="trendy-recipes">Trendy Recipes</h2>
+
+    <p-carousel
+      [value]="menuItems"
+      [numVisible]="3"
+      [numScroll]="2"
+      [circular]="true"
+      [responsiveOptions]="responsiveOptions"
+      [autoplayInterval]="3000"
+    >
+      <ng-template let-item pTemplate="item">
+        <div class="carousel-item">
+          <div class="image-container">
+            <img
+              [src]="'./assets/images/' + item.image"
+              [alt]="item.name"
+              class="carousel-image"
+            />
+            <span
+              class="veg-tag"
+              [ngClass]="{ veg: item.isVeg, 'non-veg': !item.isVeg }"
+            >
+              {{ item.isVeg ? "Veg" : "Non-Veg" }}
+            </span>
+          </div>
+          <div class="item-content">
+            <h4 class="item-name">{{ item.name }}</h4>
+            <div class="item-footer">
+              <span class="item-price">{{
+                item.price | currency: "INR" : "symbol"
+              }}</span>
+              <div class="cart-controls">
+                <button
+                  class="cart-btn minus-btn"
+                  (click)="removeFromCart(item)"
+                  [disabled]="getCartQuantity(item.id) === 0"
+                  *ngIf="getCartQuantity(item.id)"
+
+                >
+                  -
+                </button>
+                <ng-container
+                  *ngIf="getCartQuantity(item.id) === 0; else quantityDisplay"
+                >
+                  <button
+                    class="cart-btn add-to-cart-btn"
+                    (click)="addToCart(item)"
+                  >
+                    Add 
+                  </button>
+                </ng-container>
+                <ng-template #quantityDisplay>
+                  <span class="cart-quantity"
+                    >Qty: {{ getCartQuantity(item.id) }}</span
+                  >
+                </ng-template>
+                <button class="cart-btn plus-btn" (click)="addToCart(item)" *ngIf="getCartQuantity(item.id)"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </p-carousel>
+
+    <div class="view-more-button">
+      <a routerLink="/menu"><button class="view-more ">View more</button>
+      </a>
+    </div>
+  </section>
+
+  <!-- Recipe Blogs Section -->
+  <section class="blogs">
+    <h2>Recipe Blogs</h2>
+    <div class="blog-content">
+      <div class="main-blog">
+        <div class="main-blog-image">
+          <a href="https://www.loveandlemons.com/roasted-mushrooms/" target="_blank">
+            <img src="./assets/images/rosted-mushroom.jpeg" alt="Main blog image">
+
+          </a>
+
+        </div>
+        <h3 class="main-blog-title">Roasted Mushroom</h3>
+        <p>Lorem ipsum dolor sit, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      </div>
+      <div class="blog-list">
+        
+        <div class="blog-item" *ngFor="let blog of blogs">
+          <div class="blog-image">
+            <a href="https://www.loveandlemons.com/" target="_blank">
+              <img [src]="blog['image']" alt="" class="blog-item-image" >
+            </a>
+          </div>
+          <div>
+            <h4>{{ blog.name }}</h4>
+            <p>{{ blog.cuisine}}</p>
+            <p class="blog-instruction">{{blog.instructions[0]  }} {{blog.instructions[1]}} 
+              <a href="https://www.loveandlemons.com/" target="_blank">...view
+                </a>
+
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="view-more">View more</button>
+  </section>
+
+  <section class="subscription">
+    <h2>Subscribe to Our Newsletter and Save 15%</h2>
+    <div class="subscription-form">
+      <input type="email" placeholder="you@example.com" />
+      <button>Subscribe</button>
+    </div>
+  </section>
+  
+
+   <!-- Footer -->
+   <footer>
+    <div class="footer-logo">food <span class="highlight"></span></div>
+    <p>Lorem ipsum dolor sit adipiscing elit.</p>
+    <div class="social-icons">
+      <img src="./assets/images/instagram.svg" alt="" class="social-icon">
+      <img src="./assets/images/facebook.svg" alt="" class="social-icon">
+      <img src="./assets/images/whatsapp-brands.svg" alt="" class="social-icon">
+      <img src="./assets/images/twitter-brands.svg" alt="" class="social-icon">
+
+
+    </div>
+    <div class="footer-links">
+      <a href="#">©COPYRIGHT 2022</a>
+      <a href="#">Recipes</a>
+      <a href="#">Learn</a>
+      <a href="#">Top 10</a>
+      <a href="#">Seasonal Sensations</a>
+      <a href="#">Shop</a>
+      <a href="#">Terms & Conditions</a>
+      <a href="#">Privacy Policy</a>
+    </div>
+  </footer>
+  <i class="pi-facebook"></i>
+
+</div>

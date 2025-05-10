@@ -1,0 +1,196 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #E6DCD3;
+  padding: 10px 20px;
+  color: black;
+  position: sticky; /* Fixed to stay at top */
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 100;
+  
+}
+
+/* Logo styles */
+.logo img {
+  height: 40px;
+}
+
+/* Dashboard title */
+.dashboard {
+  color: #B27369;
+  font-size: 1.7rem;
+}
+
+/* Nav content (mobile menu container) */
+.nav-content {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* User actions */
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Profile picture */
+.profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+}
+
+/* Logout button */
+.logout-btn {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: #dc2626;
+}
+
+/* Hamburger menu button */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: #B27369;
+  font-size: 1.5rem;
+}
+
+/* Sidebar links (used in mobile menu) */
+.sidebar-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: none; /* Hidden by default, shown in mobile */
+}
+
+.menu-item a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  color: black;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background 0.1s, color 0.1s;
+  justify-content: center;
+}
+
+.menu-item a:hover {
+  background-color: #d3c9c0; /* Slightly darker than navbar */
+}
+
+.menu-item a.active {
+  background-color: #d3c9c0;
+}
+
+/* Desktop-only elements */
+.desktop-only {
+  display: block;
+}
+
+/* Mobile-only elements */
+.mobile-only {
+  display: none;
+}
+
+/* Media queries for responsive design */
+@media (max-width: 650px) {
+  .navbar {
+    padding: 10px 15px;
+  }
+
+  /* Hide desktop-only elements */
+  .desktop-only {
+    display: none;
+  }
+
+  /* Show mobile-only elements */
+  .mobile-only {
+    display: block;
+  }
+
+  /* Show hamburger menu */
+  .hamburger {
+    display: block;
+    z-index: 1001;
+  }
+
+  /* Nav content (mobile menu) */
+  .nav-content {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100vh;
+    width: 250px;
+    background-color: #E6DCD3;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 80px 20px 20px;
+    transition: right 0.3s ease-in-out;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+  }
+
+  /* When menu is open */
+  .nav-content.mobile-menu-open {
+    right: 0;
+  }
+
+  /* Sidebar list for mobile */
+  .sidebar-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 30px;
+  }
+
+  /* User actions for mobile */
+  .user-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .user-actions .profile-pic {
+    margin-bottom: 20px;
+  }
+
+  .user-actions .logout-btn {
+    width: 100%;
+    margin: 10px 0;
+    margin-right: 0;
+  }
+
+  .user-actions .dashboard {
+    margin-bottom: 30px;
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo img {
+    height: 35px;
+  }
+
+  .nav-content {
+    width: 200px;
+  }
+}

@@ -1,0 +1,243 @@
+<!-- src/app/components/admin/menu-items/menuitems.component.html -->
+<div class="menu-items-parent-container">
+  <div class="menu-items-container">
+    <div *ngIf="showForm && isAdmin()" class="form-overlay">
+      <div *ngIf="showForm" class="form-container">
+        <form [formGroup]="addMenuItemForm" (ngSubmit)="addMenuItem()">
+          <button class="close-button" (click)="toggleForm()">X</button>
+          <label>Name:</label>
+          <input formControlName="name" type="text" />
+
+          <label>Description:</label>
+          <textarea formControlName="description"></textarea>
+
+          <label>Price:</label>
+          <input formControlName="price" type="number" />
+
+          <label>Category:</label>
+          <select formControlName="categoryId">
+            <option *ngFor="let category of categories" [value]="category.id">
+              {{ category.name }}
+            </option>
+          </select>
+
+          <div class="form-field">
+            <label class="form-label">Veg:</label>
+            <div class="checkbox-wrapper">
+              <input
+                type="checkbox"
+                id="isVegCheckbox"
+                formControlName="isVeg"
+                class="checkbox"
+              />
+              <label for="isVegCheckbox" class="checkbox-visual"></label>
+            </div>
+          </div>
+
+          <label>Image:</label>
+          <input type="file" (change)="onImageUpload($event)" />
+
+          <button type="submit" [disabled]="addMenuItemForm.invalid">
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="menu-item-header">
+      <div class="veg-toggle-wrapper">
+        <label class="veg-toggle-label"
+          ><img
+            src="assets/images/veg.png"
+            alt="Veg"
+            width="24px"
+            height="24px"
+          />
+        </label>
+        <div class="veg-toggle">
+          <input
+            type="checkbox"
+            id="veg-toggle"
+            (change)="onVegToggle($event)"
+            [checked]="isVegFilter"
+            hidden
+          />
+          <label for="veg-toggle" class="toggle-slider">
+            <span class="toggle-text veg">On</span>
+            <span class="toggle-text all">Off</span>
+            <span class="slider-ball"> </span>
+          </label>
+        </div>
+
+        <label class="veg-toggle-label"
+          ><img
+            src="assets/images/non-veg.png"
+            alt="Veg"
+            width="24px"
+            height="24px"
+          />
+        </label>
+
+        <div class="veg-toggle">
+          <input
+            type="checkbox"
+            id="nonveg-toggle"
+            (change)="onNonVegToggle($event)"
+            [checked]="isVegFilter === false"
+            hidden
+          />
+          <label for="nonveg-toggle" class="toggle-slider nonveg-slider">
+            <span class="toggle-text nonveg">On</span>
+            <span class="toggle-text all">Off</span>
+            <span class="slider-ball"></span>
+          </label>
+        </div>
+      </div>
+      <div class="categories-container">
+        <button class="scroll-btn left-btn" (click)="scrollCategories('left')">
+          <
+        </button>
+        <div class="categories-nav">
+          <button
+            class="category-btn"
+            [ngClass]="{ selected: !selectedCategoryId }"
+            (click)="selectCategory(null)"
+          >
+            All
+          </button>
+          <button
+            *ngFor="let category of categories"
+            class="category-btn"
+            [ngClass]="{ selected: selectedCategoryId === category.id }"
+            (click)="selectCategory(category.id)"
+          >
+            {{ category.name }}
+          </button>
+        </div>
+        <button
+          class="scroll-btn right-btn"
+          (click)="scrollCategories('right')"
+        >
+          >
+        </button>
+      </div>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search items"
+        (input)="onSearch($event)"
+      />
+      <button
+        class="add-button"
+        (click)="toggleForm()"
+        *ngIf="user?.role === 'Admin'"
+      >
+        Add item
+      </button>
+    </div>
+
+    <!-- ADDED: Error Display -->
+
+    <div class="cards-grid" *ngIf="!loading; else loadingTemplate">
+      <div class="menu-card" *ngFor="let item of menuItems$ | async">
+        <img
+          [src]="'./assets/images/' + item.image"
+          [alt]="item.name"
+          class="menu-image"
+        />
+        <div class="menu-content">
+          <div class="item-name-delete">
+            <h4 class="menu-name">{{ item.name }}</h4>
+            <span
+              class="material-symbols-outlined delete-icon"
+              (click)="onDelete(item.id, item.name)"
+              *ngIf="isAdmin()"
+            >
+              delete
+            </span>
+
+            <div class="loader" *ngIf="itemLoading[item.id]"></div>
+            <div
+              *ngIf="!isAdmin() && !itemLoading[item.id]"
+              class="cart-controls"
+            >
+              <button
+                class="cart-btn minus-btn"
+                (click)="removeFromCart(item)"
+                [disabled]="getCartQuantity(item.id) === 0"
+                *ngIf="getCartQuantity(item.id)"
+              >
+                -
+              </button>
+              <ng-container
+                *ngIf="getCartQuantity(item.id) === 0; else quantityDisplay"
+              >
+                <button
+                  class="cart-btn add-to-cart-btn"
+                  (click)="addToCart(item)"
+                  style="width: 90px"
+                >
+                  Add
+                </button>
+              </ng-container>
+              <ng-template #quantityDisplay>
+                <span class="cart-quantity"
+                  >Qty: {{ getCartQuantity(item.id) }}</span
+                >
+              </ng-template>
+              <button
+                class="cart-btn plus-btn"
+                (click)="addToCart(item)"
+                *ngIf="getCartQuantity(item.id)"
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          <p class="menu-description">
+            {{
+              item.description.length > 15
+                ? item.description.slice(0, 20) + "..."
+                : item.description
+            }}
+          </p>
+          <div class="menu-details">
+            <div class="menu-details-values">
+              <span class="menu-price">{{
+                item.price | currency: "INR" : "symbol"
+              }}</span>
+              <span
+                class="menu-veg"
+                [ngClass]="{ veg: item.isVeg, 'non-veg': !item.isVeg }"
+              >
+                {{ item.isVeg ? "Veg" : "Non-Veg" }}
+              </span>
+              <!-- <span class="menu-category">Category: {{ item.categoryId }}</span> -->
+              <span
+                class="menu-status"
+                [ngClass]="{ active: item.isActive, inactive: !item.isActive }"
+                *ngIf="isAdmin()"
+              >
+                {{ item.isActive ? "Active" : "Inactive" }}
+              </span>
+            </div>
+            <span
+              class="edit-menu-button pi pi-pencil"
+              (click)="onEdit(item)"
+              *ngIf="isAdmin()"
+            ></span>
+          </div>
+        </div>
+      </div>
+      <div class="no-items" *ngIf="(menuItems$ | async)?.length === 0">
+        No menu items found.
+      </div>
+    </div>
+
+    <ng-template #loadingTemplate>
+      <div class="loading">Loading menu items...</div>
+    </ng-template>
+    <p-toast />
+  </div>
+</div>

@@ -1,0 +1,36 @@
+.admin-dashboard{
+    height:  100vh;
+    display: flex;
+    flex-direction: column;
+}
+.admin-content{
+    display: flex;
+    /* width: 100%; */
+    flex: 1;
+
+}
+.content {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto; /* Scrollable content area */
+  }
+  .admin-sidebar{
+    width: 250px;
+  }
+  .admin-sidebar {
+    transition: width 0.3s ease; /* Smooth collapsing */
+  }
+
+
+  @media (max-width: 650px) {
+    /* .admin-sidebar {
+      width: 0;
+      overflow: hidden;
+    } */
+    .admin-sidebar.active {
+      width: 250px;
+    }
+    .admin-sidebar{
+      display: none;
+    }
+  }

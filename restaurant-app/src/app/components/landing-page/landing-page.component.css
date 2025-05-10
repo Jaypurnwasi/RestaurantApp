@@ -1,0 +1,652 @@
+.container{
+  display: flex;
+  flex-direction: column;
+  background-color: #E6DCD3;
+}
+.banner {
+    background-color: #B27369;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .banner h1 {
+    margin: 0;
+    font-size: 2rem;
+  }
+  
+  .banner p {
+    margin: 10px 0 0;
+    font-size: 1.2rem;
+  }
+  
+  .home-content {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .home-content h2 {
+    color: #B27369;
+  }
+  
+  .home-content p {
+    color: #333;
+  }
+  
+  /* Carousel Styles */
+  :host ::ng-deep .p-carousel {
+    padding: 20px 0; /* Add spacing above and below carousel */
+    max-width: 80vw;
+  margin:  0 auto;
+  }
+  
+  :host ::ng-deep .p-carousel-items-content {
+    display: flex;
+    gap: 20px; /* Space between carousel items */
+  }
+
+ /* Hero section  */
+ .hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 0;
+  gap: 4rem;
+  width: 80vw;
+  margin: 0 auto;
+  height: 65vh;
+  max-width: 1400px; /* Added max-width for very large screens */
+}
+
+.hero-text {
+  width: 40%;
+}
+
+.hero-text h1 {
+  font-size: 48px;
+  line-height: 1.2;
+  color: #B27369;
+}
+
+.hero-text p {
+  margin: 20px 0;
+  color: #666;
+}
+
+.hero-text button {
+  background-color: #B27369;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px; /* Added explicit font size */
+}
+
+.hero-text button:hover {
+  background-color: #8F5A52;
+}
+
+.hero-image {
+  width: 40%;
+  text-align: center;
+  font-style: italic;
+  color: #999;
+  border-radius: 20px;
+}
+
+.hero-image-main {
+  border: 2px solid #8F5A52;
+  border-radius: 48px;
+  width: 100%; /* Added to ensure image scales */
+  height: auto; /* Maintain aspect ratio */
+  object-fit: cover; /* Ensure image fills container */
+}
+  
+ /* corousel section */
+ .carousel-section{
+  display:flex;
+  flex-direction: column;
+  width: 80vw;
+  justify-content: center;
+  margin:  0 auto;
+ }
+
+ .trendy-recipes {
+  padding: 50px 0;
+  text-align: center;
+  font-size: 36px;
+    color: #B27369; /* Muted coral for the heading */
+}
+
+.trendy-recipes h2 {
+  font-size: 32px;
+  margin-bottom: 30px;
+  color: #B27369; /* Muted coral for the heading */
+}
+
+  .carousel-item {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 300px; /* Fixed width for consistency */
+    margin: 0 auto; 
+  }
+  
+  .image-container {
+    position: relative;
+    width: 100%;
+    height: 150px; /* Fixed height for images */
+  }
+  
+  .carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensure images fit without distortion */
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  
+  .veg-tag {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: white;
+  }
+  
+  .veg-tag.veg {
+    background-color: rgba(0, 128, 0, 0.8);
+  }
+  
+  .veg-tag.non-veg {
+    background-color: rgba(255, 0, 0, 0.8);
+  }
+  
+  .item-content {
+    padding: 15px;
+  }
+  
+  .item-name {
+    margin: 0 0 10px;
+    font-size: 1.2rem;
+    color: #333;
+    text-align: center;
+  }
+  
+  .item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .item-price {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: rgba(0, 128, 0, 0.575);
+  }
+  
+  :host ::ng-deep .p-button-sm.add-to-cart-btn {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+    background-color: #ff9800;
+    border-color: #ff9800;
+  }
+  
+  :host ::ng-deep .p-button-sm.add-to-cart-btn:hover {
+    background-color: #f57c00;
+    border-color: #f57c00;
+  }
+
+.cart-controls {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cart-btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.cart-quantity {
+  padding: 8px 12px;
+  font-size: 1rem;
+  color: #666;
+  font-weight: 500;
+  border-bottom: 1px solid #B27369;
+}
+
+.minus-btn {
+  background-color: #ef4444;
+  color: white;
+
+}
+
+.minus-btn:hover {
+  background-color: #dc2626;
+}
+
+.add-to-cart-btn {
+  background-color: white;
+  color: #b27369;
+  border: 1px solid #b27369;
+  font-weight: 600;
+}
+
+.add-to-cart-btn:hover {
+  transition: 0.5s;
+  background-color: #b27369;
+  color: white;
+}
+
+.plus-btn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.plus-btn:hover {
+  background-color: #45a049;
+}
+
+.view-more {
+  background-color: transparent;
+  transition: 0.5s;
+  border: 1px solid #B27369; /* Muted coral border */
+  padding: 10px 24px;
+  border-radius: 20px;
+  margin-top: 20px;
+  cursor: pointer;
+  color: #B27369; /* Muted coral text */
+}
+.view-more-button{
+  display: flex;
+  justify-content: center;
+}
+
+.view-more:hover {
+  background-color: #B27369; /* Muted coral background on hover */
+  color: white;
+}
+
+ /* Blogs Section */
+ 
+ .blogs {
+  padding: 50px 0;
+  text-align: center;
+ 
+}
+
+.blogs h2 {
+  font-size: 32px;
+  margin-bottom: 30px;
+  color: #B27369; /* Muted coral for the heading */
+}
+
+.blog-content {
+  display: flex;
+  gap: 20px;
+  width: 80vw;
+  justify-content: center;
+  margin: 0 auto;
+  
+}
+
+.main-blog {
+  width: 50%;
+  text-align: left;
+}
+
+.main-blog span {
+  display: block;
+  font-style: italic;
+  color: #999; /* Light gray for placeholder text */
+  margin-bottom: 10px;
+}
+
+.main-blog h3 {
+  color: #B27369; /* Muted coral for the heading */
+}
+
+.main-blog p {
+  color: #666; /* Gray for secondary text */
+}
+.main-blog-image{
+  max-width: 600px;
+  margin-bottom: 2rem;
+  border-radius: 24px;
+  cursor: pointer;
+}
+.main-blog-image img{
+  width: 100%;
+  border-radius: 24px;
+
+}
+
+
+.blog-list {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.blog-item {
+  display: flex;
+  gap: 10px;
+  background-color: white; /* White background for blog items */
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.blog-image{
+  max-width: 100px;
+  cursor: pointer;
+}
+.blog-item-image{
+  width: 100%;
+  border-radius: 12px;
+}
+.blog-instruction{
+  margin-top: 1rem;
+}
+
+.blog-item span {
+  font-style: italic;
+  color: #999; /* Light gray for placeholder text */
+}
+
+.blog-item h4 {
+  margin: 0;
+  color: #B27369; /* Muted coral for blog titles */
+}
+
+.blog-item p {
+  color: #666; /* Gray for secondary text */
+}
+a{
+  cursor: pointer;
+
+}
+
+/* Subscription Section */
+.subscription {
+  background-color: #8F5A52; /* Darker coral for the subscription section */
+  color: white;
+  padding: 50px;
+  text-align: center;
+  border-radius: 10px;
+  width: 95vw;
+  margin: 0 auto;
+}
+
+.subscription h2 {
+  font-size: 32px;
+  margin-bottom: 30px;
+}
+
+.subscription-form {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.subscription-form input {
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+  width: 300px;
+  background-color: #E6DCD3; /* Light beige for input background */
+  color: #666; /* Gray for input text */
+}
+
+.subscription-form button {
+  background-color: #B27369; /* Muted coral for the button */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.subscription-form button:hover {
+  background-color: white;
+  color: #B27369; /* Muted coral text on hover */
+}
+
+/* Footer */
+footer {
+   /* Darker coral for the footer */
+  color: black;
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+  margin-bottom: 3rem;
+  margin-top: 2rem;
+}
+
+.footer-logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.footer-logo .highlight {
+  color: black; /* Light beige for the highlight */
+}
+
+.footer-links {
+  margin-top: 10px;
+}
+
+.footer-links a {
+  color: black;
+  margin: 0 10px;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: #8F5A52; /* Light beige on hover */
+}
+
+.social-icons span {
+  margin: 0 5px;
+  color: black; /* Light beige for social icons */
+}
+.social-icon{
+  width: 24px;
+  margin: 6px;
+}
+
+/* Utility classes*/
+.link{
+  text-decoration: none;
+}
+
+  /* Responsive Adjustments */
+  @media screen and (max-width: 1024px) {
+    .hero {
+      gap: 2rem;
+      padding: 40px 0;
+      height: auto; /* Allow height to adjust */
+    }
+  
+    .hero-text {
+      width: 45%;
+    }
+  
+    .hero-image {
+      width: 45%;
+    }
+  
+    .hero-text h1 {
+      font-size: 36px;
+    }
+    .blog-content {
+      gap: 15px;
+    }
+  
+    .main-blog h3 {
+      font-size: 22px;
+    }
+  
+    .blog-item h4 {
+      font-size: 16px;
+    }
+  }
+  @media (max-width: 768px) {
+    .carousel-item {
+      width: 200px; /* Smaller width on tablets */
+    }
+    .hero {
+      flex-direction: column; /* Stack items vertically */
+      width: 90vw;
+      padding: 30px 0;
+      gap: 2rem;
+    }
+  
+    .hero-text {
+      width: 100%;
+      text-align: center; /* Center text for better mobile display */
+    }
+  
+    .hero-image {
+      width: 100%;
+      max-width: 500px; /* Prevent image from getting too large */
+    }
+  
+    .hero-text h1 {
+      font-size: 28px;
+    }
+  
+    .hero-text p {
+      font-size: 14px;
+      margin: 15px 0;
+    }
+  
+    .hero-text button {
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+  
+    .hero-image-main {
+      border-radius: 24px; /* Slightly smaller radius for mobile */
+    }
+    /* .blog-content{
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .blog-item{ 
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    } */
+
+
+
+    .blogs {
+      padding: 30px 0;
+    }
+  
+    .blogs h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+  
+    .blog-content {
+      flex-direction: column;
+    }
+  
+    .main-blog {
+      width: 100%;
+      margin-bottom: 30px;
+    }
+  
+    .main-blog-image {
+      max-width: 100%;
+    }
+  
+    .blog-list {
+      width: 100%;
+    }
+  
+    .blog-item {
+      padding: 8px;
+      gap: 8px;
+    }
+  
+    .blog-image {
+      max-width: 80px;
+    }
+  
+    .view-more {
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+  }
+  
+  @media (max-width: 560px) {
+    .carousel-item {
+      width: 100%; /* Full width on mobile */
+      max-width: 250px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .hero {
+      padding: 20px 0;
+      gap: 1.5rem;
+    }
+  
+    .hero-text h1 {
+      font-size: 24px;
+    }
+  
+    .hero-text p {
+      font-size: 13px;
+    }
+  
+    .hero-text button {
+      padding: 8px 14px;
+      font-size: 13px;
+    }
+    .blogs {
+      padding: 20px 0;
+    }
+  
+    .blogs h2 {
+      font-size: 24px;
+    }
+  
+    .main-blog h3 {
+      font-size: 20px;
+    }
+  
+    .blog-item {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+  
+    .blog-image {
+      max-width: 150px;
+      width: 100%;
+    }
+  
+    .blog-item h4 {
+      font-size: 16px;
+    }
+  
+    .blog-item p {
+      font-size: 14px;
+    }
+  }

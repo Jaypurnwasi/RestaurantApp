@@ -1,0 +1,45 @@
+<div class="signup-container">
+    <h2 class="signup-header">Sign In</h2>
+  
+    <!-- Email Input and Send OTP Button -->
+    <form [formGroup]="signInForm" class="signup-form" >
+      <div>
+        <label>Email</label>
+        <input type="email" formControlName="email" placeholder="Enter your Email" (keyup.enter) = "sendOTP()"  />
+        <div *ngIf="signInForm.get('email')?.invalid && signInForm.get('email')?.touched" class="error">
+          Valid email is required.
+        </div>
+      </div>
+      <div class="send-otp-section">
+        <button type="button" (click)="sendOTP()"  [disabled]="signInForm.get('email')?.invalid" class="signup-button">
+          Send OTP
+        </button>
+        <span class="loader" *ngIf="sendOtpLoader"></span>
+      </div>
+    </form>
+  
+    <!-- OTP Input and Verify Button -->
+    <form [formGroup]="otpForm" *ngIf="otpSent" class="otp-form">
+      <div>
+        <label>Enter OTP</label>
+        <input type="text" formControlName="otp" placeholder="Enter OTP" (keyup.enter)="onSubmit()" />
+        <div *ngIf="otpForm.get('otp')?.invalid && otpForm.get('otp')?.touched" class="error">
+          OTP is required.
+        </div>
+      </div>
+      <div class="send-otp-section">
+        <button type="button" (click)="onSubmit()" [disabled]="otpForm.invalid" class="signup-button">
+          Verify 
+        </button>
+        <span class="loader" *ngIf="verifyOtpLoader"></span>
+      </div>    
+    </form>
+    <div class="signup-section">
+      <span>New user?</span>
+      <button class="signup-btn" (click)="onSignup()">Sign Up</button>
+    </div>
+      
+    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+    <p-toast></p-toast>
+  </div>
+  

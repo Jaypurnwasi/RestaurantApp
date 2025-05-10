@@ -1,0 +1,83 @@
+<div class="orders-container">
+    <div class="orders-header">
+      <!-- <h3>All Orders</h3> -->
+      <div class="status-toggle-wrapper">
+        <label class="status-toggle-label">Filter:</label>
+        <div class="status-toggle">
+          <input 
+            type="checkbox" 
+            id="status-toggle" 
+            (change)="onStatusToggle($event)" 
+            [checked]="isLiveFilter" 
+            hidden 
+          />
+          <label for="status-toggle" class="toggle-slider">
+            <span class="toggle-text live">Live</span>
+
+            <span class="toggle-text previous">Previous</span>
+            <span class="slider-ball"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  
+    <ng-container *ngIf="orders$ | async as orderList">
+      <table class="orders-table center"  *ngIf="orderList.length > 0; else noOrdersTemplate">
+        <thead>
+          <tr>
+            <th *ngIf="isAdmin()">Order ID</th>
+            <th *ngIf="isAdmin()">Customer</th>
+            <th>Items</th>
+            <th>table_no</th>
+            <th>Amount</th>
+            <th>Created At</th>
+            <th>Updated At</th> 
+            <th>Status</th>
+          </tr>
+        </thead>  
+        <tbody>
+          <tr *ngFor="let order of orderList">
+            <td *ngIf="isAdmin()">{{ order.id }}</td>
+            <td *ngIf="isAdmin()">{{order.customerName}}</td>
+            <td>
+              <ul>
+                <li *ngFor="let item of order.items" class="item-list">
+                  {{ item.menuItem.name }} (Qty: {{ item.quantity }})
+                </li>
+              </ul>
+            </td>
+            <td>{{ getTableName(order.tableId)}}</td>
+            <td>{{ order.amount | currency }}</td>
+            
+            <td>{{ order.createdAt }}</td>
+            <td>{{ order.updatedAt }}</td>
+            
+            <td>
+              <select 
+                [value]="order.status" 
+                (change)="updateStatus(order.id, $event)" 
+                [ngClass]="getStatusClass(order.status)">
+                <option 
+                *ngFor="let status of getValidStatuses(order.status)" 
+                [value]="status"
+                [disabled]="status !== order.status && !validStatusTransitions[order.status].includes(status)"
+              >
+                {{ status }}
+              </option>
+              </select >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+  
+    <ng-template #noOrdersTemplate  >
+      <div class="no-items">No orders found. </div>
+    </ng-template>
+
+    <ng-template #loadingTemplate >
+      <div class="loading" *ngIf="loading">Loading menu items...</div>
+    </ng-template>
+    <p-toast />
+
+  </div>

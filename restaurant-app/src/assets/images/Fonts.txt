@@ -1,0 +1,9 @@
+Fonts used in this design:
+
+Font: Barlow Condensed
+Author: Jeremy Tribby
+Url: https://fonts.google.com/specimen/Barlow+Condensed
+
+Font: Josefin Sans
+Author: Santiago Orozco
+Url: https://fonts.google.com/specimen/Josefin+Sans

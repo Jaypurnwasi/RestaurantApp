@@ -1,0 +1,69 @@
+
+<div class="orders-container-parent">
+    <div class="orders-container">
+        <div class="orders-header">
+          <!-- <h3>All Orders</h3> -->
+          <div class="status-toggle-wrapper">
+            <label class="status-toggle-label">Filter:</label>
+            <div class="status-toggle">
+              <input 
+                type="checkbox" 
+                id="status-toggle" 
+                (change)="onStatusToggle($event)" 
+                [checked]="isLiveFilter" 
+                hidden 
+              />
+              <label for="status-toggle" class="toggle-slider">
+                <span class="toggle-text live">Live</span>
+                <span class="toggle-text previous">Previous</span>
+                <span class="slider-ball"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      
+        <ng-container *ngIf="orders$ | async as orderList">
+          <div class="orders-grid" *ngIf="orderList.length > 0; else noOrdersTemplate">
+            <div class="order-card" *ngFor="let order of orderList">
+              <div class="order-card-header">
+                <div class="order-id" *ngIf="isAdmin()">#{{ order.id }}</div>
+                <div class="order-status" [ngClass]="getStatusClass(order.status)">
+                
+                      {{ order.status }}
+                    
+                </div>
+              </div>
+      
+              <div class="order-details">
+                <div class="order-customer" *ngIf="isAdmin()"> {{ order.customerName }}</div>
+                <div class="order-items order-flex" >
+                  <span [ngClass]="!isAdmin()?'order-heading':''">Items:</span>
+                   
+                  <ul class="list-items">
+                    <li *ngFor="let item of order.items">
+                      {{ item.menuItem.name }} ( {{ item.quantity }} )
+                    </li>
+                  </ul>
+                </div>
+                <div class="order-table order-flex" >  <span [ngClass]="!isAdmin()?'order-heading':''">Table:</span> <span>{{ getTableName(order.tableId) }}</span> </div>
+                <div class="order-amount order-flex">  <span [ngClass]="!isAdmin()?'order-heading':''">Amount:</span> {{ order.amount | currency:'INR' }}</div>
+              </div>
+      
+              <div class="order-footer " >
+                <span class="order-flex"><span class="order-heading"> Created: </span> <span>{{ order.createdAt }}</span>
+              </span>
+              <span class="order-flex"><span class="order-heading"> Updated: </span><span>{{ order.updatedAt }}</span> </span>
+                
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      
+        <ng-template #noOrdersTemplate>
+          <div class="no-orders">No orders found.</div>
+        </ng-template>
+      </div>
+
+</div>
+
+  
